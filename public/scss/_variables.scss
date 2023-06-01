@@ -1,0 +1,191 @@
+
+:root {
+    --ff-berlin:Berlin Sans;
+    --ff-arcade:Arcade;
+    --ff-vietnam:'Be Vietnam Pro';
+    --bg-color:#F5F5F5;
+    --primary-color:#8338E3;
+    --secondary-color:#A870E2;
+    --input-bg-color:#ECEBEB;
+    --contact-input-color:#8E45C4;
+    --grey-color:#777777;
+    --dark-grey-color:#515050;
+    --model-bg-color:#e6e5e5;
+    --profile-hover-color:#d9d9d9;
+    --fw-LIGHT:300;
+    --fw-REGULAR:400;
+    --fw-MEDIUM:500;
+    --fw-SBOLD:600;
+    --fw-BOLD:700;
+    --fs-landlinks:1.5rem;
+    --fs-landtext:2rem;
+    --fs-200:.7rem;
+    --fs-300:1rem;
+    --fs-400:1.4rem;
+    --fs-500:1.6rem;
+    --fs-600:1.9rem;
+    --fs-700:2.3rem;
+    --fs-800:2.7rem;
+    --fs-1000:4rem;
+  
+    /* HEADER VARIABLES */
+  
+    --height-header:100px;
+    --width-logo:50px;
+    --header-icons-width:30px;
+    --heart-icon-width:34px;
+    --magn-glass-width:24px;
+    --favslikesmodel-img-width:25px;
+    --profile-icons-width:23px;
+    --padding-default:.8rem 1.2rem;
+    --transition-duration:300ms;
+  }
+
+
+
+  @media (min-width: 300px) and (max-width: 500px) {
+    :root {
+      --fs-200: .7rem;
+      --fs-300: .7rem;
+      --fs-400: .2rem;
+      --fs-500: 1.2rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 10rem;
+      --height-header: 100px;
+      --width-logo: 30px;
+    }
+  }  
+
+  @media (max-width: 500px) {
+    :root {
+      --fs-200: .5rem;
+      --fs-300: .7rem;
+      --fs-400: 1.4rem;
+      --fs-500: 1.2rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 2.2rem;
+      --fs-landtext: .7rem;
+      --fs-landlinks: .8rem;
+      --height-header: 100px;
+      --favslikesmodel-img-width: 15px;
+      --width-logo: 40px;
+    }
+  }
+
+  @media (min-width: 500px) and (max-width: 650px) {
+    :root {
+      --fs-200: .7rem;
+      --fs-300: .9rem;
+      --fs-400: 1.4rem;
+      --fs-500: 1.2rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 3.6rem;
+      --fs-landtext: 1.1rem;
+      --fs-landlinks: 1rem;
+      --height-header: 100px;
+      --width-logo: 40px;
+      --favslikesmodel-img-width: 15px;
+      --profile-icons-width: 20px;
+    }
+  }
+
+
+  @media (min-width: 650px) and (max-width: 800px) {
+    :root {
+      --fs-200: .6rem;
+      --fs-300: .95rem;
+      --fs-400: 1.4rem;
+      --fs-500: 1.7rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 4.6rem;
+      --fs-landtext: 1.2rem;
+      --fs-landlinks: 1.1rem;
+      --height-header: 100px;
+      --width-logo: 40px;
+      --profile-icons-width: 20px;
+    }
+  }  
+
+
+  @media (min-width: 800px) and (max-width: 1100px) {
+    :root {
+      --fs-200: .7rem;
+      --fs-300: .8rem;
+      --fs-400: 1.4rem;
+      --fs-500: 1.6rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 5.7rem;
+      --fs-landtext: 1.4rem;
+      --fs-landlinks: 1.3rem;
+      --height-header: 100px;
+      --width-logo: 50px;
+      --header-icons-width: 27px;
+      --heart-icon-width: 30px;
+      --magn-glass-width: 21px;
+    }
+  }
+
+  @media (min-width: 1100px) and (max-width: 1500px) {
+    :root {
+      --fs-200: .7rem;
+      --fs-300: 1rem;
+      --fs-400: 1.4rem;
+      --fs-500: 1.6rem;
+      --fs-600: 1.9rem;
+      --fs-700: 2.3rem;
+      --fs-1000: 8rem;
+      --fs-landtext: 1.8rem;
+      --fs-landlinks: 1.5rem;
+      --height-header: 100px;
+      --width-logo: 50px;
+      --header-icons-width: 30px;
+      --heart-icon-width: 34px;
+      --magn-glass-width: 24px;
+    }
+  }
+
+
+  @media (min-width: 1500px) and (max-width: 2000px) {
+    :root {
+      --fs-200: .9rem;
+      --fs-300: 1.2rem;
+      --fs-400: 1.5rem;
+      --fs-500: 1.8rem;
+      --fs-600: 2.3rem;
+      --fs-700: 2.6rem;
+      --fs-1000: 9.5rem;
+      --fs-landtext: 1.7rem;
+      --fs-landlinks: 1.4rem;
+      --width-logo: 80px;
+      --height-header: 130px;
+      --header-icons-width: 35px;
+      --heart-icon-width: 40px;
+      --magn-glass-width: 30px;
+    }
+  }
+
+
+  @media (min-width: 2000px) and (max-width: 4000px) {
+    :root {
+      --fs-200: .9rem;
+      --fs-300: 1.5rem;
+      --fs-400: 1.7rem;
+      --fs-500: 2.3rem;
+      --fs-600: 2.3rem;
+      --fs-700: 2.6rem;
+      --fs-1000: 12.5rem;
+      --fs-landtext: 2.7rem;
+      --fs-landlinks: 2.3rem;
+      --width-logo: 85px;
+      --height-header: 150px;
+      --header-icons-width: 43px;
+      --heart-icon-width: 48px;
+      --magn-glass-width: 40px;
+      --favslikesmodel-img-width: 35px;
+    }
+  }

@@ -1,0 +1,24 @@
+{
+    "name": "usuario/modelarium",
+    "autoload": {
+        "psr-4": {
+            "Usuario\\modelarium3D\\": "./",
+            "Controllers\\" :  "./Controllers",
+            "Models\\" : "./Models",
+            "Lib\\" :  "./Lib"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pablo",
+            "email": "99648035+HollowKnightGuy@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "firebase/php-jwt": "*",
+        "phpmailer/phpmailer": "^6.7",
+        "symfony/mailer": "^6.2",
+        "symfony/google-mailer": "^6.2"
+    }
+}

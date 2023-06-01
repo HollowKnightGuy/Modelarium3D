@@ -1,0 +1,104 @@
+@font-face {
+  font-family: Berlin Sans;
+  src: url(../fonts/BRLNSDB.TTF);
+}
+
+@font-face {
+  font-family: Arcade;
+  src: url(../fonts/ARCADE_N.TTF);
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  min-width: 100vw;
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: var(--ff-vietnam);
+  background-color: var(--bg-color);
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: var(--grey-color);
+}
+
+li {
+  list-style-type: none;
+}
+
+input,
+textarea {
+  outline: none;
+  resize: none;
+}
+
+.linkpurple {
+  color: var(--secondary-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.textshadow {
+  text-shadow: 2px 2px 6px rgb(56, 56, 56);
+}
+
+.textshadowlight {
+  text-shadow: 2px 2px 6px rgb(189, 189, 189);
+}
+
+.boxshadow {
+  box-shadow: 2px 2px 6px rgb(171, 168, 168);
+}
+
+.defaultbtn {
+  background: var(--primary-color);
+  color: var(--input-bg-color);
+  font-weight: var(--fw-SBOLD);
+  border-radius: 4px;
+  padding: 1rem .7rem;
+  cursor: pointer;
+  border: 0;
+}
+
+.transition {
+  transition: all var(--transition-duration);
+
+  &:hover {
+    transition: all var(--transition-duration);
+  }
+}
+
+input {
+
+  &::-webkit-input-placeholder,
+  &:-ms-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder {
+    font-family: var(--ff-vietnam);
+  }
+}
+
+.none {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.plink-clicked {
+  background-color: var(--profile-hover-color);
+}

@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+
+    #Activar rewrite
+    RewriteEngine on
+    Options All -Indexes
+    Options -MultiViews
+    #ErrorDocument 404 http://localhost/modelarium3D/
+
+    # RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2 
+
+</IfModule>
