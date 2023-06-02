@@ -56,7 +56,7 @@ require_once '../views/layout/header.php';
 
             <div class="cont-comment-1">
                 <div class="comment-user-info">
-                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/banner/profile.jpg" alt="">
+                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/default/profile.jpg" alt="">
                     <h1 class="username-modelview">You</h1>
                 </div>
 
@@ -67,7 +67,7 @@ require_once '../views/layout/header.php';
 
             <div class="cont-comment-2">
                 <div class="comment-user-info">
-                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/banner/profile.jpg" alt="">
+                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/default/profile.jpg" alt="">
                     <h1 class="username-modelview">User 1</h1>
                 </div>
 
@@ -82,7 +82,7 @@ require_once '../views/layout/header.php';
 
             <div class="cont-comment-2">
                 <div class="comment-user-info">
-                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/banner/profile.jpg" alt="">
+                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/default/profile.jpg" alt="">
                     <h1 class="username-modelview">User 2</h1>
                 </div>
 
@@ -97,7 +97,7 @@ require_once '../views/layout/header.php';
 
             <div class="cont-comment-2">
                 <div class="comment-user-info">
-                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/banner/profile.jpg" alt="">
+                    <img class="profileimg-comment" src="<?= $_ENV['BASE_URL'] ?>img/default/profile.jpg" alt="">
                     <h1 class="username-modelview">User 3</h1>
                 </div>
 

@@ -10,9 +10,9 @@ require_once '../views/layout/header.php';
     <main>
     
         <div class="banner">
-            <img class="banner-img" src="../img/banner/banner.jpg" alt="banner">
+            <img class="banner-img" src="../img/default/banner.jpg" alt="banner">
 
-            <img class="profile-img" src="../img/banner/profile.jpg" alt="profile">
+            <img class="profile-img" src="../img/default/profile.jpg" alt="profile">
             
             <div class="profile-info">
                 <h1>ByCarlitos</h1>

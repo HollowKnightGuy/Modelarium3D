@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,13 +11,11 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <?php
-    if(isset($_SESSION['identity']) && $_SESSION['identity'] != false){
+    if (isset($_SESSION['identity']) && $_SESSION['identity'] != false) {
         $session = $_SESSION['identity'];
-    }else{
-        $session = false;    
+    } else {
+        $session = false;
     }
-
-
     ?>
 
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,21 +39,21 @@
                     <span>|</span>
                 </li>
 
-                <?php if(!isset($_SESSION['admin'])): ?>
+                <?php if (!isset($_SESSION['admin'])) : ?>
 
-                <li class="dnoneresponsive header-link">
-                    <a href="<?= $_ENV['BASE_URL'] ?>home">Home</a>
-                </li>
-                <li class="dnoneresponsive header-link">
-                    <a href="<?= $_ENV['BASE_URL'] ?>models">Models</a>
-                </li>
-                <li class="dnoneresponsive header-link">
-                    <a href="<?= $_ENV['BASE_URL'] ?>contact">Contact</a>
-                </li>
-                <?php endif;?>
+                    <li class="dnoneresponsive header-link">
+                        <a href="<?= $_ENV['BASE_URL'] ?>home">Home</a>
+                    </li>
+                    <li class="dnoneresponsive header-link">
+                        <a href="<?= $_ENV['BASE_URL'] ?>models">Models</a>
+                    </li>
+                    <li class="dnoneresponsive header-link">
+                        <a href="<?= $_ENV['BASE_URL'] ?>contact">Contact</a>
+                    </li>
+                <?php endif; ?>
 
-                
-                <?php if(isset($_SESSION['admin']) && $_SESSION['admin']): ?>
+
+                <?php if (isset($_SESSION['admin']) && $_SESSION['admin']) : ?>
                     <li class="dnoneresponsive header-link">
                         <a href="<?= $_ENV['BASE_URL'] ?>admin/requests">Requests</a>
                     </li>
@@ -62,8 +62,8 @@
                         <a href="<?= $_ENV['BASE_URL'] ?>admin/users">Users</a>
                     </li>
 
-                <?php endif;?>
-                <?php if(!isset($_SESSION['admin']) || !$_SESSION['admin']): ?>
+                <?php endif; ?>
+                <?php if (!isset($_SESSION['admin']) || !$_SESSION['admin']) : ?>
                     <li class="header-link searcher">
                         <form action="#" class="searchbar">
                             <input type="text" name="search">
@@ -73,7 +73,7 @@
                     </li>
                 <?php endif; ?>
                 <div class="user-options dnoneresponsive2">
-                    <?php if($session): ?>
+                    <?php if ($session) : ?>
                         <li class="header-link user-link transition">
                             <a href="<?= $_ENV['BASE_URL'] ?>logout">
                                 logout
@@ -82,22 +82,22 @@
                     <?php endif; ?>
 
 
-                    <?php if(!isset($_SESSION['admin']) || !$_SESSION['admin']): ?>
+                    <?php if (!isset($_SESSION['admin']) || !$_SESSION['admin']) : ?>
 
-                    <li class="header-link user-link transition">
-                        <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
-                            <img class="link-icon heart-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="">
-                            <img class="none heart-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart-red.svg" alt="">
-                        </a>
-                    </li>
-                    <li class="header-link user-link">
-                        <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
-                            <img class="link-icon star-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="star.png">
-                            <img class="none star-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star-yellow.svg" alt="star.png">
-                        </a>
-                    </li>
+                        <li class="header-link user-link transition">
+                            <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
+                                <img class="link-icon heart-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="">
+                                <img class="none heart-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart-red.svg" alt="">
+                            </a>
+                        </li>
+                        <li class="header-link user-link">
+                            <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
+                                <img class="link-icon star-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="star.png">
+                                <img class="none star-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star-yellow.svg" alt="star.png">
+                            </a>
+                        </li>
 
-                <?php endif; ?>
+                    <?php endif; ?>
 
                     <li class="header-link user-link">
                         <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
@@ -119,6 +119,7 @@
             <ul class="responsivemenu transition">
                 <div id="general-menu-section">
 
+                    <?php if (!isset($_SESSION['admin']) && !$_SESSION['admin']) : ?>
                     <li>
                         <a class="transition" href="<?= $_ENV['BASE_URL'] ?>home">
                             <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/home.svg" alt="home.svg">
@@ -126,36 +127,42 @@
                         </a>
                     </li>
 
-                    <li>
-                        <a class="transition" href="<?= $_ENV['BASE_URL'] ?>models">
-                            <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/model.svg" alt="models.svg">
-                            <span>Models</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="transition" href="<?= $_ENV['BASE_URL'] ?>contact">
-                            <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/contact.svg" alt="contact.svg">
-                            <span>Contact</span>
-                        </a>
-                    </li>
-
-                    <?php if(isset($_SESSION['admin']) && $_SESSION['admin']): ?>
                         <li>
-                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>">
-                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/admin.svg" alt="admin.svg">
-                                <span>Admin</span>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>models">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/model.svg" alt="models.svg">
+                                <span>Models</span>
                             </a>
                         </li>
-                    <?php endif;?>
 
-                    <li>
-                        <a class="transition" href="<?= $_ENV['BASE_URL'] ?>aboutus">
-                            <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/team.svg" alt="team.svg">
-                            <span>About us</span>
-                        </a>
-                    </li>
-                    <?php if(!$session): ?>
+                        <li>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>contact">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/contact.svg" alt="contact.svg">
+                                <span>Contact</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>aboutus">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/team.svg" alt="team.svg">
+                                <span>About us</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin']) : ?>
+                        <li>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>admin/users">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/admin.svg" alt="admin.svg">
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>admin/requests">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/request.svg" alt="request.svg">
+                                <span>Requests</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (!$session) : ?>
                         <li>
                             <a class="transition" id="account-responsive-link" href="<?= $_ENV['BASE_URL'] ?>login" style="cursor:pointer;">
                                 <div>
@@ -165,7 +172,7 @@
                             </a>
                         </li>
                     <?php endif; ?>
-                    <?php if($session): ?>
+                    <?php if ($session) : ?>
                         <li>
                             <a class="transition" id="account-responsive-link" style="cursor:pointer;">
                                 <div>
@@ -184,7 +191,7 @@
                             </a>
                         </li>
                     <?php endif; ?>
-                    <?php if(!$session): ?>
+                    <?php if (!$session) : ?>
                         <li>
                             <a class="transition" href="<?= $_ENV['BASE_URL'] ?>login">
                                 <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/login.svg" alt="login.svg">
@@ -201,7 +208,7 @@
 
                 </div>
 
-                <?php if($session): ?>
+                <?php if ($session) : ?>
                     <div id="responsive-menu-profilesection">
                         <li>
                             <a class="transition" id="back-account-responsive-link" style="cursor:pointer;">
@@ -216,19 +223,21 @@
                                 <span>Profile</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
-                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="likes.svg">
-                                <span>Likes</span>
-                            </a>
-                        </li>
+                        <?php if ($session->rol != 'ROLE_ADMIN') : ?>
+                            <li>
+                                <a class="transition" href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
+                                    <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="likes.svg">
+                                    <span>Likes</span>
+                                </a>
+                            </li>
 
-                        <li>
-                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
-                                <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="profile.svg">
-                                <span>Favorites</span>
-                            </a>
-                        </li>
+                            <li>
+                                <a class="transition" href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
+                                    <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="profile.svg">
+                                    <span>Favorites</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                         <li>
                             <a class="transition" href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile/settings' : 'login'; ?>">
                                 <img class="link-icon" src="<?= $_ENV['BASE_URL'] ?>img/icons/gearsettings.svg" alt="profile.svg">

@@ -4,8 +4,8 @@
     RewriteEngine on
     Options All -Indexes
     Options -MultiViews
-    #ErrorDocument 404 http://localhost/modelarium3D/
+    #ErrorDocument 404 http://localhost/modelarium3D-php/
 
     # RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2 
-
+    RewriteRule ^ public/index.php [QSA,L]
 </IfModule>

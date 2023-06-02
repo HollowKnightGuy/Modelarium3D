@@ -23,7 +23,7 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD']; 
 
         //$action = preg_replace("/\/proyectocursos\//",'',$_SERVER['REQUEST_URI']); //Desde el index raiz
-        $action = preg_replace("/\/modelarium3D\/public\//",'',$_SERVER['REQUEST_URI']);//desde el public
+        $action = preg_replace("/\/modelarium3D-php\/public\//",'',$_SERVER['REQUEST_URI']);//desde el public
        //$_SERVER['REQUEST_URI'] almacena la cadena de texto que hay después del nombre del host en la URL
         $action = trim($action, '/');
 

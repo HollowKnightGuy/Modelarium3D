@@ -54,27 +54,30 @@ $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
                 <a href="<?= $_ENV['BASE_URL']?>profile">
                     <button class="defaultbtn submit transition boxshadow viewprofbtn">View Profile</button>
                 </a>
-                <form class="container psprofile-form" action="../userprofile/update">
+                <form class="container psprofile-form" method="POST" action="<?= $_ENV['BASE_URL']?>userprofile/update" enctype="multipart/form-data">
                     <div class="inputcontainer psform-input-cont">
                         <label for="name">Name</label>
-                        <input id="name" type="text" value="<?php echo($userdata->nombre); ?>">
+                        <input id="name" name="data[name]" type="text" value="<?= $userdata->nombre; ?>">
                     </div>
                     <div class="inputcontainer psform-input-cont">
                         <label for="bio">Bio</label>
-                        <textarea id="bio" type="text" rows="8"> <?php echo($userdata->descripcion)?></textarea>
+                        <textarea id="bio" name="data[bio]" type="text" rows="8"><?= $userdata->descripcion?></textarea>
                     </div>
                     <div class="banner-img-container">
                         <div class="ps-prof-img">
                             <label for="profs-img">Profile Image</label>
-                            <input type="file" name="profs-img" id="input-ps-img" hidden>
+                            <input type="file" name="profile_img" id="input-ps-img" hidden>
                             <img src="<?= $_ENV['BASE_URL'] ?>img/user/profilephoto/<?= $userdata->foto_perfil;?>" width="100px" alt="profile.jpg" class="ps-img">
-                            <img src="<?= $_ENV['BASE_URL']?>img/banner/pencil.png" alt="pencil" width="100px" class="ps-img pencil-img none transition" id="pencil1">
+                            <img src="<?= $_ENV['BASE_URL']?>img/default/pencil.png" alt="pencil" width="100px" class="ps-img pencil-img none transition" id="pencil1">
                         </div>
                         <div class="ps-prof-banner">
                             <label for="profs-banner">Banner Image</label>
-                            <input type="file" name="profs-banner" id="input-ps-banner" hidden>
-                            <img src="<?= $_ENV['BASE_URL']?>img/banner/banner.jpg" width="150px" alt="profile.jpg" class="ps-img">
-                            <img src="<?= $_ENV['BASE_URL']?>img/banner/pencil.png" alt="pencil" width="100px" class="ps-img pencil-img none transition" id="pencil2">
+                            <input type="file" name="profile_banner" id="input-ps-banner" hidden>
+
+                            <?php if($userdata->banner == NULL){$route = $_ENV['BASE_URL']."img/default/banner.jpg";}
+                            else{$route = $_ENV['BASE_URL']."img/user/profilebanner/". $userdata->banner;}?>
+                            <img src="<?= $route ?>" width="150px" alt="banner.jpg" class="ps-img">
+                            <img src="<?= $_ENV['BASE_URL']?>img/default/pencil.png" alt="pencil" width="100px" class="ps-img pencil-img none transition" id="pencil2">
                         </div>
                     </div>
                     <div class="inputcontainer psform-input-cont">

@@ -81,8 +81,6 @@ require_once '../views/layout/header.php';
             if (element.nodeType === Node.ELEMENT_NODE) options.push(element)  
         });
         
-        console.log(options);
-        
         function changeModelsState(option, element){
             for(let i = 0; i < 3; i++){
                 ulOptions[i].classList.remove("default");

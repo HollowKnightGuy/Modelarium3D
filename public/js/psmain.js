@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    console.log(pslinks)
     // FUNCIONALITY OF THE PROFILE SETTINGS
     pslinks[4].addEventListener("click", function () {
       changePSState("none", "none", "none", "flex");

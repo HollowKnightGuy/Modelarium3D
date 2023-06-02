@@ -15,12 +15,10 @@ class HomeController{
     }
 
     public function index(){
-        $_SESSION['header'] = "landingheader.php";
         $this -> pages -> render("landing");
     }
 
     public function contacto(){
-        $_SESSION['header'] = "contactheader.php";
         $this -> pages -> render("contact");
     }
 

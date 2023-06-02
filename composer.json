@@ -2,7 +2,7 @@
     "name": "usuario/modelarium",
     "autoload": {
         "psr-4": {
-            "Usuario\\modelarium3D\\": "./",
+            "Usuario\\modelarium3D-php\\": "./",
             "Controllers\\" :  "./Controllers",
             "Models\\" : "./Models",
             "Lib\\" :  "./Lib"

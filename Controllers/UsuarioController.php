@@ -3,17 +3,17 @@
 
 namespace Controllers;
 use Lib\Pages;
+use Lib\Utils;
 use Models\Usuario;
-
 
 class UsuarioController{
 
-
+    private Utils $utils;
     private Pages $pages;
     private Usuario $usuario;
 
     public function __construct(){
-
+        $this -> utils = new Utils();
         $this -> pages = new Pages();
         $this -> usuario = new Usuario(0,'','','','','','','','','');     
 
@@ -22,8 +22,7 @@ class UsuarioController{
 
     //Llama al método register de  y muestra la vista de registro
     public function registro(){
-        $_SESSION['scripts'] = ['main', 'psmain'];
-        $_SESSION['header'] = "";
+         
         $message = ["generico" => "", "password" => "", "email" => "", "nombre" => "", "descripcion" => "", "imagen" => ""];
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -36,9 +35,12 @@ class UsuarioController{
                 $usuario = Usuario::fromArray($registrado);
             }
             $save = $usuario -> save($message, $propiedadesImg);
-            var_dump($save);
             if($save === true){
-                $this -> login(true);
+                if(Utils::isAdmin()){
+                    $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
+                }else{
+                    $this -> login(true);
+                }
             }else if(gettype($save) === "string"){
                 $this -> pages -> render('usuario/registerform', ['message' => $save, 'datos_guardados' => $_POST['data'], 'imagenval' => $_FILES]);
             }else{
@@ -54,32 +56,28 @@ class UsuarioController{
 
 
     public function login($registro = false){
-        $_SESSION['scripts'] = ['main', 'psmain'];
-        $_SESSION['header'] = "";
+         
+        $message = ["generico" => "", "password" => "", "email" => ""];
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' || $registro){
 
             if($_POST['data']){
                 $auth = $_POST['data'];
                 $usuario = Usuario::fromArray($auth);
-                $identity = $usuario -> login();
-
-                if($identity && is_object($identity)){
+                $identity = $usuario -> login($message);
+                if(gettype($identity) == "array"){
+                    $this -> pages -> render('usuario/loginform', ["message" => $identity, "datos_guardados" => $auth]);
+                }
+                else if($identity && is_object($identity)){
                     $_SESSION['identity'] = $identity;
                     if($identity -> rol == 'ROLE_ADMIN'){
                         $_SESSION['admin'] = true;
                     }
                     $this -> pages -> render("modelos/models");
-                    $_SESSION['error_login'] = '';
-
-                }else{
-                    $_SESSION['error_login'] = 'Identificación fallida !!';
-
-                    $this -> pages -> render('usuario/loginform');
                 }
             }
         } else{
-            $_SESSION['error_login'] = '';
-            $this -> pages -> render('usuario/loginform');
+            $this -> pages -> render('usuario/loginform', ['message' => $message, 'datos_guardados' => []]);
         }
     }
     
@@ -88,9 +86,8 @@ class UsuarioController{
     public function cerrar_sesion(){
         unset($_SESSION['admin']);
         unset($_SESSION['identity']);
-        $_SESSION['header'] = "";
+         
         $this -> pages -> render("modelos/models");
-
     }
 
     public function obtenerUsuario($mail){
@@ -98,23 +95,24 @@ class UsuarioController{
     }
 
     public function update(){
-        var_dump('nknsa');
+        
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $datos = $_POST['data'];
-                       
+            $img = $_FILES;
             
-            $this -> pages -> render('usuario/profile');
+            $this -> usuario -> update($datos, $img);
+            $this -> pages -> render('usuario/profilesettings');
 
         }
         else{
-            $this -> pages -> render('usuario/profile');
+            $this -> pages -> render('usuario/profilesettings');
         }
     }
 
     
     public function perfil(){
         
-        $_SESSION['header'] = "";
+         
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $datos = $_POST['data'];
                        
@@ -141,7 +139,7 @@ class UsuarioController{
             $this -> pages -> render('usuario/author');
 
         }
-        $_SESSION['header'] = "";
+         
 
     }
 
@@ -149,7 +147,7 @@ class UsuarioController{
     public function perfilajustes(){
         
         $_SESSION['scripts'] = ['psmain'];
-        $_SESSION['header'] = "";
+         
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $datos = $_POST['data'];
             $this -> pages -> render('usuario/profilesettings');
@@ -172,15 +170,12 @@ class UsuarioController{
         else{
             $this -> pages -> render('usuario/creatorform');
         }
-        $_SESSION['header'] = "";
-
+         
     }
 
     public function solicitud(){
 
-
-
-        if($_SESSION['admin'] == TRUE){
+        if(Utils::isAdmin()){
 
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $datos = $_POST['data'];
@@ -190,7 +185,7 @@ class UsuarioController{
             else{
                 $this -> pages -> render('admin/requests');
             }
-            $_SESSION['header'] = ""; 
+              
         }
         
         elseif($_SESSION['rol'] == 'ROLE_CREATOR'){
@@ -203,7 +198,7 @@ class UsuarioController{
             else{
                 $this -> pages -> render('creator/request');
             }
-            $_SESSION['header'] = ""; 
+              
         
         }
 
@@ -212,17 +207,29 @@ class UsuarioController{
 
     public function gestionUsuarios(){
 
-        if($_SESSION['admin'] == TRUE){
-
+        if(Utils::isAdmin()){
+            $usuarios = $this -> usuario -> getall();
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $datos = $_POST['data'];
                 $this -> pages -> render('admin/users');
 
             }
-            else{
-                $this -> pages -> render('admin/users');
+            $this -> pages -> render('admin/users', ['usuarios' => $usuarios]);  
+        }else{
+            $this -> pages -> render('/');
+        }
+    }
+
+    public function borrarUsuario($id){
+        if(Utils::isAdmin()){
+            $borrar = $this -> usuario -> borrar($id);
+            if($borrar){
+                return true;
+            }else{
+                return $borrar;
             }
-            $_SESSION['header'] = ""; 
+        }else{
+            $this -> pages -> render('/');
         }
     }
 
