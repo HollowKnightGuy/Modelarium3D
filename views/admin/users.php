@@ -1,6 +1,6 @@
 <?php
 $estilos = 'about'; ?>
-<link rel="stylesheet" href=" <?= $_ENV['BASE_URL'] ?>css/<?= $estilos ?>.css">
+<link rel="stylesheet" href=" <?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilos ?>.css">
 <?php
 require_once '../views/layout/header.php';
 ?>
@@ -33,10 +33,10 @@ tr:hover{
 }
 .tdselected{
     background-color: var(--secondary-color);
+    color: white;
 }
 .tdselected:hover{
     background-color: var(--secondary-color);
-
 }
 tr:first-child:hover{
     background-color: var(--bg-color);
@@ -89,19 +89,33 @@ tr:first-child:hover{
     </table>
     <div class="user-opt">
         <a class="defaultbtn" href="<?= $_ENV['BASE_URL']?>admin/createuser">Crear Usuario</a>
-        <a class="defaultbtn">Editar Usuario Seleccionado</a>
-        <a class="defaultbtn">Borrar Usuario Seleccionado</a>
+        <a class="defaultbtn" id="editarbtn" href="<?= $_ENV['BASE_URL']?>admin/updateuser/id=">Editar Usuario Seleccionado</a>
+        <a class="defaultbtn" id="borrarbtn" href="<?= $_ENV['BASE_URL']?>admin/deleteuser/id=">Borrar Usuario Seleccionado</a>
     </div>
 </div>
 <script>
     const users = document.getElementsByClassName("user");
+    const borrarbtn = document.getElementById("borrarbtn");
+    const editarbtn = document.getElementById("editarbtn");
     let lastclicked; 
     $(".user").on("click",function(e){
         let iduser = e.target.parentElement.children[0].attributes['id'].nodeValue;
+        console.log(iduser);
         if(lastclicked != undefined){
+            setLink(iduser, borrarbtn);
+            setLink(iduser, editarbtn);
             lastclicked.classList.toggle("tdselected");
+        }else{
+            borrarbtn.href += iduser;
         }
         lastclicked = e.target.parentElement;
         lastclicked.classList.toggle("tdselected");
     });
+
+    function setLink(iduser, node){
+        let link = node.href.split("=");
+        link[1] = iduser;
+        link = link.join("=");
+        node.href = link;
+    }
 </script>

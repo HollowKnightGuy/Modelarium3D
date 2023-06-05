@@ -2,7 +2,7 @@
 <?php 
 $estilos = [ 'profile','models'];
 foreach ($estilos as $estilo) :  ?>
-    <link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilo ?>.css">
+    <link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilo ?>.css">
 <?php
 endforeach;
 require_once '../views/layout/header.php';

@@ -1,7 +1,7 @@
 <?php
 $estilos = ['profile', 'models'];
 foreach ($estilos as $estilo) :  ?>
-    <link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilo ?>.css">
+    <link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilo ?>.css">
 <?php
 endforeach;
 require_once '../views/layout/header.php';
@@ -13,17 +13,16 @@ $usuarioC = new UsuarioController();
 if (isset($_SESSION['identity'])) {
     $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 }
-
 ?>
 
 <main>
     <div class="banner">
-        <?php if($userdata->banner == NULL){$route = $_ENV['BASE_URL']."img/default/banner.jpg";}
-        else{$route = $_ENV['BASE_URL']."img/user/profilebanner/". $userdata->banner;}?>
+        <?php if($userdata->banner == NULL){$route = $_ENV['BASE_URL_PUBLIC']."img/default/banner.jpg";}
+        else{$route = $_ENV['BASE_URL_PUBLIC']."img/user/profilebanner/". $userdata->banner;}?>
         <img class="banner-img" src="<?= $route ?>" alt="banner">
         <div class="profile-options">
 
-            <img class="profile-img" src="<?= $_ENV['BASE_URL'] ?>img/user/profilephoto/<?= $userdata->foto_perfil; ?>" alt="profile">
+            <img class="profile-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/user/profilephoto/<?= $userdata->foto_perfil; ?>" alt="profile">
         </div>
         <div class="profile-creator-gear">
             <div class="profile-creator-div">
@@ -33,21 +32,22 @@ if (isset($_SESSION['identity'])) {
 
                     <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
                         Be Creator
-                        <img class="model-creator-svg" src="<?= $_ENV['BASE_URL'] ?>img/icons/cube.svg" alt="model">
+                        <img class="model-creator-svg" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/cube.svg" alt="model">
                     </button>
                 <?php endif; ?>
             </div>
             <div class="profile-gear-button">
                 <a href="<?= $_ENV['BASE_URL'] ?>profile/settings">
-                    <img class="gear-svg transition" src="<?= $_ENV['BASE_URL'] ?>img/icons/gear.svg" alt="gear">
+                    <img class="gear-svg transition" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/gear.svg" alt="gear">
                 </a>
             </div>
         </div>
 
         <div class="profile-info">
-            <h1><?php echo ($userdata->nombre) ?></h1>
-            <p><?php echo 'Joined ', (explode(' ', $userdata->fecha_creacion))[0] ?></p>
-            <p><?php echo (explode('_', $userdata->rol))[1]; ?></p>
+            <h1><?= $userdata->nombre ?></h1>
+            <p><?= 'Joined ', explode(' ', $userdata->fecha_creacion)[0] ?></p>
+            <p><?= explode('_', $userdata->rol)[1]; ?></p>
+            <p style="color:black"><?= $userdata->descripcion ?></p>
 
         </div>
     </div>
@@ -58,19 +58,19 @@ if (isset($_SESSION['identity'])) {
             <ul>
                 <li>
                     <a class="profile_link transition" onclick="changePState('flex','none','none','none','none')">
-                        <img src="<?= $_ENV['BASE_URL'] ?>img/icons/model.svg" alt="model">
+                        <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/model.svg" alt="model">
                         <span>Models</span>
                     </a>
                 </li>
                 <li>
                     <a class="profile_link transition none" onclick="changePState('none','none','flex','none','none')">
-                        <img src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="heart">
+                        <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
                         <span>Liked</span>
                     </a>
                 </li>
                 <li>
                     <a class="profile_link transition none" onclick="changePState('none','none','none','flex','none')">
-                        <img src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="">
+                        <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="">
                         <span>Favorites</span>
                     </a>
                 </li>
@@ -79,21 +79,21 @@ if (isset($_SESSION['identity'])) {
 
                     <li>
                         <a class="profile_link transition none" onclick="changePState('none','flex','none','none','none')">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/icons/created.svg" alt="created">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/created.svg" alt="created">
                             <span>Created</span>
                         </a>
                     </li>
 
                     <li>
                         <a class="profile_link transition none" onclick="changePState('none','none','none','none','flex')">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/icons/hidden.svg" alt="hidden">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/hidden.svg" alt="hidden">
                             <span>Hidden</span>
                         </a>
                     </li>
 
                     <li>
-                        <a class="profile_link transition none" href="<?= $_ENV['BASE_URL'] ?>/models/create">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/icons/new-model.svg" alt="hidden">
+                        <a class="profile_link transition none" href="<?= $_ENV['BASE_URL'] ?>models/create">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/new-model.svg" alt="hidden">
                             <span>New Model</span>
                         </a>
                     </li>
@@ -108,7 +108,7 @@ if (isset($_SESSION['identity'])) {
                 <article class="profile-section profile-section-models">
                     <div class="model">
                         <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/models/arcade.png" alt="model">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/arcade.png" alt="model">
                         </div>
 
                         <div class="model--modelinfo">
@@ -118,11 +118,11 @@ if (isset($_SESSION['identity'])) {
                             </div>
                             <div class="model--likesfavs textshadowlight">
                                 <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="heart">
+                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                                 <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="heart">
+                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@ if (isset($_SESSION['identity'])) {
                 <article class="profile-section profile-section-liked none">
                     <div class="model">
                         <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/models/cactus.png" alt="model">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/cactus.png" alt="model">
                         </div>
 
                         <div class="model--modelinfo">
@@ -149,11 +149,11 @@ if (isset($_SESSION['identity'])) {
                             </div>
                             <div class="model--likesfavs textshadowlight">
                                 <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart-red.svg" alt="heart">
+                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                                 <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="heart">
+                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@ if (isset($_SESSION['identity'])) {
                 <article class="profile-section profile-section-favorites none">
                     <div class="model">
                         <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL'] ?>img/models/ipad.png" alt="model">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/ipad.png" alt="model">
                         </div>
 
                         <div class="model--modelinfo">
@@ -183,11 +183,11 @@ if (isset($_SESSION['identity'])) {
                             </div>
                             <div class="model--likesfavs textshadowlight">
                                 <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="heart">
+                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                                 <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/star-yellow.svg" alt="heart">
+                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="heart">
                                     <span>40</span>
                                 </div>
                             </div>
@@ -209,7 +209,7 @@ if (isset($_SESSION['identity'])) {
                     <article class="profile-section profile-section-created none">
                         <div class="model">
                             <div class="model--model">
-                                <img src="<?= $_ENV['BASE_URL'] ?>img/models/sofa.png" alt="model">
+                                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/sofa.png" alt="model">
                             </div>
 
                             <div class="model--modelinfo">
@@ -219,11 +219,11 @@ if (isset($_SESSION['identity'])) {
                                 </div>
                                 <div class="model--likesfavs textshadowlight">
                                     <div class="model--likes">
-                                        <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/hidden.svg" alt="heart">
+                                        <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/hidden.svg" alt="heart">
 
                                     </div>
                                     <div class="model--favs">
-                                        <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/trashcan.svg" alt="heart">
+                                        <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
 
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@ if (isset($_SESSION['identity'])) {
                     <article class="profile-section profile-section-hidden none">
                         <div class="model">
                             <div class="model--model">
-                                <img src="<?= $_ENV['BASE_URL'] ?>img/models/chair.png" alt="model">
+                                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/chair.png" alt="model">
                             </div>
 
                             <div class="model--modelinfo">
@@ -250,12 +250,12 @@ if (isset($_SESSION['identity'])) {
                                 </div>
                                 <div class="model--likesfavs textshadowlight">
                                     <div class="model--likes">
-                                        <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/visible.svg" alt="heart">
+                                        <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/visible.svg" alt="heart">
 
                                     </div>
                                     <div class="model--favs">
-                                        <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/trashcan.svg" alt="heart">
-
+                                        <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
+BASE_URL_PUBLIC
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 <?php
 require_once '../views/layout/landingheader.php';
  ?>
-<link rel="stylesheet" href="<?= $_ENV['BASE_URL']?>css/landing.css">   
+<link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC']?>css/landing.css">   
 
     <div class="landing">
         <div class="landing-title">

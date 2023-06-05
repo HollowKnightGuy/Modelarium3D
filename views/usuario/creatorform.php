@@ -1,6 +1,6 @@
 <?php 
 $estilos = 'form'; ?>
-    <link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilos ?>.css">
+    <link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilos ?>.css">
 <?php
 require_once '../views/layout/header.php';
 ?>
@@ -8,7 +8,7 @@ require_once '../views/layout/header.php';
     <main>
         <div class="container">
             <h1 class="title">Creator Form</h1>
-            <form action="<?php $_ENV['BASE_URL']?>/creator/request" method="POST" class="form">
+            <form action="<?php $_ENV['BASE_URL']?>/creator/request" method="POST" class="form" enctype="multipart/form-data">
                 
                 <div class="creator-form-section">
                     <div class="input-container">
@@ -35,7 +35,7 @@ require_once '../views/layout/header.php';
                     <div class="input-container selectfilecontainer">
                         <button class="select-file-btn transition">
                             <span>Select File</span>
-                            <img src="<?=$_ENV['BASE_URL']?>img/icons/upload-file2.svg" alt="upload-file">
+                            <img src="<?=$_ENV['BASE_URL_PUBLIC']?>img/icons/upload-file2.svg" alt="upload-file">
                         </button>
                         <div>
                             <span class="required">*</span>

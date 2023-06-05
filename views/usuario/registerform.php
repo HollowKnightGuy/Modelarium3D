@@ -3,10 +3,10 @@
 use Lib\Utils;
 
 $estilos = 'form'; ?>
-<link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilos ?>.css">
+<link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilos ?>.css">
 <?php
 require_once '../views/layout/header.php';
-$error_img = '<img src=' . $_ENV['BASE_URL'] . 'img/icons/error.svg alt=error>';
+$error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
 ?>
 
 <div class="container registerContainer">
@@ -35,7 +35,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL'] . 'img/icons/error.svg alt=error>';
         </span>
 
         <div class="input-container">
-            <button class="select-file-btn transition" onclick="getFile()"><span>Select File</span><img src="<?= $_ENV['BASE_URL'] ?>img/icons/upload-file2.svg" alt="upload-file"></button>
+            <button class="select-file-btn transition" onclick="getFile()"><span>Select File</span><img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/upload-file2.svg" alt="upload-file"></button>
             <input type="text" id="inputImgName" placeholder="ProfilePhoto.png" readonly>
             <input type="file" required name="file" id="file" required hidden> <span class="required">*</span>
         </div>

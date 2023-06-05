@@ -94,18 +94,31 @@ class UsuarioController{
         return $this->usuario->buscaMail($mail);
     }
 
-    public function update(){
-        
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $datos = $_POST['data'];
-            $img = $_FILES;
-            
-            $this -> usuario -> update($datos, $img);
-            $this -> pages -> render('usuario/profilesettings');
+    public function obtenerUsuarioPorId($id){
+        return $this->usuario->buscaId($id);
+    }
 
-        }
-        else{
-            $this -> pages -> render('usuario/profilesettings');
+
+    public function update($id = null){
+        $message = ["nombre" => "", "descripcion" => "", "imagen" => "", "imagenbanner" => ""];
+        if($id != null){
+            $this -> pages -> render('usuario/edit_user', ['message' => $message, 'datos_guardados' => "", 'id' => $id]);
+        }else if($_SESSION){
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $datos = $_POST['data'];
+                $img = $_FILES;
+                $imgProps = ['profile_photo' => Utils::propsImg($_FILES['profile_img']), 'profile_banner' => Utils::propsImg($_FILES['profile_banner'])];
+                $update = $this -> usuario -> update($datos, $img, $message, $imgProps);
+                if($update === true){
+                    $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => $datos]);
+                }else if(gettype($update) === "array"){
+                    $this -> pages -> render('usuario/profilesettings', ['message' => $update, 'datos_guardados' => $datos]);
+                }
+            }
+            else{
+                $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => ""]);
+            }
+            
         }
     }
 
@@ -143,22 +156,6 @@ class UsuarioController{
 
     }
 
-    
-    public function perfilajustes(){
-        
-        $_SESSION['scripts'] = ['psmain'];
-         
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $datos = $_POST['data'];
-            $this -> pages -> render('usuario/profilesettings');
-
-        }
-        else{
-            $this -> pages -> render('usuario/profilesettings');
-        }
-
-    }
-
 
     public function sercreador(){
         
@@ -171,37 +168,6 @@ class UsuarioController{
             $this -> pages -> render('usuario/creatorform');
         }
          
-    }
-
-    public function solicitud(){
-
-        if(Utils::isAdmin()){
-
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $datos = $_POST['data'];
-                $this -> pages -> render('admin/managerequest');
-    
-            }
-            else{
-                $this -> pages -> render('admin/requests');
-            }
-              
-        }
-        
-        elseif($_SESSION['rol'] == 'ROLE_CREATOR'){
-
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $datos = $_POST['data'];
-                $this -> pages -> render('creator/request');
-    
-            }
-            else{
-                $this -> pages -> render('creator/request');
-            }
-              
-        
-        }
-
     }
 
 
@@ -224,6 +190,7 @@ class UsuarioController{
         if(Utils::isAdmin()){
             $borrar = $this -> usuario -> borrar($id);
             if($borrar){
+                $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
                 return true;
             }else{
                 return $borrar;
@@ -234,7 +201,3 @@ class UsuarioController{
     }
 
 }
-
-
-?>
-

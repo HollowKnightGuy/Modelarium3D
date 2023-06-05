@@ -1,9 +1,9 @@
 <?php
 $estilos = 'form'; ?>
-<link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilos ?>.css">
+<link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilos ?>.css">
 <?php
 require_once '../views/layout/header.php';
-$error_img = '<img src='.$_ENV['BASE_URL'].'img/icons/error.svg alt=error>';
+$error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error>';
 
 ?>
 <main>
@@ -23,7 +23,7 @@ $error_img = '<img src='.$_ENV['BASE_URL'].'img/icons/error.svg alt=error>';
             <span class="red-error">
                 <?= $message['password'] === "" ? "" : $error_img.$message['password']; ?>
             </span>
-            <span><?= $_SESSION['error_login'] ?></span>
+            <span><?= $_SESSION['error_login'] ?? "" ?></span>
             <input class="submit transition" type="submit" value="LOGIN">
             <span>Are you not registered? <a class="linkpurple" href="<?= $_ENV['BASE_URL'] ?>register">Click here</a></span>
         </form>

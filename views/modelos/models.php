@@ -1,7 +1,7 @@
 <?php 
 $estilos = ['models'];
 foreach ($estilos as $estilo) :  ?>
-    <link rel="stylesheet" href="<?= $_ENV['BASE_URL'] ?>css/<?= $estilo ?>.css">
+    <link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilo ?>.css">
 <?php
 endforeach;
 require_once '../views/layout/header.php';
@@ -19,7 +19,7 @@ require_once '../views/layout/header.php';
                         <li class="select-option transition" onclick="changeModelsState(2, this)">Level 2</li>
                         <li class="select-option transition" onclick="changeModelsState(3, this)">Level 3</li>
                     </ul>
-                    <img src="<?= $_ENV['BASE_URL'] ?>img/icons/down-arrow.svg" alt="">
+                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/down-arrow.svg" alt="">
                 </div>
                 <!-- <form action="<?= $_ENV['BASE_URL'] ?>models" id="models-form" hidden> -->
                     <select name="" id="form-select" onchange="console.log(2)" hidden>
@@ -39,7 +39,7 @@ require_once '../views/layout/header.php';
 
             <div class="model">
                 <div class="model--model">
-                    <img src="<?= $_ENV['BASE_URL'] ?>img/models/arcade.png" alt="model">
+                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/arcade.png" alt="model">
                 </div>
         
                 <div class="model--modelinfo">
@@ -49,11 +49,11 @@ require_once '../views/layout/header.php';
                     </div>
                     <div class="model--likesfavs textshadowlight">
                         <div class="model--likes">
-                            <img class="likes-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/heart.svg" alt="heart">
+                            <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
                             <span>40</span>
                         </div>
                         <div class="model--favs">
-                            <img class="favs-img" src="<?= $_ENV['BASE_URL'] ?>img/icons/star.svg" alt="heart">
+                            <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
                             <span>40</span>
                         </div>
                     </div>

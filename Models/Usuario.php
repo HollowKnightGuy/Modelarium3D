@@ -6,7 +6,7 @@ use Lib\BaseDatos;
 use PDO;
 use PDOException;
 use Lib\Security;
-
+use Lib\Utils;
 
 class Usuario
 {
@@ -22,7 +22,7 @@ class Usuario
 	private string $descuento;
 	private string $fecha_creacion;
 	private string $num_modelos;
-
+	private Utils $utils;
 
 	private BaseDatos $conexion;
 
@@ -39,6 +39,7 @@ class Usuario
 		$this->descuento = $descuento;
 		$this->fecha_creacion = $fecha_creacion;
 		$this->num_modelos = $num_modelos;
+		$this->utils = new Utils();
 	}
 
 
@@ -227,6 +228,23 @@ class Usuario
 	}
 
 
+	public function buscaId($id)
+	{
+		// COMPRUEBA SI UN id ESTA EN USO (NO USADO)
+		$result = false;
+		$cons = $this->conexion->prepara("SELECT * FROM usuarios WHERE id = ?");
+		$cons->bindParam(1, $id);
+		try {
+			$cons->execute();
+			if ($cons && $cons->rowCount() == 1) {
+				$result = $cons->fetch(PDO::FETCH_OBJ);
+			}
+		} catch (PDOException $err) {
+			$result = false;
+		}
+		return $result;
+	}
+
 	public function login($message): array|bool|object
 	{
 		// LLEVA A CABO LA VALIDACION PARA QUE EL LOGIN SE PROCESE
@@ -404,13 +422,8 @@ class Usuario
 		}
 
 		$imgProps = $datos_usuario['imgProps'];
-		if ($imgProps['tipo'] != 'jpg' && $imgProps['tipo'] != 'jpeg' && $imgProps['tipo'] != 'png') {
-			$message['imagen'] = "El tipo de la imagen debe ser jpg/jpeg/png";
-		} else if ($imgProps['ancho'] != $imgProps['alto']) {
-			$message['imagen'] = "La imagen debe ser cuadrada";
-		} else if ($imgProps['peso'] > 200) {
-			$message['imagen'] = "Como máximo debe pesar 75KB";
-		}
+		$message = Utils::validarImagenPerfil($imgProps, $message);
+
 
 		if ($this->comprobarErrores($message)) {
 			return true;
@@ -432,71 +445,129 @@ class Usuario
 	}
 
 
-	public function update($datos, $img)
+	public function update($datos, $img, $message)
 	{
-
 		$datos_old = $this->buscaMail($_SESSION['identity']->email);
-
 		$nombre = $datos['name'];
 		$bio = $datos['bio'];
 		$imgperfil = $datos_old->foto_perfil;
 		$bannerperfil = $datos_old->banner;
+		$datos_validar = [
+			'nombre' => $nombre,
+			'descripcion' => $bio,
+			'imgProps' => $img
+		];
 
-
-		if ($img['profile_img']['name'] != '') {
-			$imgperfil = $img['profile_img']['name'];
-			$route = "../public/img/user/profilephoto/";
-
-			if (file_exists($route) || @mkdir($route)) {
-				$origenDocumento = $img['profile_img']['tmp_name'];
-				$urlDocumento = $route . $imgperfil;
-				@move_uploaded_file($origenDocumento, $urlDocumento);
-
-				if (file_exists($route . $datos_old->foto_perfil)) {
-
-					unlink($route . $datos_old->foto_perfil);
+		$validacion = $this->validarDatosUpdate($datos_validar, $message);
+		if ($validacion === true) {
+			var_dump($img);
+			if ($img['profile_img']['name'] != '') {
+				$imgperfil = $img['profile_img']['name'];
+				$route = "../public/img/user/profilephoto/";
+				
+				if (file_exists($route) || @mkdir($route)) {
+					$origenDocumento = $img['profile_img']['tmp_name'];
+					$urlDocumento = $route . $imgperfil;
+					@move_uploaded_file($origenDocumento, $urlDocumento);
+					
+					if (file_exists($route . $datos_old->foto_perfil)) {
+						
+						unlink($route . $datos_old->foto_perfil);
+					}
+				}
+			} elseif ($img['profile_banner']['name'] != '') {
+				
+				if ($bannerperfil == NULL) {
+					
+					$bannerperfil = $img['profile_banner']['name'];
+					$route = "../public/img/user/profilebanner/";
+					
+					if (file_exists($route) || @mkdir($route)) {
+						$origenDocumento = $img['profile_banner']['tmp_name'];
+						$urlDocumento = $route . $bannerperfil;
+						@move_uploaded_file($origenDocumento, $urlDocumento);
+					}
+				} else {
+					
+					$bannerperfil = $img['profile_banner']['name'];
+					$route = "../public/img/user/profilebanner/";
+					
+					if (file_exists($route) || @mkdir($route)) {
+						$origenDocumento = $img['profile_banner']['tmp_name'];
+						$urlDocumento = $route . $bannerperfil;
+						@move_uploaded_file($origenDocumento, $urlDocumento);
+						if (file_exists($route . $datos_old->banner)) {
+							unlink($route . $datos_old->banner);
+						}
+					}
 				}
 			}
-		} elseif ($img['profile_banner']['name'] != '') {
 
-			$bannerperfil = $img['profile_banner']['name'];
-			$route = "../public/img/user/profilebanner/";
-
-			if (file_exists($route) || @mkdir($route)) {
-				$origenDocumento = $img['profile_banner']['tmp_name'];
-				$urlDocumento = $route . $bannerperfil;
-				@move_uploaded_file($origenDocumento, $urlDocumento);
+			$consulta = "UPDATE usuarios SET nombre = '$nombre', descripcion = '$bio', foto_perfil = '$imgperfil', banner = '$bannerperfil' WHERE email = '$datos_old->email'";
 
 
-				if (file_exists($route . $datos_old -> banner)) {
-
-					unlink($route . $datos_old -> banner);
-				}
+			try {
+				$consulta = $this->conexion->consulta($consulta);
+				return true;
+			} catch (\PDOException $e) {
+				exit($e->getMessage());
 			}
-		}
+		} else {
 
-		$consulta = "UPDATE usuarios SET nombre = '$nombre', descripcion = '$bio', foto_perfil = '$imgperfil', banner = '$bannerperfil' WHERE email = '$datos_old->email'";
-
-
-		try {
-			$consulta = $this->conexion->consulta($consulta);
-			return $consulta->fetchAll(\PDO::FETCH_ASSOC);
-		} catch (\PDOException $e) {
-			exit($e->getMessage());
+			return $validacion;
 		}
 	}
 
 
-	public function borrar($id){
+
+	//Valida todos los datos que debe de tener un usuario en el formulario de registro, devuelve true si está bien o un string con el mensaje de error
+	public function validarDatosUpdate($datos_usuario, $message): array|bool
+	{
+
+		$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
+
+		if (empty($datos_usuario['nombre']) || preg_match($nombreval, $datos_usuario['nombre']) === 0) {
+			$message['nombre'] = "El nombre solo puede contener letras y espacios";
+		} else {
+			$message['nombre'] = "";
+		}
+
+		if (!empty($datos_usuario['descripcion']) && preg_match($nombreval, $datos_usuario['descripcion']) === 0) {
+			$message['descripcion'] = "La descripción solo puede contener letras y espacios";
+		} else {
+			$message['descripcion'] = "";
+		}
+
+		$imgProps = $datos_usuario['imgProps'];
+		if ($imgProps['profile_img'] != false) {
+			$img = $imgProps['profile_img'];
+			$message = Utils::validarImagenPerfil($img, $message);
+		}
+		if ($imgProps['profile_banner'] != false) {
+			$img = $imgProps['profile_banner'];
+			$message = Utils::validarImagenBanner($img, $message);
+		}
+
+		if ($this->comprobarErrores($message)) {
+			return true;
+		}
+		return $message;
+	}
+
+
+
+
+
+	public function borrar($id)
+	{
 		$consulta =  $this->conexion->prepara("DELETE FROM usuarios WHERE id = :id");
 		$consulta->bindParam('id', $id);
 
 		try {
-			$consulta = $this->conexion->consulta($consulta);
+			$consulta->execute();
 			return true;
 		} catch (\PDOException $e) {
 			exit($e->getMessage());
 		}
 	}
-	
 }

@@ -818,8 +818,9 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 }
 
 .banner-img {
-  width: 100%;
   height: 200px;
+	width: 100%;
+	object-fit: cover;
 }
 
 .profile-img {

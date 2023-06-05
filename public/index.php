@@ -9,6 +9,7 @@ use Lib\Router;
 use Controllers\UsuarioController;
 use Controllers\HomeController;
 use Controllers\ModeloController;
+use Controllers\PeticionController;
 
 
 
@@ -17,14 +18,13 @@ $dotenv->safeLoad();
 
 ?>
 <?php if (isset($_SESSION['identity']) && $_SESSION['identity']->rol === 'ROLE_ADMIN') : ?>
-    <script type='module' src='<?= $_ENV["BASE_URL"] ?>js/adminmain.js' defer></script>
+    <script type='module' src='<?= $_ENV["BASE_URL_PUBLIC"] ?>js/adminmain.js' defer></script>
 <?php else : ?>
-    <script type='module' src='<?= $_ENV["BASE_URL"] ?>js/main.js' defer></script>
+    <script type='module' src='<?= $_ENV["BASE_URL_PUBLIC"] ?>js/main.js' defer></script>
 
 <?php endif; ?>
 
 <?php
-
 
 
 Router::add('GET', '/', function () {
@@ -68,7 +68,7 @@ Router::add('GET', '/profile', function () {
 // });
 
 Router::add('GET', '/profile/settings', function () {
-    (new UsuarioController())->perfilajustes();
+    (new UsuarioController())->update();
 });
 
 Router::add('GET', '/profile/becreator', function () {
@@ -120,22 +120,22 @@ Router::add('GET', '/aboutus', function () {
 //CREADOR
 
 Router::add('GET', 'creator/request', function () {
-    (new UsuarioController())->solicitud();
+    (new PeticionController())->solicitud();
 });
 
 Router::add('POST', 'creator/request', function () {
-    (new UsuarioController())->solicitud();
+    (new PeticionController())->solicitud();
 });
 
 
 //ADMINISTRADOR
 
 Router::add('GET', 'admin/requests', function () {
-    (new UsuarioController())->solicitud();
+    (new PeticionController())->solicitud();
 });
 
 Router::add('POST', 'admin/requests', function () {
-    (new UsuarioController())->solicitud();
+    (new PeticionController())->solicitud();
 });
 
 Router::add('GET', 'admin/users', function () {
@@ -154,16 +154,16 @@ Router::add('POST', 'admin/createuser', function () {
     (new UsuarioController())->registro();
 });
 
-Router::add('GET', 'admin/deleteuser', function () {
-    (new UsuarioController())->borrarUsuario();
+Router::add('GET', 'admin/deleteuser/id=:id', function (int $id) {
+    (new UsuarioController())->borrarUsuario($id);
 });
 
-Router::add('GET', 'admin/edituser', function () {
-    (new UsuarioController())->registro();
+Router::add('GET', 'admin/updateuser/id=:id', function (int $id) {
+    (new UsuarioController())->update($id);
 });
 
-Router::add('POST', 'admin/edituser', function () {
-    (new UsuarioController())->registro();
+Router::add('POST', 'admin/updateuser/id=:id', function (int $id) {
+    (new UsuarioController())->update($id);
 });
 
 Router::dispatch();

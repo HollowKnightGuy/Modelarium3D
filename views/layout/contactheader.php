@@ -12,7 +12,7 @@
             <ul class="contact-links">
                 <li class="header-logo-contact">
                     <a href="<?=$_ENV['BASE_URL']?>">
-                        <img src="<?=$_ENV['BASE_URL']?>img/logo/logo.png" alt="logo" class="logo">
+                        <img src="<?=$_ENV['BASE_URL_PUBLIC']?>img/logo/logo.png" alt="logo" class="logo">
                         <h1 class="header-title">Modelarium</h1>
                     </a>
                 </li>
