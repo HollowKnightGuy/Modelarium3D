@@ -6,16 +6,19 @@ use Lib\Pages;
 use Lib\Utils;
 use Models\Usuario;
 
+
 class UsuarioController{
 
     private Utils $utils;
     private Pages $pages;
     private Usuario $usuario;
 
+
     public function __construct(){
         $this -> utils = new Utils();
         $this -> pages = new Pages();
-        $this -> usuario = new Usuario(0,'','','','','','','','','');     
+        $this -> usuario = new Usuario(0,'','','','','','','','','');
+
 
     }
 
@@ -136,7 +139,6 @@ class UsuarioController{
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $datos = $_POST['data'];
                        
-            
             $this -> pages -> render('usuario/profile');
 
         }
@@ -168,6 +170,10 @@ class UsuarioController{
         
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $datos = $_POST['data'];
+            $files = $_FILES;
+
+            // TODO: MANDAR LOS DATOS Y CREAR LA PETICION DE SER CREADOR
+
             $this -> pages -> render('usuario/creatorform');
 
         }

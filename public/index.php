@@ -122,6 +122,14 @@ Router::add('GET', '/aboutus', function () {
     (new HomeController())->aboutus();
 });
 
+Router::add('GET', 'profile/becreator', function () {
+    (new UsuarioController())->serCreador();
+});
+
+Router::add('POST', 'profile/becreator', function () {
+    (new UsuarioController())->serCreador();
+});
+
 //CREADOR
 
 Router::add('GET', 'creator/request', function () {
@@ -174,6 +182,7 @@ Router::add('POST', 'admin/updateuser/id=:id', function (int $id) {
 Router::dispatch();
 
 ?>
+
 
 
 <script>

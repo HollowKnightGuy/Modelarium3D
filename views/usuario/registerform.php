@@ -35,12 +35,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
         </span>
 
         <div class="input-container selectfilecontainer">
-            <button class="select-file-btn transition" onclick="getFile()">
-                <span>Select File</span>
-                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/upload-file2.svg" alt="file.svg">
-            </button>
-            <input type="text" id="inputImgName" placeholder="ProfilePhoto.png" readonly>
-            <input type="file" required name="file" id="file" required hidden> <span class="required">*</span>
+            <input style="color:white; background-color:var(--primary-color)" type="button" value="Select File" class="select-file-btn transition" onclick="getFile()">
+            </input>
+            <div>
+                <span class="required">*</span>
+                <input class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
+                <input type="file" name="file" id="file" hidden required>
+            </div>
         </div>
         <span class="red-error">
 

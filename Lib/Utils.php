@@ -44,6 +44,17 @@ class Utils{
         }
     }
 
+    public static function propsModelo($modelo):array|bool{
+        if($modelo['tmp_name'] === ""){
+            return false;
+        }else{
+            list($ancho, $alto) = getimagesize( $modelo['tmp_name']);
+            $peso = $modelo['size'] / 1024;
+            $propiedadesModelo = ['ancho' => $ancho, 'alto' => $alto, 'tipo' => explode(".", $modelo['name'])[1], 'peso' => $peso];
+            return $propiedadesModelo;
+        }
+    }
+
     
 	public static function validarImagenPerfil($img, $message):array{
         $img = Utils::propsImg($img);
@@ -64,11 +75,38 @@ class Utils{
         if($banner !== false){
             if ($banner['tipo'] != 'jpg' && $banner['tipo'] != 'jpeg' && $banner['tipo'] != 'png') {
                 $message['imagenbanner'] = "El tipo de la imagen debe ser jpg/jpeg/png";
-            }else if ($banner['peso'] > 150) {
-                $message['imagenbanner'] = "El banner como máximo debe pesar 150KB";
+            }else if ($banner['peso'] > 75) {
+                $message['imagenbanner'] = "El banner como máximo debe pesar 75KB";
             }
         }
 
+		return $message;
+	}
+
+
+    public static function validarImagenModelo($img, $message):array{
+        $img = Utils::propsImg($img);
+        if($img !== false){
+            if ($img['tipo'] != 'jpg' && $img['tipo'] != 'jpeg' && $img['tipo'] != 'png') {
+                $message['modelo_foto'] = "El tipo de la imagen debe ser jpg/jpeg/png";
+            } else if ($img['ancho'] > $img['alto']) {
+                $message['modelo_foto'] = "La imagen del modelo debe tener mas alto que ancho";
+            } else if ($img['peso'] > 150) {
+                $message['modelo_foto'] = "La imagen del como máximo debe pesar 125KB";
+            }
+        }
+		return $message;
+	}
+
+    public static function validarArchivoModelo($modelo, $message):array{
+        $modelo = Utils::propsModelo($modelo);
+        if($modelo !== false){
+            if ($modelo['tipo'] != 'glb') {
+                $message['modelo_glb'] = "El tipo de archivo debe ser .gbl";
+            } else if ($modelo['peso'] > 300) {
+                $message['modelo_glb'] = "El modelo debe pesar como máximo 300KB";
+            }
+        }
 		return $message;
 	}
 }

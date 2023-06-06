@@ -311,22 +311,20 @@ class Modelo
 	}
 
 
-	public function guardar($data){
+	public function guardar($datos){
 
-		$titulo = $data['title'];
-		$descripcion = $data['desc'];
-		$id_usuario = $data['id_usuario'];
-		$archivo_modelo = $data['archivo_modelo'];
-		$foto_modelo = $data['foto_modelo'];
-		$precio = $data['price'];
-		$fecha_subida = $data['fecha_subida'];
-
+		$titulo = $datos['title'];
+		$precio = $datos['price'];
+		$descripcion = $datos['desc'];
+		$id_usuario = $datos['id_usuario'];
+		$archivo_modelo = $datos['archivo_modelo']['name'];
+		$foto_modelo = $datos['foto_modelo']['name'];
 
 		$consulta = $this->conexion->prepara("INSERT INTO modelos(
-			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio, fecha_subida
+			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio
 			) 
 			VALUES(
-				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio,:fecha_subida
+				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio
 				)");
 		$consulta->bindParam(':titulo', $titulo, PDO::PARAM_STR);
 		$consulta->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
@@ -334,21 +332,32 @@ class Modelo
 		$consulta->bindParam(':archivo_modelo', $archivo_modelo, PDO::PARAM_STR);
 		$consulta->bindParam(':foto_modelo', $foto_modelo, PDO::PARAM_STR);
 		$consulta->bindParam(':precio', $precio, PDO::PARAM_STR);
-		$consulta->bindParam(':fecha_subida', $fecha_subida, PDO::PARAM_STR);
 
 		try {
 			$consulta->execute();
+
 			if ($consulta && $consulta->rowCount() == 1) {
 				$resultado = $consulta->fetch(PDO::FETCH_OBJ);
-				var_dump($resultado); die;
 			}
 		} catch (PDOException $err) {
-			
 			$resultado = false;
-			var_dump($resultado); die;
 
 		}
 		return $resultado;
 	
+	}
+
+	public function obtenerPendientes(){
+		
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE estado = 'pendiente'");
+		try {
+			$consulta->execute();
+			$resultado = $consulta->fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			$resultado = false;
+		}
+		
+		return $resultado;
 	}
 }

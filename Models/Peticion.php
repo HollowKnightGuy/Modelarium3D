@@ -8,7 +8,7 @@ use PDO;
 use PDOException;
 use Lib\Security;
 use Lib\Utils;
-Use Models\Modelo;
+use Controllers\ModeloController;
 
 
 class Peticion
@@ -20,20 +20,18 @@ class Peticion
 	private string $id_usuario;
 	private string $estado;
 	private string $fecha_peticion;
-
-    private Modelo $modelo;
+    private ModeloController $mcontroller;
 
 
     public function __construct($id, $id_modelo, $id_usuario, $estado, $fecha_peticion)
 	{
-		$this->conexion = new BaseDatos();
-		$this->id = $id;
-		$this->id_modelo = $id_modelo;
-		$this->id_usuario = $id_usuario;
-		$this->estado = $estado;
-		$this->fecha_peticion = $fecha_peticion;
-
-        $this -> modelo = new Modelo(0,'','','','','','','','','','','');
+		$this -> conexion = new BaseDatos();
+		$this -> id = $id;
+		$this -> id_modelo = $id_modelo;
+		$this -> id_usuario = $id_usuario;
+		$this -> estado = $estado;
+		$this -> fecha_peticion = $fecha_peticion;
+        $this -> mcontroller = new ModeloController();
 
     }
 
@@ -138,58 +136,64 @@ class Peticion
 	}
 
 
-	public function guardarPeticion($datos, $file, $usuario){
-
+	public function guardarPeticionModelo($message, $datos, $file, $usuario){
+		$ruta1 = "../public/3dmodels/";
 		$datos['id_usuario'] = $usuario->id;
-		$datos['fecha_subida'] = Date("Y-m-d H:i:s");
-		$datos['archivo_modelo'] = $file['data']['name']['file'];
-		$datos['foto_modelo'] = $file['data']['name']['file_photo'];
+		$file['model_file']['name']  = uniqid('3dmodel').$file['model_file']['name'];
+		$file['model_photo']['name']  = uniqid('imgmodel').$file['model_photo']['name'];
+		$datos['archivo_modelo'] = $file['model_file'];
+		$datos['foto_modelo'] = $file['model_photo'];
+		$validacion = $this -> validarPModelo($datos, $message);
+		if($validacion === true){
+			if (file_exists($ruta1) || @mkdir($ruta1)) {
+				$origenDocumento = $file['model_file']['tmp_name'];
+				$urlDocumento = $ruta1 . $datos['archivo_modelo']['name'];
+				@move_uploaded_file($origenDocumento, $urlDocumento);
+			}
+	
+			$ruta2 = "../public/img/modelRequest/photos/";
+			if (file_exists($ruta2) || @mkdir($ruta2)) {
+				$origenDocumento = $file['model_photo']['tmp_name'];
+				$urlDocumento = $ruta2 . $datos['foto_modelo']['name'];
+				@move_uploaded_file($origenDocumento, $urlDocumento);
+			}
+			$this -> mcontroller -> crear($datos);
+			$datos = $this -> mcontroller -> obtenerModelo($datos['id_usuario'], $datos['title']);
+			
+			$datos -> fecha_peticion = Date("Y-m-d H:i:s");
+			$this -> guardarPModelo($datos);
 
-		if (file_exists("../public/img/modelRequest/models/") || @mkdir("../public/img/modelRequest/models/")) {
-			$origenDocumento = $file['data']['tmp_name']['file'];
-			$urlDocumento = "../public/img/modelRequest/models/" . $datos['archivo_modelo'];
-			@move_uploaded_file($origenDocumento, $urlDocumento);
-		}
-
-		if (file_exists("../public/img/modelRequest/photos/") || @mkdir("../public/img/modelRequest/photos/")) {
-			$origenDocumento = $file['data']['tmp_name']['file_photo'];
-			$urlDocumento = "../public/img/modelRequest/photos/" . $datos['foto_modelo'];
-			@move_uploaded_file($origenDocumento, $urlDocumento);
+		}else{
+			return $validacion;
 		}
 		
-		// Funciona la subida a la Base de datos
-		$resultado = $this -> modelo -> guardar($datos);
-		var_dump($resultado);die;
-		$this -> guardar($datos);
-
-
-		//TODO: Recoger también el archivo y guardarlo en una carpeta de peticiones
-
 	}
 
-	public function guardar($datos){
+	public function guardarPModelo($datos){
 
-		$id_modelo = $datos['id_modelo'];
-		$id_usuario = $datos['id_usuario'];
-		$estado = $datos['estado'];
-		$fecha_peticion = $datos['fecha_peticion'];
+		$id_modelo = $datos -> id;
+		$id_usuario = $datos -> id_usuario;
+		$estado = $datos -> estado;
+		$fecha_peticion = $datos -> fecha_peticion;
+		$tipo = 'MO';
 
 
-		$consulta = $this->conexion->prepara("INSERT INTO peticiones(
-			id_modelo, estado, id_usuario, precio, fecha_peticion
+		$consulta = $this -> conexion -> prepara("INSERT INTO peticiones(
+			id_modelo, estado, id_usuario, tipo, fecha_peticion
 			) 
 			VALUES(
-				:id_modelo,:estado,:id_usuario,:precio,:fecha_peticion
+				:id_modelo,:estado,:id_usuario,:tipo,:fecha_peticion
 				)");
-		$consulta->bindParam(':id_modelo', $id_modelo, PDO::PARAM_STR);
-		$consulta->bindParam(':estado', $estado, PDO::PARAM_STR);
-		$consulta->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
-		$consulta->bindParam(':fecha_peticion', $fecha_peticion, PDO::PARAM_STR);
+		$consulta -> bindParam(':id_modelo', $id_modelo, PDO::PARAM_STR);
+		$consulta -> bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
+		$consulta -> bindParam(':estado', $estado, PDO::PARAM_STR);
+		$consulta -> bindParam(':tipo', $tipo, PDO::PARAM_STR);
+		$consulta -> bindParam(':fecha_peticion', $fecha_peticion, PDO::PARAM_STR);
 
 		try {
-			$consulta->execute();
-			if ($consulta && $consulta->rowCount() == 1) {
-				$resultado = $consulta->fetch(PDO::FETCH_OBJ);
+			$consulta -> execute();
+			if ($consulta && $consulta -> rowCount() == 1) {
+				$resultado = $consulta -> fetch(PDO::FETCH_OBJ);
 			}
 		} catch (PDOException $err) {
 			$resultado = false;
@@ -197,8 +201,54 @@ class Peticion
 		return $resultado;
 	
 	}
-	
 
-}
+
+	public function validarPModelo($datosavalidar, $message){	
+			$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
+			$precioval = "/^(0|[1-9]\d*)(\.\d{2})?$/";
+			
+			if (empty($datosavalidar['title']) || preg_match($nombreval, $datosavalidar['title']) === 0) {
+				$message['nombre'] = "El nombre solo puede contener letras y espacios";
+			} else {
+				$message['nombre'] = "";
+			}
+			
+			if (empty($datosavalidar['price']) || !preg_match($precioval, $datosavalidar['price'])) {
+				$message['precio'] = "El precio debe contener solo numeros (Ex: XX.XX)";
+			} else {
+				$message['precio'] = "";
+			}
+	
+			if (empty($datosavalidar['desc']) && preg_match($nombreval, $datosavalidar['desc']) === 0) {
+				$message['descripcion'] = "La descripción solo puede contener letras y espacios";
+			} else {
+				$message['descripcion'] = "";
+			}
+	
+			$archivo_modelo = $datosavalidar['archivo_modelo'];
+			$message = Utils::validarArchivoModelo($archivo_modelo, $message);
+
+	
+			$foto_modelo = $datosavalidar['foto_modelo'];
+			$message = Utils::validarImagenModelo($foto_modelo, $message);
+	
+	
+			if ($this->comprobarErrores($message)) {
+				return true;
+			}
+			return $message;
+		}
+
+
+		public function comprobarErrores($lista)
+		{
+			foreach ($lista as $error) {
+				if (!empty($error)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 
 ?>

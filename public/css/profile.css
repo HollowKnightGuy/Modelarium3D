@@ -816,7 +816,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 }
 
 .banner-img {
-  height: 200px;
+  height: 225px;
 	width: 100%;
 	object-fit: cover;
 }

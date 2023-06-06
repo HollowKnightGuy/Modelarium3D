@@ -884,7 +884,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  
   font-size: var(--fs-300);
   background-color: var(--input-bg-color);
   color: var(--dark-grey-color);
@@ -902,6 +901,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   background-color: var(--primary-color);
   cursor: pointer;
 }
+
 
 .select-file-btn > img[alt="file.svg"]{
   position: relative;
