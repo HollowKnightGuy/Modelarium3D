@@ -7,6 +7,7 @@ endforeach;
 require_once '../views/layout/header.php';
 
 use Controllers\UsuarioController;
+$_SESSION['scripts'] = ['psmain']; 
 
 $usuarioC = new UsuarioController;
 $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
@@ -166,3 +167,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
         </article>
     </section>
 </main>
+
+<?php 
+require_once '../views/layout/footer.php';
+?>

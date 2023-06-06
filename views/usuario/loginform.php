@@ -29,3 +29,7 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
         </form>
     </div>
 </main>
+
+<?php
+require_once '../views/layout/footer.php';
+?>

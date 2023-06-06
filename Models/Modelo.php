@@ -15,6 +15,8 @@ class Modelo
 	private string $id;
 	private string $titulo;
 	private string $id_usuario;
+	private string $archivo_modelo;
+	private string $foto_modelo;
 	private string $descripcion;
 	private string $fecha_subida;
 	private string $privado;
@@ -26,7 +28,7 @@ class Modelo
 
 
 
-    public function __construct($id, $titulo, $id_usuario, $descripcion, $fecha_subida, $privado, $num_likes, $num_favs, $num_comment, $num_complejidad)
+    public function __construct($id, $titulo, $id_usuario, $archivo_modelo, $foto_modelo, $descripcion, $fecha_subida, $privado, $num_likes, $num_favs, $num_comment, $num_complejidad)
 	{
 		$this -> conexion = new BaseDatos();
 		$this -> id = $id;
@@ -34,6 +36,8 @@ class Modelo
 		$this -> id_usuario = $id_usuario;
 		$this -> descripcion = $descripcion;
 		$this -> id_usuario = $id_usuario;
+		$this -> archivo_modelo = $archivo_modelo;
+		$this -> foto_modelo = $foto_modelo;
 		$this -> fecha_subida = $fecha_subida;
 		$this -> privado = $privado;
         $this -> $num_likes = $num_likes;
@@ -100,6 +104,46 @@ class Modelo
 	public function setId_usuario($id_usuario)
 	{
 		$this->id_usuario = $id_usuario;
+
+		return $this;
+	}
+
+	/**
+	 * Get the value of archivo_modelo
+	 */ 
+	public function getArchivo_modelo()
+	{
+		return $this->archivo_modelo;
+	}
+
+	/**
+	 * Set the value of archivo_modelo
+	 *
+	 * @return  self
+	 */ 
+	public function setArchivo_modelo($archivo_modelo)
+	{
+		$this->archivo_modelo = $archivo_modelo;
+
+		return $this;
+	}
+
+		/**
+	 * Get the value of foto_modelo
+	 */ 
+	public function getFoto_modelo()
+	{
+		return $this->foto_modelo;
+	}
+
+	/**
+	 * Set the value of foto_modelo
+	 *
+	 * @return  self
+	 */ 
+	public function setFoto_modelo($foto_modelo)
+	{
+		$this->foto_modelo = $foto_modelo;
 
 		return $this;
 	}
@@ -244,31 +288,67 @@ class Modelo
         return $this;
     }
 
+	public function obtenerModelo($id_usuario, $titulo){
+		
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
+		WHERE id_usuario = :id_usuario AND titulo = :titulo");
 
-	public function save($data){
+		$consulta->bindParam(':id_usuario', $id_usuario);
+		$consulta->bindParam(':titulo', $titulo);
+	
 
-		$id = $data['id'];
-		$titulo = $data['titulo'];
-		$descripcion = $data['descripcion'];
+		try {
+			$consulta->execute();
+			
+			$resultado = $consulta->fetch(PDO::FETCH_OBJ);
+			
+		} catch (PDOException $err) {
+			$resultado = false;
+		}
+		
+		return $resultado;
+	
+	}
+
+
+	public function guardar($data){
+
+		$titulo = $data['title'];
+		$descripcion = $data['desc'];
 		$id_usuario = $data['id_usuario'];
-		$precio = $data['precio'];
+		$archivo_modelo = $data['archivo_modelo'];
+		$foto_modelo = $data['foto_modelo'];
+		$precio = $data['price'];
 		$fecha_subida = $data['fecha_subida'];
-		$fecha_creacion = $data['fecha_creacion'];
 
 
 		$consulta = $this->conexion->prepara("INSERT INTO modelos(
-			id, titulo, descripcion, id_usuario, precio, fecha_subida, fecha_creacion,
+			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio, fecha_subida
 			) 
 			VALUES(
-				:id,:titulo,:descripcion,:id_usuario,:precio,:fecha_subida,:fecha_creacion, 
+				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio,:fecha_subida
 				)");
-		$consulta->bindParam('id', $id);
 		$consulta->bindParam(':titulo', $titulo, PDO::PARAM_STR);
 		$consulta->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
 		$consulta->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
+		$consulta->bindParam(':archivo_modelo', $archivo_modelo, PDO::PARAM_STR);
+		$consulta->bindParam(':foto_modelo', $foto_modelo, PDO::PARAM_STR);
 		$consulta->bindParam(':precio', $precio, PDO::PARAM_STR);
 		$consulta->bindParam(':fecha_subida', $fecha_subida, PDO::PARAM_STR);
-		$consulta->bindParam(':fecha_creacion', $fecha_creacion, PDO::PARAM_STR);
 
+		try {
+			$consulta->execute();
+			if ($consulta && $consulta->rowCount() == 1) {
+				$resultado = $consulta->fetch(PDO::FETCH_OBJ);
+				var_dump($resultado); die;
+			}
+		} catch (PDOException $err) {
+			
+			$resultado = false;
+			var_dump($resultado); die;
+
+		}
+		return $resultado;
+	
 	}
 }

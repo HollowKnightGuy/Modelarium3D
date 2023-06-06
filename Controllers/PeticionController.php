@@ -21,8 +21,7 @@ class PeticionController{
         $this -> pages = new Pages();
         $this -> peticion = new Peticion(0,0,0,0,0);
         $this -> usuario = new Usuario(0,'','','','','','','','','');
-        $this -> modelo = new Modelo(0,'','','','','','','','','');
-
+        $this -> modelo = new Modelo(0,'','','','','','','','','','','');
 
     }
 

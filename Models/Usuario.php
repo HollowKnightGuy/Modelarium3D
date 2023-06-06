@@ -329,7 +329,7 @@ class Usuario
 
 
 	//Crea un usuario en la base de datos con los datos que le pasamos
-	public function save($message, $propiedadesImg): array|bool
+	public function save($message): array|bool
 	{
 		$email = $this->email;
 		if ($this->buscaMail($email) != false) {
@@ -340,6 +340,7 @@ class Usuario
 			$nombre = $this->nombre;
 			$password = $this->password;
 			$rol = 'ROLE_USER';
+			$this -> foto_perfil['name'] = uniqid('img').$this -> foto_perfil['name'];
 			$foto_perfil = $this->foto_perfil['name'];
 			$descripcion = $this->descripcion;
 			$fecha_creacion = date('Y-m-d H:i:s');
@@ -348,7 +349,7 @@ class Usuario
 				'email' => $email,
 				'password' => $password,
 				'descripcion' => $descripcion,
-				'imgProps' => $propiedadesImg
+				'imgProps' => $this -> foto_perfil
 			];
 			$validacion = $this->validarDatosRegister($datos_validar, $message);
 			if ($validacion === true) {
@@ -447,11 +448,17 @@ class Usuario
 
 	public function update($datos, $img, $message)
 	{
-		$datos_old = $this->buscaMail($_SESSION['identity']->email);
+		if(Utils::isAdmin()){
+			$datos_old = $this -> buscaId($_SESSION['idUserToEdit']);
+			$imgperfil = $datos_old->foto_perfil;
+			$bannerperfil = $datos_old->banner;
+		}else{
+			$datos_old = $this->buscaMail($_SESSION['identity']->email);
+			$imgperfil = $datos_old->foto_perfil;
+			$bannerperfil = $datos_old->banner;
+		}
 		$nombre = $datos['name'];
 		$bio = $datos['bio'];
-		$imgperfil = $datos_old->foto_perfil;
-		$bannerperfil = $datos_old->banner;
 		$datos_validar = [
 			'nombre' => $nombre,
 			'descripcion' => $bio,
@@ -460,28 +467,28 @@ class Usuario
 
 		$validacion = $this->validarDatosUpdate($datos_validar, $message);
 		if ($validacion === true) {
-			var_dump($img);
 			if ($img['profile_img']['name'] != '') {
+				$img['profile_img']['name'] = uniqid('img').$img['profile_img']['name'];
 				$imgperfil = $img['profile_img']['name'];
 				$route = "../public/img/user/profilephoto/";
-				
+
 				if (file_exists($route) || @mkdir($route)) {
 					$origenDocumento = $img['profile_img']['tmp_name'];
 					$urlDocumento = $route . $imgperfil;
 					@move_uploaded_file($origenDocumento, $urlDocumento);
-					
+
 					if (file_exists($route . $datos_old->foto_perfil)) {
-						
+
 						unlink($route . $datos_old->foto_perfil);
 					}
 				}
 			} elseif ($img['profile_banner']['name'] != '') {
-				
+
 				if ($bannerperfil == NULL) {
-					
+					$img['profile_banner']['name'] = uniqid('img').$img['profile_banner']['name'];
 					$bannerperfil = $img['profile_banner']['name'];
 					$route = "../public/img/user/profilebanner/";
-					
+
 					if (file_exists($route) || @mkdir($route)) {
 						$origenDocumento = $img['profile_banner']['tmp_name'];
 						$urlDocumento = $route . $bannerperfil;
@@ -489,9 +496,10 @@ class Usuario
 					}
 				} else {
 					
+					$img['profile_banner']['name'] = uniqid('img').$img['profile_banner']['name'];
 					$bannerperfil = $img['profile_banner']['name'];
 					$route = "../public/img/user/profilebanner/";
-					
+
 					if (file_exists($route) || @mkdir($route)) {
 						$origenDocumento = $img['profile_banner']['tmp_name'];
 						$urlDocumento = $route . $bannerperfil;
@@ -560,14 +568,25 @@ class Usuario
 
 	public function borrar($id)
 	{
-		$consulta =  $this->conexion->prepara("DELETE FROM usuarios WHERE id = :id");
-		$consulta->bindParam('id', $id);
-
-		try {
-			$consulta->execute();
-			return true;
-		} catch (\PDOException $e) {
-			exit($e->getMessage());
+		$usuario = $this -> buscaId($id);
+		if( $usuario === false){
+			return false;
+		}else{
+			if($usuario -> banner != null || $usuario -> banner != ""){
+				unlink("../public/img/user/profilebanner/".$usuario -> banner);
+			}
+			if($usuario -> foto_perfil != null || $usuario -> foto_perfil != ""){
+				unlink("../public/img/user/profilephoto/".$usuario -> foto_perfil);
+			}
+			$consulta =  $this->conexion->prepara("DELETE FROM usuarios WHERE id = :id");
+			$consulta->bindParam('id', $id);
+	
+			try {
+				$consulta->execute();
+				return true;
+			} catch (\PDOException $e) {
+				exit($e->getMessage());
+			}
 		}
 	}
 }

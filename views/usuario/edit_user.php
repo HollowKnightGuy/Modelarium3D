@@ -9,14 +9,10 @@ require_once '../views/layout/header.php';
 use Controllers\UsuarioController;
 
 $usuarioC = new UsuarioController;
-$userdata = $usuarioC->obtenerUsuarioPorId($id);
+isset($id) ? $_SESSION['idUserToEdit'] = $id : "";
+$userdata = $usuarioC->obtenerUsuarioPorId($_SESSION['idUserToEdit']);
 $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
 ?>
-
-
-<?php foreach ($_SESSION['scripts'] as $script) : ?>
-    <script type="module" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>js/<?= $script ?>.js" defer></script>
-<?php endforeach; ?>
 
 
 
@@ -25,7 +21,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
     <section class="profile-settings-content">
         <article class="profsetsection" id="psprofile">
             <h1>Edit User</h1>
-            <form class="container psprofile-form" method="POST" action="<?= $_ENV['BASE_URL'] ?>admin/users" enctype="multipart/form-data">
+            <form class="container psprofile-form" method="POST" action="<?= $_ENV['BASE_URL'] ?>userprofile/update" enctype="multipart/form-data">
                 <div class="inputcontainer psform-input-cont">
                     <label for="name">Name</label>
                     <input id="name" name="data[name]" type="text" value="<?= $userdata->nombre; ?>" required>

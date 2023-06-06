@@ -71,6 +71,18 @@ Router::add('GET', '/profile/settings', function () {
     (new UsuarioController())->update();
 });
 
+Router::add('POST', '/profile/settings', function () {
+    (new UsuarioController())->update();
+});
+
+Router::add('GET', '/userprofile/update', function () {
+    (new UsuarioController())->update();
+});
+
+Router::add('POST', '/userprofile/update', function () {
+    (new UsuarioController())->update();
+});
+
 Router::add('GET', '/profile/becreator', function () {
     (new UsuarioController())->sercreador();
 });
@@ -100,13 +112,6 @@ Router::add('GET', '/models/view', function () {
     (new ModeloController())->mostrarModelo();
 });
 
-Router::add('GET', '/userprofile/update', function () {
-    (new UsuarioController())->update();
-});
-
-Router::add('POST', '/userprofile/update', function () {
-    (new UsuarioController())->update();
-});
 
 
 Router::add('GET', '/contact', function () {

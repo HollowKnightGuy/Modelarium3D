@@ -11,8 +11,8 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
 <div class="container registerContainer">
 
-        <h1 class="title"><?= Utils::isAdmin() ? "Create User" : "Register" ?></h1>
-        <form action="<?= $_ENV['BASE_URL'] ?><?= Utils::isAdmin() ? "admin/createuser" : "register" ?>" method="POST" class="form" enctype="multipart/form-data">
+    <h1 class="title"><?= Utils::isAdmin() ? "Create User" : "Register" ?></h1>
+    <form action="<?= $_ENV['BASE_URL'] ?><?= Utils::isAdmin() ? "admin/createuser" : "register" ?>" method="POST" class="form" enctype="multipart/form-data">
         <div class="input-container">
             <input type="text" name="data[username]" id="username" required placeholder="Username" value="<?= $datos_guardados['username'] ?? "" ?>"> <span class="required">*</span>
         </div>
@@ -34,13 +34,17 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
             <?= $message['password'] === "" ? "" : $error_img . $message['password']; ?>
         </span>
 
-        <div class="input-container">
-            <button class="select-file-btn transition" onclick="getFile()"><span>Select File</span><img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/upload-file2.svg" alt="upload-file"></button>
+        <div class="input-container selectfilecontainer">
+            <button class="select-file-btn transition" onclick="getFile()">
+                <span>Select File</span>
+                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/upload-file2.svg" alt="file.svg">
+            </button>
             <input type="text" id="inputImgName" placeholder="ProfilePhoto.png" readonly>
             <input type="file" required name="file" id="file" required hidden> <span class="required">*</span>
         </div>
         <span class="red-error">
-            <?= $message['imagen'] === "" ? "" : $error_img . $message['imagen']; ?>
+
+            <?= $message['imagen'] === "" ? "Format allowed: .png .jpg .jpeg" : $error_img . $message['imagen']; ?>
         </span>
 
         <div class="input-container">
@@ -77,3 +81,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
         inputImgName.value = arrayImg[lengthArr - 1]
     }
 </script>
+
+<?php
+require_once '../views/layout/footer.php';
+?>

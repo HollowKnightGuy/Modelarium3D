@@ -24,6 +24,7 @@ tr, th, td{
     text-align: center;
     border: 1px solid grey;
     padding: .3rem;
+    font-size: var(--fs-200);
 }
 
 tr:hover{
@@ -54,6 +55,7 @@ tr:first-child:hover{
     background-color: var(--bg-color);
 }
 .user-opt a{
+    font-size: var(--fs-300);
     text-align: center;
 }
 
@@ -80,9 +82,9 @@ tr:first-child:hover{
                 <td><?= $usuario['email'] === "" ? "-" : $usuario['email'] ?></td>
                 <td><?= $usuario['descripcion'] === "" ? "-" : $usuario['descripcion'] ?></td>
                 <td><?= $usuario['foto_perfil'] === "" ? "-" : $usuario['foto_perfil'] ?></td>
-                <td><?= $usuario['banner'] === "" ? "-" : $usuario['banner'] ?></td>
-                <td><?= $usuario['num_modelos'] === "" ? "-" : $usuario['num_modelos'] ?></td>
-                <td><?= $usuario['descuento'] === "" ? "-" : $usuario['descuento'] ?></td>
+                <td><?= $usuario['banner'] === null ? "default.jpg" : $usuario['banner'] ?></td>
+                <td><?= $usuario['num_modelos'] === "" || $usuario['num_modelos'] === null ? "-" : $usuario['num_modelos'] ?></td>
+                <td><?= $usuario['descuento'] === "" || $usuario['descuento'] === null ? "-" : $usuario['descuento'] ?></td>
                 <td><?= $usuario['fecha_creacion'] === "" ? "-" : $usuario['fecha_creacion'] ?></td>
             </tr>
         <?php endforeach; ?>
@@ -107,6 +109,7 @@ tr:first-child:hover{
             lastclicked.classList.toggle("tdselected");
         }else{
             borrarbtn.href += iduser;
+            editarbtn.href += iduser;
         }
         lastclicked = e.target.parentElement;
         lastclicked.classList.toggle("tdselected");

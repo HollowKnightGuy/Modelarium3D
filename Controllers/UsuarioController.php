@@ -29,12 +29,9 @@ class UsuarioController{
             if($_POST['data']){
                 $registrado = $_POST['data'];
                 $registrado['file'] = $_FILES['file'];
-                list($ancho, $alto) = getimagesize( $registrado['file']['tmp_name']);
-                $peso = $_FILES['file']['size'] / 1024;
-                $propiedadesImg = ['ancho' => $ancho, 'alto' => $alto, 'tipo' => explode("/", $registrado['file']['type'])[1], 'peso' => $peso];
                 $usuario = Usuario::fromArray($registrado);
             }
-            $save = $usuario -> save($message, $propiedadesImg);
+            $save = $usuario -> save($message);
             if($save === true){
                 if(Utils::isAdmin()){
                     $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
@@ -99,29 +96,39 @@ class UsuarioController{
     }
 
 
-    public function update($id = null){
+    public function update($id = null, $adminview = false){
         $message = ["nombre" => "", "descripcion" => "", "imagen" => "", "imagenbanner" => ""];
         if($id != null){
             $this -> pages -> render('usuario/edit_user', ['message' => $message, 'datos_guardados' => "", 'id' => $id]);
-        }else if($_SESSION){
+        }else{
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $datos = $_POST['data'];
                 $img = $_FILES;
                 $imgProps = ['profile_photo' => Utils::propsImg($_FILES['profile_img']), 'profile_banner' => Utils::propsImg($_FILES['profile_banner'])];
                 $update = $this -> usuario -> update($datos, $img, $message, $imgProps);
-                if($update === true){
-                    $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => $datos]);
-                }else if(gettype($update) === "array"){
-                    $this -> pages -> render('usuario/profilesettings', ['message' => $update, 'datos_guardados' => $datos]);
+                    if($update === true){
+                        if(Utils::isAdmin() &&  $adminview){
+                            $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
+                        }else{
+                            $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => $datos]);
+                        }
+                    }else if(gettype($update) === "array"){
+                        if(Utils::isAdmin()){
+                            $this -> pages -> render('usuario/edit_user', ['message' => $update, 'datos' => "", 'id' => $id]);
+                        }else{
+                            $this -> pages -> render('usuario/profilesettings', ['message' => $update, 'datos_guardados' => $datos]);
+                        }
+                    }
                 }
-            }
-            else{
-                $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => ""]);
+                else{
+                    $this -> pages -> render('usuario/profilesettings', ['message' => $message, 'datos_guardados' => ""]);
+                }
             }
             
         }
-    }
-
+    
+        
+        
     
     public function perfil(){
         
@@ -175,11 +182,6 @@ class UsuarioController{
 
         if(Utils::isAdmin()){
             $usuarios = $this -> usuario -> getall();
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $datos = $_POST['data'];
-                $this -> pages -> render('admin/users');
-
-            }
             $this -> pages -> render('admin/users', ['usuarios' => $usuarios]);  
         }else{
             $this -> pages -> render('/');
@@ -192,9 +194,8 @@ class UsuarioController{
             if($borrar){
                 $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
                 return true;
-            }else{
-                return $borrar;
             }
+            $this -> pages -> render('admin/users', ['usuarios' => $this -> usuario -> getall()]);
         }else{
             $this -> pages -> render('/');
         }

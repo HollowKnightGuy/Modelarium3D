@@ -332,3 +332,8 @@ BASE_URL_PUBLIC
 
     <?php endif; ?>
 </script>
+
+
+<?php 
+require_once '../views/layout/footer.php';
+?>

@@ -290,18 +290,17 @@ nav {
   height: var(--height-header);
 }
 .responsivesearcher input {
-  height: 10px;
   border-radius: 35px;
   border: none;
-  font-size: var(--fs-300);
+  font-size: var(--fs-400);
   outline: none;
-  padding: 1rem;
+  padding: 2rem;
   width: 100%;
   position: relative;
   margin: auto;
   top: 15px;
   width: 80%;
-  height: 40%;
+  height: 60%;
 }
 
 .user-options {
@@ -435,7 +434,6 @@ nav {
 .isactive {
   left: 0;
 }
-
 @media (min-width: 300px) and (max-width: 500px) {
   .logo {
     margin-right: 0.5rem;
@@ -476,7 +474,7 @@ nav {
     width: 200px;
   }
   .searchbar input {
-    height: 17px;
+    height: 38px;
     padding: 0.5rem;
   }
 }
@@ -485,8 +483,8 @@ nav {
     width: 300px;
   }
   .searchbar input {
-    height: 17px;
-    padding: 0.5rem;
+    height: 38px;
+    padding: 1rem;
   }
   .header-logo {
     margin-left: 3rem;
@@ -497,8 +495,8 @@ nav {
     width: 480px;
   }
   .searchbar input {
-    height: 17px;
-    padding: 0.5rem;
+    height: 35px;
+    padding: 1rem;
   }
 }
 @media (max-width: 1100px) {
@@ -518,8 +516,8 @@ nav {
     width: 450px;
   }
   .searchbar input {
-    height: 20px;
-    padding: 0.7rem;
+    height: 40px;
+    padding: 1.2rem;
   }
 }
 @media (min-width: 1500px) and (max-width: 2000px) {
@@ -527,8 +525,8 @@ nav {
     width: 375px;
   }
   .searchbar input {
-    height: 15px;
-    padding: 1rem;
+    height: 45px;
+    padding: 1.3rem;
   }
 }
 @media (min-width: 2000px) and (max-width: 4000px) {
@@ -536,8 +534,8 @@ nav {
     width: 600px;
   }
   .searchbar input {
-    height: 25px;
-    padding: 1.2rem;
+    height: 50px;
+    padding: 1.5rem;
   }
 }
 @font-face {
@@ -563,7 +561,7 @@ body {
   overflow-x: hidden;
   font-family: var(--ff-vietnam);
   background-color: var(--bg-color);
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   margin-bottom: 350px;
 }
@@ -850,6 +848,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   display: flex;
 }
 
+
 .selectfilecontainer div {
   width: 109%;
   position: relative;
@@ -866,6 +865,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   font-size: var(--fs-300);
   background-color: var(--input-bg-color);
   color: var(--dark-grey-color);
+  box-sizing: border-box;
   font-weight: 400;
   border-radius: 8px;
   border: none;
@@ -875,27 +875,41 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   width: 100%;
 }
 
+.container input:focus,
+.container textarea:focus{
+  border: 2px solid grey inset;
+}
+
 .select-file-btn {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  
   font-size: var(--fs-300);
   background-color: var(--input-bg-color);
   color: var(--dark-grey-color);
   font-weight: 400;
   border-radius: 8px;
   border: none;
-  padding: 1.2em;
+  padding: 1.2em 1.2em 0 1.2em;
   margin-top: 1.2rem;
   margin-bottom: .5rem;
   margin-right: 1rem;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 8px;
   color: white;
   font-weight: var(--fw-MEDIUM);
   background-color: var(--primary-color);
   cursor: pointer;
 }
+
+.select-file-btn > img[alt="file.svg"]{
+  position: relative;
+  top: -5px;
+}
+
+
+
 .select-file-btn:hover {
   letter-spacing: 3px;
 }
@@ -919,6 +933,9 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   letter-spacing: 5px;
   background-color: white !important;
   color: var(--primary-color) !important;
+}
+.registersfbtn{
+  margin-right: 1rem;
 }
 
 .link {
@@ -968,6 +985,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
 }
 @media (max-width: 500px) {
+
   .form {
     width: 80%;
   }
@@ -994,8 +1012,13 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
     margin-right: 0;
     padding: 0.5rem;
   }
-  .select-file-btn img {
+  .select-file-btn > img {
+    width: 13px;
+    top: -1px;
+  }
+  .select-file-btn > img[alt='file.svg'] {
     width: 15px;
+    top: -1px;
   }
 }
 @media (min-width: 500px) and (max-width: 650px) {
@@ -1010,16 +1033,38 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .form {
     width: 70%;
   }
-  .selectfileinput,
-  .select-file-btn {
-    padding: 0;
-  }
+  
   .requiredtitle {
     display: none;
   }
 }
 @media (min-width: 800px) and (max-width: 1100px) {
+
   .requiredtitle {
     display: none;
   }
-}/*# sourceMappingURL=form.css.map */
+  
+}
+@media (min-width: 1500px) and (max-width: 2000px) {
+
+  .select-file-btn > img {
+    width: 25px;
+    top: -1px;
+  }
+  .select-file-btn > img[alt='file.svg'] {
+    width: 30px;
+    top: -4px;
+  }
+}
+@media (min-width: 2000px){
+
+  .select-file-btn > img {
+    width: 30px;
+    top: -1px;
+  }
+  .select-file-btn > img[alt='file.svg'] {
+    width: 35px;
+    top: -6px;
+  }
+}
+/*# sourceMappingURL=form.css.map */
