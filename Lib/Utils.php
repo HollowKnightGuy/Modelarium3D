@@ -12,6 +12,16 @@ class Utils{
 
         return $name;
     }
+    
+        public static function isLogged():bool{
+            // COMPRUEBA SI HAY ALGUIEN LOGUEADO
+            if(isset($_SESSION['identity'])){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
 
     public static function isAdmin():bool{
         // COMPRUEBA SI LA SESSION ESTA INICIADA POR UN ADMIN
@@ -23,9 +33,9 @@ class Utils{
         }
     }
 
-    public static function isLogged():bool{
+    public static function isCreator():bool{
         // COMPRUEBA SI HAY ALGUIEN LOGUEADO
-        if(isset($_SESSION['identity'])){
+        if(isset($_SESSION['identity']) && $_SESSION['identity'] -> rol === 'ROLE_CREATOR'){
             return true;
         }
         else{
@@ -109,6 +119,15 @@ class Utils{
         }
 		return $message;
 	}
+
+    public static function irLogin(){
+        header("Location:".$_ENV['BASE_URL']."login/");
+    }
+
+    
+    public static function irModels(){
+        header("Location:".$_ENV['BASE_URL']."models/");
+    }
 }
 
 ?>

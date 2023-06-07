@@ -10,6 +10,8 @@ use Controllers\UsuarioController;
 use Controllers\HomeController;
 use Controllers\ModeloController;
 use Controllers\PeticionController;
+use Controllers\LikeController;
+use Controllers\FavoritosController;
 
 
 
@@ -83,9 +85,6 @@ Router::add('POST', '/userprofile/update', function () {
     (new UsuarioController())->update();
 });
 
-Router::add('GET', '/profile/becreator', function () {
-    (new UsuarioController())->sercreador();
-});
 
 Router::add('GET', '/model/author', function () {
     (new UsuarioController())->autor();
@@ -112,6 +111,13 @@ Router::add('GET', '/models/view', function () {
     (new ModeloController())->mostrarModelo();
 });
 
+Router::add('GET', '/model/like/id=:id', function (int $id) {
+    (new LikeController())->like($id);
+});
+
+Router::add('GET', '/model/fav/id=:id', function (int $id) {
+    (new FavoritosController())->favorito($id);
+});
 
 
 Router::add('GET', '/contact', function () {
@@ -123,11 +129,11 @@ Router::add('GET', '/aboutus', function () {
 });
 
 Router::add('GET', 'profile/becreator', function () {
-    (new UsuarioController())->serCreador();
+    (new PeticionController())->serCreador();
 });
 
 Router::add('POST', 'profile/becreator', function () {
-    (new UsuarioController())->serCreador();
+    (new PeticionController())->serCreador();
 });
 
 //CREADOR
@@ -149,6 +155,10 @@ Router::add('GET', 'admin/requests', function () {
 
 Router::add('POST', 'admin/requests', function () {
     (new PeticionController())->solicitud();
+});
+
+Router::add('GET', 'admin/requests/creators/id=:id', function (int $id) {
+    (new PeticionController())->obtenerCreador($id);
 });
 
 Router::add('GET', 'admin/users', function () {
@@ -178,6 +188,36 @@ Router::add('GET', 'admin/updateuser/id=:id', function (int $id) {
 Router::add('POST', 'admin/updateuser/id=:id', function (int $id) {
     (new UsuarioController())->update($id);
 });
+
+
+
+
+Router::add('GET', 'admin/denyrequest/MO/id=:id', function (int $id) {
+    (new PeticionController())->rechazarSolicitud('MO', $id);
+});
+
+Router::add('GET', 'admin/acceptrequest/MO/id=:id', function (int $id) {
+    (new PeticionController())->aceptarSolicitud('MO', $id);
+});
+
+
+Router::add('GET', 'admin/denyrequest/BC/id=:id', function (string $type, int $id) {
+    (new PeticionController())->rechazarSolicitud($type, $id);
+});
+Router::add('GET', 'admin/acceptrequest/BC/id=:id', function (string $type, int $id) {
+    (new PeticionController())->aceptarSolicitud($type, $id);
+});
+
+
+Router::add('GET', 'admin/denytrequest/CO/id=:id', function (string $type, int $id) {
+    (new PeticionController())->rechazarSolicitud($type, $id);
+});
+Router::add('GET', 'admin/acceptrequest/CO/id=:id', function (string $type, int $id) {
+    (new PeticionController())->aceptarSolicitud($type, $id);
+});
+
+
+
 
 Router::dispatch();
 

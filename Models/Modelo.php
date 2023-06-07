@@ -11,15 +11,17 @@ use Lib\Utils;
 class Modelo
 {
 
-    private BaseDatos $conexion;
+	private BaseDatos $conexion;
 	private string $id;
 	private string $titulo;
+	private string $descripcion;
 	private string $id_usuario;
 	private string $archivo_modelo;
 	private string $foto_modelo;
-	private string $descripcion;
-	private string $fecha_subida;
+	private string $precio;
 	private string $privado;
+	private string $fecha_subida;
+	private string $estado;
 	private string $num_likes;
 	private string $num_favs;
 	private string $num_comment;
@@ -28,29 +30,58 @@ class Modelo
 
 
 
-    public function __construct($id, $titulo, $id_usuario, $archivo_modelo, $foto_modelo, $descripcion, $fecha_subida, $privado, $num_likes, $num_favs, $num_comment, $num_complejidad)
+	public function __construct($id, $titulo, $descripcion, $id_usuario, $archivo_modelo, $foto_modelo, $precio, $fecha_subida, $privado, $estado, $num_likes, $num_favs, $num_comment, $num_complejidad)
 	{
-		$this -> conexion = new BaseDatos();
-		$this -> id = $id;
-		$this -> titulo = $titulo;
-		$this -> id_usuario = $id_usuario;
-		$this -> descripcion = $descripcion;
-		$this -> id_usuario = $id_usuario;
-		$this -> archivo_modelo = $archivo_modelo;
-		$this -> foto_modelo = $foto_modelo;
-		$this -> fecha_subida = $fecha_subida;
-		$this -> privado = $privado;
-        $this -> $num_likes = $num_likes;
-        $this -> $num_favs = $num_favs;
-        $this -> $num_comment = $num_comment;
-        $this -> $num_complejidad = $num_complejidad;
+		$this->conexion = new BaseDatos();
+		$this->id = $id;
+		$this->titulo = $titulo;
+		$this->descripcion = $descripcion;
+		$this->id_usuario = $id_usuario;
+		$this->archivo_modelo = $archivo_modelo;
+		$this->foto_modelo = $foto_modelo;
+		$this->precio = $precio;
+		$this->fecha_subida = $fecha_subida;
+		$this->privado = $privado;
+		$this->estado = $estado;
+		$this->$num_likes = $num_likes;
+		$this->$num_favs = $num_favs;
+		$this->$num_comment = $num_comment;
+		$this->$num_complejidad = $num_complejidad;
+	}
 
+	public static function fromArray(array $data): Modelo
+	{
+		// DEVUELVE UN OBJETO A PARTIR DE UN ARRAY CON DATOS DE ESTE OBJETO
 
-    }
+		$modelo = new Modelo(
+			$data['id'] ?? '',
+			$data['titulo'] ?? '',
+			$data['descripcion'] ?? '',
+			$data['id_usuario'] ?? '',
+			$data['archivo_modelo'] ?? '',
+			$data['foto_modelo'] ?? '',
+			$data['precio'] ?? '',
+			$data['fecha_subida'] ?? '',
+			$data['privado'] ?? '',
+			$data['estado'] ?? '',
+			$data['num_likes'] ?? '',
+			$data['num_favs'] ?? '',
+			$data['num_comment'] ?? '',
+			$data['nivel_complejidad'] ?? '',
+		);
+
+		$modelo->setNum_likes($data['num_likes'] ?? 0);
+		$modelo->setNum_favs($data['num_favs'] ?? 0);
+		$modelo->setNum_comment($data['num_comment'] ?? 0);
+		$modelo->setNum_complejidad($data['nivel_complejidad'] ?? 0);
+
+		return $modelo;
+	}
+
 
 	/**
 	 * Get the value of id
-	 */ 
+	 */
 	public function getId()
 	{
 		return $this->id;
@@ -60,7 +91,7 @@ class Modelo
 	 * Set the value of id
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setId($id)
 	{
 		$this->id = $id;
@@ -70,7 +101,7 @@ class Modelo
 
 	/**
 	 * Get the value of titulo
-	 */ 
+	 */
 	public function getTitulo()
 	{
 		return $this->titulo;
@@ -80,7 +111,7 @@ class Modelo
 	 * Set the value of titulo
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setTitulo($titulo)
 	{
 		$this->titulo = $titulo;
@@ -90,7 +121,7 @@ class Modelo
 
 	/**
 	 * Get the value of id_usuario
-	 */ 
+	 */
 	public function getId_usuario()
 	{
 		return $this->id_usuario;
@@ -100,7 +131,7 @@ class Modelo
 	 * Set the value of id_usuario
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setId_usuario($id_usuario)
 	{
 		$this->id_usuario = $id_usuario;
@@ -110,7 +141,7 @@ class Modelo
 
 	/**
 	 * Get the value of archivo_modelo
-	 */ 
+	 */
 	public function getArchivo_modelo()
 	{
 		return $this->archivo_modelo;
@@ -120,7 +151,7 @@ class Modelo
 	 * Set the value of archivo_modelo
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setArchivo_modelo($archivo_modelo)
 	{
 		$this->archivo_modelo = $archivo_modelo;
@@ -128,9 +159,9 @@ class Modelo
 		return $this;
 	}
 
-		/**
+	/**
 	 * Get the value of foto_modelo
-	 */ 
+	 */
 	public function getFoto_modelo()
 	{
 		return $this->foto_modelo;
@@ -140,7 +171,7 @@ class Modelo
 	 * Set the value of foto_modelo
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setFoto_modelo($foto_modelo)
 	{
 		$this->foto_modelo = $foto_modelo;
@@ -150,7 +181,7 @@ class Modelo
 
 	/**
 	 * Get the value of descripcion
-	 */ 
+	 */
 	public function getDescripcion()
 	{
 		return $this->descripcion;
@@ -160,7 +191,7 @@ class Modelo
 	 * Set the value of descripcion
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setDescripcion($descripcion)
 	{
 		$this->descripcion = $descripcion;
@@ -170,7 +201,7 @@ class Modelo
 
 	/**
 	 * Get the value of fecha_subida
-	 */ 
+	 */
 	public function getFecha_subida()
 	{
 		return $this->fecha_subida;
@@ -180,7 +211,7 @@ class Modelo
 	 * Set the value of fecha_subida
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setFecha_subida($fecha_subida)
 	{
 		$this->fecha_subida = $fecha_subida;
@@ -190,7 +221,7 @@ class Modelo
 
 	/**
 	 * Get the value of privado
-	 */ 
+	 */
 	public function getPrivado()
 	{
 		return $this->privado;
@@ -200,7 +231,7 @@ class Modelo
 	 * Set the value of privado
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setPrivado($privado)
 	{
 		$this->privado = $privado;
@@ -210,7 +241,7 @@ class Modelo
 
 	/**
 	 * Get the value of num_likes
-	 */ 
+	 */
 	public function getNum_likes()
 	{
 		return $this->num_likes;
@@ -220,7 +251,7 @@ class Modelo
 	 * Set the value of num_likes
 	 *
 	 * @return  self
-	 */ 
+	 */
 	public function setNum_likes($num_likes)
 	{
 		$this->num_likes = $num_likes;
@@ -228,90 +259,142 @@ class Modelo
 		return $this;
 	}
 
-    /**
-     * Get the value of num_complejidad
-     */ 
-    public function getNum_complejidad()
-    {
-        return $this->num_complejidad;
-    }
+	/**
+	 * Get the value of num_complejidad
+	 */
+	public function getNum_complejidad()
+	{
+		return $this->num_complejidad;
+	}
 
-    /**
-     * Set the value of num_complejidad
-     *
-     * @return  self
-     */ 
-    public function setNum_complejidad($num_complejidad)
-    {
-        $this->num_complejidad = $num_complejidad;
+	/**
+	 * Set the value of num_complejidad
+	 *
+	 * @return  self
+	 */
+	public function setNum_complejidad($num_complejidad)
+	{
+		$this->num_complejidad = $num_complejidad;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get the value of num_favs
-     */ 
-    public function getNum_favs()
-    {
-        return $this->num_favs;
-    }
+	/**
+	 * Get the value of num_favs
+	 */
+	public function getNum_favs()
+	{
+		return $this->num_favs;
+	}
 
-    /**
-     * Set the value of num_favs
-     *
-     * @return  self
-     */ 
-    public function setNum_favs($num_favs)
-    {
-        $this->num_favs = $num_favs;
+	/**
+	 * Set the value of num_favs
+	 *
+	 * @return  self
+	 */
+	public function setNum_favs($num_favs)
+	{
+		$this->num_favs = $num_favs;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get the value of num_comment
-     */ 
-    public function getNum_comment()
-    {
-        return $this->num_comment;
-    }
+	/**
+	 * Get the value of num_comment
+	 */
+	public function getNum_comment()
+	{
+		return $this->num_comment;
+	}
 
-    /**
-     * Set the value of num_comment
-     *
-     * @return  self
-     */ 
-    public function setNum_comment($num_comment)
-    {
-        $this->num_comment = $num_comment;
+	/**
+	 * Set the value of num_comment
+	 *
+	 * @return  self
+	 */
+	public function setNum_comment($num_comment)
+	{
+		$this->num_comment = $num_comment;
 
-        return $this;
-    }
+		return $this;
+	}
 
-	public function obtenerModelo($id_usuario, $titulo){
-		
+
+	/**
+	 * Get the value of precio
+	 */
+	public function getPrecio()
+	{
+		return $this->precio;
+	}
+
+	/**
+	 * Set the value of precio
+	 *
+	 * @return  self
+	 */
+	public function setPrecio($precio)
+	{
+		$this->precio = $precio;
+
+		return $this;
+	}
+
+	/**
+	 * Get the value of estado
+	 */
+	public function getEstado()
+	{
+		return $this->estado;
+	}
+
+	/**
+	 * Set the value of estado
+	 *
+	 * @return  self
+	 */
+	public function setEstado($estado)
+	{
+		$this->estado = $estado;
+
+		return $this;
+	}
+
+	public function obtenerModelo($id_usuario, $titulo)
+	{
+
 		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
 		WHERE id_usuario = :id_usuario AND titulo = :titulo");
 
 		$consulta->bindParam(':id_usuario', $id_usuario);
 		$consulta->bindParam(':titulo', $titulo);
-	
+
 
 		try {
 			$consulta->execute();
-			
-			$resultado = $consulta->fetch(PDO::FETCH_OBJ);
-			
+
+			return $consulta->fetch(PDO::FETCH_OBJ);
 		} catch (PDOException $err) {
-			$resultado = false;
+			return false;
 		}
-		
-		return $resultado;
-	
+	}
+
+	public function obtenerModelosUsuario($id_usuario){
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
+		WHERE id_usuario=:id_usuario");
+		$consulta->bindParam(':id_usuario', $id_usuario);
+		try {
+			$consulta->execute();
+			return $consulta-> fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			
+			return false;
+		}
 	}
 
 
-	public function guardar($datos){
+	public function guardar($datos)
+	{
 
 		$titulo = $datos['title'];
 		$precio = $datos['price'];
@@ -337,27 +420,172 @@ class Modelo
 			$consulta->execute();
 
 			if ($consulta && $consulta->rowCount() == 1) {
-				$resultado = $consulta->fetch(PDO::FETCH_OBJ);
+				return $consulta->fetch(PDO::FETCH_OBJ);
 			}
 		} catch (PDOException $err) {
-			$resultado = false;
-
+			return false;
 		}
-		return $resultado;
-	
 	}
 
-	public function obtenerPendientes(){
-		
+	public function borrar($id)
+	{
+		$consulta = $this->conexion->prepara("DELETE FROM modelos WHERE id = :id");
+		$consulta->bindParam(':id', $id);
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function obtenerPendientes()
+	{
+
 		$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE estado = 'pendiente'");
 		try {
 			$consulta->execute();
-			$resultado = $consulta->fetchAll(PDO::FETCH_OBJ);
+			return $consulta->fetchAll(PDO::FETCH_OBJ);
 		} catch (PDOException $err) {
 			echo "Error en la consulta: " . $err->getMessage();
-			$resultado = false;
+			return false;
 		}
-		
-		return $resultado;
+	}
+
+	public function obtenerModelos(int $num_complejidad = null): ?array
+	{
+		// DEVUELVE UN ARRAY DE OBJETOS MODELO
+		if ($num_complejidad === null) {
+			$this->conexion->consulta("SELECT * FROM modelos WHERE estado='subido' ORDER BY id ");
+			return $this->getAll();
+		} else {
+			$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE num_dificultad = :num_complejidad");
+			$consulta->bindParam(':num_complejidad', $num_complejidad);
+			$consulta->execute();
+			return $this->getAll();
+		}
+	}
+
+	public function getAll(): ?array
+	{
+		// DEVUELVE UN ARRAY DE MODELOS
+		$modelos = [];
+		$modelos_datos = $this->conexion->extraer_todos();
+		foreach ($modelos_datos as $datos) {
+			$modelos[] = Modelo::fromArray($datos);
+		}
+		return $modelos;
+	}
+
+	public function cambiarEstado($id)
+	{
+		$consulta = $this->conexion->prepara("UPDATE modelos SET estado='subido' WHERE id=:id");
+		$consulta->bindParam(':id', $id);
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function obtenerModeloPorId($idmodelo)
+	{
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE id=:id");
+		$consulta->bindParam(':id', $idmodelo);
+		try {
+			$consulta->execute();
+			return $consulta->fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function like($idmodelo){
+		$modelo = $this->obtenerModeloPorId($idmodelo);
+		$num_likes = $modelo[0]->num_likes;
+
+
+		if ($num_likes === null) {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_likes=1 WHERE id=:id');
+		} else {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_likes=num_likes+1 WHERE id=:id');
+		}
+		$consulta->bindParam(':id', $idmodelo);
+
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function revertirLike($idmodelo){
+		$modelo = $this->obtenerModeloPorId($idmodelo);
+		$num_likes = $modelo[0]->num_likes;
+
+
+		if ($num_likes === 1) {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_likes=NULL WHERE id=:id');
+		} else {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_likes=num_likes-1 WHERE id=:id');
+		}
+		$consulta->bindParam(':id', $idmodelo);
+
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+
+	public function favorito($idmodelo){
+		$modelo = $this->obtenerModeloPorId($idmodelo);
+		$num_favs = $modelo[0]->num_favs;
+
+
+		if ($num_favs === null) {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_favs=1 WHERE id=:id');
+		} else {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_favs=num_favs+1 WHERE id=:id');
+		}
+		$consulta->bindParam(':id', $idmodelo);
+
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function revertirFavorito($idmodelo){
+		$modelo = $this->obtenerModeloPorId($idmodelo);
+		$num_favs = $modelo[0]->num_favs;
+
+
+		if ($num_favs === 1) {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_favs=NULL WHERE id=:id');
+		} else {
+			$consulta = $this->conexion->prepara('UPDATE modelos SET num_favs=num_favs-1 WHERE id=:id');
+		}
+		$consulta->bindParam(':id', $idmodelo);
+
+		try {
+			$consulta->execute();
+			return true;
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
 	}
 }

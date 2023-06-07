@@ -56,7 +56,7 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
                     <?= $message['precio'] === "" ? "" : $error_img . $message['precio']; ?>
                 </span>
                 <div class="input-container">
-                    <textarea name="data[desc_model]" id="desc" rows="10" placeholder="Model Description"></textarea>
+                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Model Description"></textarea>
                     <span class="required">*</span>
                 </div>
                 <span class="red-error">
@@ -68,7 +68,7 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
                     <div>
                         <span class="required">*</span>
                         <input class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
-                        <input type="file" name="data[file]" id="file" hidden>
+                        <input type="file" name="model_file" id="file" hidden>
                     </div>
                 </div>
                 <span class="red-error">
@@ -80,7 +80,7 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
                     <div>
                         <span class="required">*</span>
                         <input class="selectfileinput2" id="inputImgName2" type="text" placeholder="Model-photo.jpg" readonly>
-                        <input type="file" name="data[file_photo]" id="file2" hidden>
+                        <input type="file" name="model_photo" id="file2" hidden>
                     </div>
                 </div>
                 <span class="red-error">

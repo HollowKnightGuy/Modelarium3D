@@ -303,20 +303,6 @@ class Usuario
 
 
 
-	//Obtiene la contraseña desde la base de datos de un usuario con el $email que le pasamos
-	public function obtenerPassword($email)
-	{
-
-		$consulta = "SELECT password FROM usuarios WHERE email = '$email'";
-
-		try {
-			$consulta = $this->conexion->consulta($consulta);
-			return $consulta->fetchAll(\PDO::FETCH_ASSOC);
-		} catch (\PDOException $e) {
-			exit($e->getMessage());
-		}
-	}
-
 	public function comprobarErrores($lista)
 	{
 		foreach ($lista as $error) {
@@ -511,11 +497,15 @@ class Usuario
 				}
 			}
 
-			$consulta = "UPDATE usuarios SET nombre = '$nombre', descripcion = '$bio', foto_perfil = '$imgperfil', banner = '$bannerperfil' WHERE email = '$datos_old->email'";
-
+			$consulta = $this -> conexion -> prepara("UPDATE usuarios SET nombre = :nombre, descripcion = :bio, foto_perfil = :imgperfil, banner = :bannerperfil WHERE email = :email");
+			$consulta -> bindParam(":nombre", $nombre);
+			$consulta -> bindParam(":bio", $bio);
+			$consulta -> bindParam(":imgperfil", $imgperfil);
+			$consulta -> bindParam(":bannerperfil", $bannerperfil);
+			$consulta -> bindParam(":email", $datos_old -> email);
 
 			try {
-				$consulta = $this->conexion->consulta($consulta);
+				$consulta -> execute();
 				return true;
 			} catch (\PDOException $e) {
 				exit($e->getMessage());
@@ -579,7 +569,7 @@ class Usuario
 				unlink("../public/img/user/profilephoto/".$usuario -> foto_perfil);
 			}
 			$consulta =  $this->conexion->prepara("DELETE FROM usuarios WHERE id = :id");
-			$consulta->bindParam('id', $id);
+			$consulta->bindParam('id', $id, PDO::PARAM_INT);
 	
 			try {
 				$consulta->execute();
@@ -588,5 +578,22 @@ class Usuario
 				exit($e->getMessage());
 			}
 		}
+	}
+
+	public function obtenerNombreUsuario($id){
+        $consulta = $this -> conexion -> prepara("SELECT nombre FROM usuarios WHERE id = :id");
+		$consulta -> bindParam(':id', $id, PDO::PARAM_INT);
+
+		try {
+			$consulta -> execute();
+			return $consulta->fetchAll(\PDO::FETCH_ASSOC);
+		} catch (\PDOException $e) {
+			exit($e->getMessage());
+		}
+	}
+
+	public function sercreador($datos, $archivos, $usuario){
+		var_dump($datos, $archivos, $usuario); die;
+		
 	}
 }

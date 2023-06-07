@@ -14,7 +14,7 @@
                         <a class="linkpurple" href="<?= $_ENV['BASE_URL'] ?>models">Level 2</a>
                     </li>
                     <li>
-                        <a class="linkpurple" href="<?= $_ENV['BASE_URL'] ?>models">Level 3</a>
+                        <a  class="linkpurple" href="<?= $_ENV['BASE_URL'] ?>models">Level 3</a>
                     </li>
                 </ul>
             </div>

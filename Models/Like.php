@@ -6,7 +6,7 @@
     use PDO;
     use PDOException;
 
-    class Favoritos{
+    class Like{
 
         private BaseDatos $conexion;
         private string $id;
@@ -21,8 +21,8 @@
             
         }
 
-        public function insertFavorito($id_usuario, $id_modelo):bool{
-            $consulta = $this->conexion->prepara('INSERT INTO favoritos(id_usuario, id_modelo) VALUES(:id_usuario, :id_modelo)');
+        public function insertLike($id_usuario, $id_modelo):bool{
+            $consulta = $this->conexion->prepara('INSERT INTO likes(id_usuario, id_modelo) VALUES(:id_usuario, :id_modelo)');
             $consulta->bindParam(':id_usuario', $id_usuario);
             $consulta->bindParam(':id_modelo', $id_modelo);
     
@@ -35,8 +35,8 @@
             }
         }
 
-        public function deleteFavorito($id_usuario, $id_modelo):bool{
-            $consulta = $this->conexion->prepara('DELETE FROM favoritos WHERE id_usuario=:id_usuario AND id_modelo=:id_modelo');
+        public function deleteLike($id_usuario, $id_modelo):bool{
+            $consulta = $this->conexion->prepara('DELETE FROM likes WHERE id_usuario=:id_usuario AND id_modelo=:id_modelo');
             $consulta->bindParam(':id_usuario', $id_usuario);
             $consulta->bindParam(':id_modelo', $id_modelo);
     
@@ -49,9 +49,9 @@
             }
         }
 
-        public function comprobarfavorito($idusuario, $idmodelo){
+        public function comprobarLike($idusuario, $idmodelo){
             $result = false;
-            $cons = $this->conexion->prepara("SELECT * FROM favoritos WHERE id_usuario = :idusuario AND id_modelo = :idmodelo");
+            $cons = $this->conexion->prepara("SELECT * FROM likes WHERE id_usuario = :idusuario AND id_modelo = :idmodelo");
             $cons->bindParam(":idusuario", $idusuario);
             $cons->bindParam(":idmodelo", $idmodelo);
             try {

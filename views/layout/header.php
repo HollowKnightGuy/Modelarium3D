@@ -85,7 +85,7 @@
                     <?php if (!isset($_SESSION['admin']) || !$_SESSION['admin']) : ?>
 
                         <li class="header-link user-link transition">
-                            <a href="<?= $_ENV['BASE_URL_PUBLIC'] ?><?= $session ? 'profile' : 'login'; ?>">
+                            <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
                                 <img class="link-icon heart-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="">
                                 <img class="none heart-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="">
                             </a>
