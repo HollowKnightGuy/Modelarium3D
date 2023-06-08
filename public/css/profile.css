@@ -826,6 +826,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   position: relative;
   z-index: 1;
   border-radius: 50%;
+  background-color: white;
   border: solid 5px #212121;
   top: -60px;
 }

@@ -22,7 +22,8 @@
             return $this -> favoritos -> comprobarFavorito($idusuario, $idmodelo);
         }
 
-        public function favorito($idmodelo){
+        public function favorito($idmodelo, $view = false){
+
             if(Utils::isLogged()){
                 $usuarioDadoFav = $this -> comprobarFavorito($_SESSION['identity']-> id, $idmodelo);
 
@@ -36,7 +37,7 @@
                     }
                     else if($this -> intercontroller -> favorito($idmodelo)){
                         $_SESSION['error_fav'] = "";
-                        header("Location:".$_ENV['BASE_URL']."models/");
+                        $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }else{
                     $revertir = $this -> favoritos -> deleteFavorito($_SESSION['identity'] -> id, $idmodelo);
@@ -46,7 +47,7 @@
                     }
                     else if($this -> intercontroller -> revertirFavorito($idmodelo)){
                         $_SESSION['error_fav'] = "";
-                        header("Location:".$_ENV['BASE_URL']."models/");
+                        $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }
             }else{

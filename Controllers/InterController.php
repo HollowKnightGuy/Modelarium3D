@@ -58,6 +58,10 @@ class InterController{
         return $this -> modeloC -> revertirFavorito($idmodelo);
     }
 
+    public function cambiaRol($id_usuario, $rol){
+        return $this -> usuarioC -> cambiaRol($id_usuario, $rol);
+    }
+
 
     public function obtenerModeloPorId($idmodelo){
         return $this -> modeloC -> obtenerModeloPorId($idmodelo);

@@ -70,11 +70,11 @@ class Utils{
         $img = Utils::propsImg($img);
         if($img !== false){
             if ($img['tipo'] != 'jpg' && $img['tipo'] != 'jpeg' && $img['tipo'] != 'png') {
-                $message['imagen'] = "El tipo de la imagen debe ser jpg/jpeg/png";
+                $message['imagen'] = "The image type must be jpg/jpeg/png";
             } else if ($img['ancho'] != $img['alto']) {
-                $message['imagen'] = "La imagen de perfil debe ser cuadrada";
+                $message['imagen'] = "Profile picture must be square";
             } else if ($img['peso'] > 150) {
-                $message['imagen'] = "La imagen de perfil como máximo debe pesar 150KB";
+                $message['imagen'] = "The image of the maximum must weigh 150KB";
             }
         }
 		return $message;
@@ -84,9 +84,9 @@ class Utils{
         $banner = Utils::propsImg($banner);
         if($banner !== false){
             if ($banner['tipo'] != 'jpg' && $banner['tipo'] != 'jpeg' && $banner['tipo'] != 'png') {
-                $message['imagenbanner'] = "El tipo de la imagen debe ser jpg/jpeg/png";
+                $message['imagenbanner'] = "The image type must be jpg/jpeg/png";
             }else if ($banner['peso'] > 75) {
-                $message['imagenbanner'] = "El banner como máximo debe pesar 75KB";
+                $message['imagenbanner'] = "The image of the maximum must weigh 75KB";
             }
         }
 
@@ -98,11 +98,11 @@ class Utils{
         $img = Utils::propsImg($img);
         if($img !== false){
             if ($img['tipo'] != 'jpg' && $img['tipo'] != 'jpeg' && $img['tipo'] != 'png') {
-                $message['modelo_foto'] = "El tipo de la imagen debe ser jpg/jpeg/png";
+                $message['modelo_foto'] = "The image type must be jpg/jpeg/png";
             } else if ($img['ancho'] > $img['alto']) {
-                $message['modelo_foto'] = "La imagen del modelo debe tener mas alto que ancho";
+                $message['modelo_foto'] = "The model image must be taller than it is wide";
             } else if ($img['peso'] > 150) {
-                $message['modelo_foto'] = "La imagen del como máximo debe pesar 125KB";
+                $message['modelo_foto'] = "The image of the maximum must weigh 125KB";
             }
         }
 		return $message;
@@ -112,21 +112,39 @@ class Utils{
         $modelo = Utils::propsModelo($modelo);
         if($modelo !== false){
             if ($modelo['tipo'] != 'glb') {
-                $message['modelo_glb'] = "El tipo de archivo debe ser .gbl";
+                $message['modelo_glb'] = "The file type must be .gbl";
             } else if ($modelo['peso'] > 300) {
-                $message['modelo_glb'] = "El modelo debe pesar como máximo 300KB";
+                $message['modelo_glb'] = "The model must weigh a maximum of 300KB";
             }
         }
 		return $message;
 	}
 
+    public static function comprobarErrores($lista)
+	{
+		foreach ($lista as $error) {
+			if (!empty($error)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
     public static function irLogin(){
-        header("Location:".$_ENV['BASE_URL']."login/");
+        header("Location:".$_ENV['BASE_URL']."login");
     }
 
     
     public static function irModels(){
         header("Location:".$_ENV['BASE_URL']."models/");
+    }
+
+    public static function irView($idmodelo){
+        header("Location:".$_ENV['BASE_URL']."models/view/id=".$idmodelo);
+    }
+
+    public static function irProfile(){
+        header("Location:".$_ENV['BASE_URL']."profile/");
     }
 }
 

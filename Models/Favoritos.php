@@ -14,10 +14,10 @@
         private string $idmodelo;
 
         public function __construct($id, $idusuario, $idmodelo){
-            $this -> conexion = new BaseDatos();
             $this -> id = $id;
             $this -> idusuario = $idusuario;
             $this -> idmodelo = $idmodelo;
+            $this -> conexion = new BaseDatos();
             
         }
 
@@ -62,6 +62,66 @@
             } catch (PDOException $err) {
                 return false;
             }
+        }
+
+        /**
+         * Get the value of idmodelo
+         */ 
+        public function getIdmodelo()
+        {
+                return $this->idmodelo;
+        }
+
+        /**
+         * Set the value of idmodelo
+         *
+         * @return  self
+         */ 
+        public function setIdmodelo($idmodelo)
+        {
+                $this->idmodelo = $idmodelo;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of idusuario
+         */ 
+        public function getIdusuario()
+        {
+                return $this->idusuario;
+        }
+
+        /**
+         * Set the value of idusuario
+         *
+         * @return  self
+         */ 
+        public function setIdusuario($idusuario)
+        {
+                $this->idusuario = $idusuario;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of id
+         */ 
+        public function getId()
+        {
+                return $this->id;
+        }
+
+        /**
+         * Set the value of id
+         *
+         * @return  self
+         */ 
+        public function setId($id)
+        {
+                $this->id = $id;
+
+                return $this;
         }
     }
 ?>

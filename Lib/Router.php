@@ -1,12 +1,14 @@
 <?php
 namespace Lib;
+use Lib\Pages;
 // para almacenar las rutas que configuremos desde el archivo indexold.php
 // use Controllers\PaginasController;
 
 class Router {
-
+    private Pages $pages;
     private static array $routes = [];
     //para ir añadiendo los métodos y las rutas en el tercer parámetro.
+
     public static function add(string $method, string $action, Callable $controller):void{
         //die($action);
 
@@ -48,8 +50,7 @@ class Router {
         }else {
            //header('Location: /404');
             //header("HTTP/1.1 404 Not Found");
-            echo ResponseHttp::statusMessage(404,'Pagina no encontrada');
-          
+            Pages::render2("notfound");
         }
 
 

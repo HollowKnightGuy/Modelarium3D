@@ -22,7 +22,7 @@
             return $this -> like -> comprobarLike($idusuario, $idmodelo);
         }
 
-        public function like($idmodelo){
+        public function like($idmodelo, $view = false){
             if(Utils::isLogged()){
                 $usuarioDadoLike = $this -> comprobarLike($_SESSION['identity']-> id, $idmodelo);
 
@@ -36,7 +36,7 @@
                     }
                     else if($this -> intercontroller -> like($idmodelo)){
                         $_SESSION['error_like'] = "";
-                        Utils::irModels();
+                        $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }else{
                     $revertir = $this -> like -> deleteLike($_SESSION['identity'] -> id, $idmodelo);
@@ -46,7 +46,7 @@
                     }
                     else if($this -> intercontroller -> revertirLike($idmodelo)){
                         $_SESSION['error_like'] = "";
-                        Utils::irModels();
+                        $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }
             }else{

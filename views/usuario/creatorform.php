@@ -3,8 +3,7 @@ $estilos = 'form'; ?>
 <link rel="stylesheet" href="<?= $_ENV['BASE_URL_PUBLIC'] ?>css/<?= $estilos ?>.css">
 <?php
 require_once '../views/layout/header.php';
-
-$message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+$error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
 ?>
 
 <main>
@@ -14,24 +13,31 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
 
             <div class="creator-form-section">
                 <div class="input-container">
-                    <input type="email" name="data[email]" id="email" placeholder="Paypal Email Adress" > 
+                    <input type="email" name="data[email]" value="<?= $datos_guardados['email'] ?? "" ?>" id="email" placeholder="Paypal Email Adress">
                     <span class="required">*</span>
                 </div>
-                <span class="textinfo">In case you sell any of the models is uploaded the money wil be sent to this Paypal address</span>
+                <?php if ($message['email'] === "") :  ?>
+                    <span class="textinfo">In case you sell any of the models is uploaded the money wil be sent to this Paypal address</span>
+                <?php else : ?>
+                    <span class="red-error">
+                        <?= $message['email'] === "" ? "" : $error_img . $message['email']; ?>
+                    </span>
+                <?php endif; ?>
+
             </div>
-            <span class="red-error">
-                <?= $message['email'] === "" ? "" : $error_img . $message['email']; ?>
-            </span>
             <div class="creator-form-section">
                 <div class="input-container">
-                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Profile Description"></textarea><span class="required">*</span>
+                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Profile Description"><?= $datos_guardados['desc'] ?? "" ?></textarea><span class="required">*</span>
 
                 </div>
-                <span class="textinfo">A profile description is mandatory to have for every creator in Modelarium</span>
+                <?php if ($message['desc'] === "") :  ?>
+                    <span class="textinfo">A profile description is mandatory to have for every creator in Modelarium</span>
+                <?php else : ?>
+                    <span class="red-error">
+                        <?= $error_img . $message['desc']; ?>
+                    </span>
+                <?php endif; ?>
             </div>
-            <span class="red-error">
-                <?= $message['descripcion'] === "" ? "" : $error_img . $message['descripcion']; ?>
-            </span>
 
             <div class="model-form">
                 <div class="creator-form-section">
@@ -41,11 +47,11 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
 
                 <div class="double-input-section">
                     <div class="input-container">
-                        <input type="text" name="data[title]" placeholder="Title">
+                        <input type="text" value="<?= $datos_guardados['title'] ?? "" ?>" name="data[title]" placeholder="Title">
                         <span class="required requiredtitle">*</span>
                     </div>
                     <div class="input-container">
-                        <input type="number" name="data[price]" placeholder="Price">
+                        <input type="text" id="price" value="<?= $datos_guardados['price'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
                         <span class="required">*</span>
                     </div>
                 </div>
@@ -56,7 +62,7 @@ $message = ['email' => "", 'descripcion' => "", 'titulo' => "", 'precio' => "", 
                     <?= $message['precio'] === "" ? "" : $error_img . $message['precio']; ?>
                 </span>
                 <div class="input-container">
-                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Model Description"></textarea>
+                    <textarea name="data[descripcion_modelo]" id="descripcion_modelo" rows="10" placeholder="Model Description"><?= $datos_guardados['descripcion_modelo'] ?? "" ?></textarea>
                     <span class="required">*</span>
                 </div>
                 <span class="red-error">

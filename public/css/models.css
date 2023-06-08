@@ -954,7 +954,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   justify-content: center;
   border: 0;
   height: 2.2rem;
-  width: 10rem;
+  width: 9rem;
 }
 .model--seebtn button:hover {
   letter-spacing: 3px;
@@ -1021,7 +1021,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .model--seebtn button {
     padding: 0.7rem 0.3rem;
     height: 0.8rem;
-    width: 5rem;
+    width: 4rem;
   }
 }
 @media (min-width: 300px) and (max-width: 400px) {

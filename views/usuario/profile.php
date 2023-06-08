@@ -13,12 +13,17 @@ $usuarioC = new UsuarioController();
 if (isset($_SESSION['identity'])) {
     $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 }
+$error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error>';
+
 ?>
 
 <main>
     <div class="banner">
-        <?php if($userdata->banner == NULL){$route = $_ENV['BASE_URL_PUBLIC']."img/default/banner.jpg";}
-        else{$route = $_ENV['BASE_URL_PUBLIC']."img/user/profilebanner/". $userdata->banner;}?>
+        <?php if ($userdata->banner == NULL) {
+            $route = $_ENV['BASE_URL_PUBLIC'] . "img/default/banner.jpg";
+        } else {
+            $route = $_ENV['BASE_URL_PUBLIC'] . "img/user/profilebanner/" . $userdata->banner;
+        } ?>
         <img class="banner-img" src="<?= $route ?>" alt="banner">
         <div class="profile-options">
 
@@ -27,7 +32,6 @@ if (isset($_SESSION['identity'])) {
         <div class="profile-creator-gear">
             <div class="profile-creator-div">
 
-                <!-- TODO NO lo está cogiendo bien -->
                 <?php if (isset($userdata->rol) && $userdata->rol == 'ROLE_USER') : ?>
 
                     <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
@@ -48,7 +52,10 @@ if (isset($_SESSION['identity'])) {
             <p><?= 'Joined ', explode(' ', $userdata->fecha_creacion)[0] ?></p>
             <p><?= explode('_', $userdata->rol)[1]; ?></p>
             <p style="color:black"><?= $userdata->descripcion ?></p>
-
+            <?php if (isset($_SESSION['peticion_mandada']) && $_SESSION['peticion_mandada']) :
+                $_SESSION['peticion_mandada'] = false; ?>
+                <span class="red-error" style="color:red;"><?= $error_img . "A creator request is already sended" ?></span>
+            <?php endif ?>
         </div>
     </div>
 
@@ -255,7 +262,7 @@ if (isset($_SESSION['identity'])) {
                                     </div>
                                     <div class="model--favs">
                                         <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
-BASE_URL_PUBLIC
+                                        BASE_URL_PUBLIC
                                     </div>
                                 </div>
                             </div>
@@ -334,6 +341,6 @@ BASE_URL_PUBLIC
 </script>
 
 
-<?php 
+<?php
 require_once '../views/layout/footer.php';
 ?>

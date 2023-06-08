@@ -43,43 +43,58 @@ require_once '../views/layout/header.php';
         font-size: var(--fs-300);
         text-align: center;
     }
+
+    .title{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: 50 10 10 10;
+    }
+
+    .model, .user{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
-<?php 
-$modelo = $modelo[0];
-$id = $modelo -> id;
+<div class="user">
+    <h1 class="title">User</h1>
+    <table>
+        <?php foreach ($usuario as $key => $value) : ?>
+            <tr>
+                <th><?= $key ?></th>
+                <td><?= $value ?></td>
+            </tr>
+        <?php endforeach; ?>
 
-if (!empty($modelo)) {
-    echo '<table>';
-    echo '<tr>';
-    foreach ($modelo as $key => $value) {
-        echo '<th>' . $key . '</th>';
-    }
-    echo '</tr>';
+    </table>
+</div>
 
-    echo '<tr>';
-    foreach ($modelo as $key => $value) {
-        echo '<td>';
-        if ($key === "foto_modelo") {
-            echo '<img src="' .$_ENV['BASE_URL_PUBLIC']. 'img/models/' . $value . '" alt="Foto Modelo" width="200px">';
-        } else {
-            echo $value;
-        }
-        echo '</td>';
-    }
-    echo '</tr>';
+<div class="model">
+    <h1 class="title">Model</h1>
+    <?php $modelo = $modelo[0] ?>
+    <table>
+        <?php foreach ($modelo as $key => $value) : ?>
+            <?php if ($key === "foto_modelo") : ?>
+                <th><?= $key ?></th>
+                <td><img src="<?= $_ENV['BASE_URL_PUBLIC']?>img/models/<?=$value?>" alt="Foto Modelo" width="200px"></td>
+            <?php else : ?>
 
-    echo '</table>';
-} else {
-    echo 'No se encontraron datos.';
-}
+                <tr>
+                    <th><?= $key ?></th>
+                    <td><?= $value ?></td>
+                </tr>
+                <?php endif; ?>
+        <?php endforeach; ?>
 
-?>
-
-<!-- TODO: QUE funsione -->
-<?php var_dump($id)?>
+    </table>
+</div>
 
     <div class="user-opt">
-        <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/BC/id=">Rechazar Petición</a>
-        <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/BC/id=".$id>Aceptar Petición</a>
+        <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/BC/id=<?= $peticion -> id?>">Rechazar Petición</a>
+        <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/BC/id=<?=$peticion -> id?>">Aceptar Petición</a>
     </div>

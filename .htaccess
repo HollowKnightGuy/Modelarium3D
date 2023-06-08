@@ -6,5 +6,5 @@
     Options -MultiViews
     #ErrorDocument 404 http://localhost/modelarium3D-php/
 
-    RewriteRule ^.*$ public/index.php [QSA,L]
+    RewriteRule ^.*$ public/index.php/ [QSA,L]
 </IfModule>

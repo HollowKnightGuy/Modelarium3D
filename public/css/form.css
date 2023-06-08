@@ -922,6 +922,13 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   margin: 0;
 }
 
+#price::after{
+  content: "€";
+  width: 30px;
+  height: 30px;
+  right: -10px;
+}
+
 .submit {
   background-color: var(--primary-color) !important;
   color: white !important;

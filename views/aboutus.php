@@ -34,7 +34,3 @@ require_once '../views/layout/header.php';
     </div>
 
 </main>
-
-<?php
-require_once '../views/layout/footer.php';
-?>

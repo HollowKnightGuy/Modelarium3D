@@ -1,7 +1,7 @@
 <?php
 
 namespace Controllers;
-
+use Controllers\ComentariosController;
 use Models\Modelo;
 use Lib\Pages;
 use Lib\Utils;
@@ -11,11 +11,13 @@ class ModeloController
 
 
     private Pages $pages;
+    private ComentariosController $comentarioC;
     private Modelo $modelo;
 
     public function __construct()
     {
         $this->pages = new Pages();
+        $this->comentarioC = new ComentariosController();
         $this->modelo = new Modelo("", "", "", "", "", "", "", "", "", "", "", "", "", "");
     }
 
@@ -25,9 +27,9 @@ class ModeloController
         $this->pages->render("modelos/models", ['modelos' => $modelos]);
     }
 
-    public function obtenerPendientes()
+    public function obtenerModelosPendientes()
     {
-        return $this->modelo->obtenerPendientes();
+        return $this->modelo->obtenerModelosPendientes();
     }
 
     public function crear($datos = NULL)
@@ -62,10 +64,12 @@ class ModeloController
         }
     }
 
-    public function mostrarModelo()
+    public function mostrarModelo($id_modelo)
     {
-
-        $this->pages->render("modelos/modelview");
+        $modelo = $this -> obtenerModeloPorId($id_modelo);
+        if(!is_object($modelo[0])) Utils::irModels();
+        $comentarios = $this -> comentarioC -> obtenerComentarios($id_modelo);    
+        $this->pages->render("modelos/modelview", ['modelo' => $modelo[0], 'comentarios' => $comentarios]);
     }
 
     public function obtenerModelo($id_usuario, $titulo)

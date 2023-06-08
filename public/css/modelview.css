@@ -656,9 +656,11 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 .modelview-interactions img {
   width: 30px;
 }
+.modelview-interactions img:hover{
+  cursor: pointer;
+}
 
 .buynow-btn {
-  border: 0;
   border-radius: 8px;
   font-weight: var(--fw-LIGHT);
   width: 200px;
@@ -668,10 +670,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   letter-spacing: 5px;
   background-color: white !important;
   color: var(--primary-color) !important;
-}
-
-.model-info-3 p {
-  text-align: center;
 }
 
 .comment-container {
@@ -697,6 +695,9 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 }
 
 .profileimg-comment {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
   width: 40px;
 }
 
@@ -706,13 +707,13 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   gap: 0.5rem;
 }
 
-.comment-1 {
+.comment-1 form{
   display: flex;
   gap: 0.5rem;
   position: relative;
   top: 0.5rem;
 }
-.comment-1 input {
+.comment-1 form input {
   width: 100%;
   height: 3rem;
   color: var(--grey-color);
@@ -810,11 +811,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .buynow-btn {
     width: 100%;
   }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 @media (min-width: 500px) and (max-width: 650px) {
   .model-view-container {
@@ -860,11 +856,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .buynow-btn {
     width: 100%;
-  }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
   .profsetlink > span {
     display: none;
@@ -922,11 +913,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .buynow-btn {
     width: 100%;
   }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 @media (min-width: 800px) and (max-width: 1100px) {
   .model-view-card {
@@ -937,11 +923,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
     margin-right: 3rem;
     width: 30rem;
     gap: 3rem;
-  }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 }
 @media (min-width: 1100px) and (max-width: 1500px) {
@@ -957,11 +938,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .model-info-2 {
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-  }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
     align-items: center;
   }
 }
@@ -980,11 +956,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
     justify-content: space-between;
     align-items: center;
   }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 @media (min-width: 2000px) and (max-width: 4000px) {
   .model-view-card {
@@ -996,11 +967,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
     width: 50rem;
     gap: 3rem;
   }
-  .model-info-3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+
 }
 footer {
   position: absolute;

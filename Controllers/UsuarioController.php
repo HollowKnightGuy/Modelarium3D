@@ -202,4 +202,8 @@ class UsuarioController
         $usuario = new Usuario("", "", "", "", "", "", "", "", "", "");
         return $usuario->obtenerNombreUsuario($id);
     }
+
+    public function cambiaRol($id_usuario, $rol){
+        return $this -> usuario -> cambiaRol($id_usuario, $rol);
+    }
 }

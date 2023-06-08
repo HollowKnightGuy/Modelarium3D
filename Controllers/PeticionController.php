@@ -26,23 +26,23 @@ class PeticionController
 
 
 
-    public function solicitud()
+    public function solicitud($message = null)
     {
 
-        //TODO HACER QUE NO HAGAN FALTA LOS CONTROLADORES; POR EJEMPLO PASAR EL OBJETO USUARIO A ESTA FUNCIÓN EN LUGAR DE USAR EL CONTROLADOR
-
-        if ($_SESSION['identity']->rol == 'ROLE_CREATOR') {
+        if (Utils::isCreator()) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+                $_POST['data']['price'] = number_format($_POST['data']['price'], 2, '.', '');
                 $datos = $_POST['data'];
                 $file = $_FILES;
-                $usuario = $this->intercontroller->obtenerUsuario($_SESSION['identity']->email);
 
+                $usuario = $this->intercontroller->obtenerUsuario($_SESSION['identity']->email);
+                
                 $peticion = $this->peticion->guardarPeticionModelo($message, $datos, $file, $usuario);
                 if ($peticion === true) {
                     $this->pages->render('usuario/profile', ['message' => $message]);
                 } else if (gettype($peticion) === "array") {
-                    $this->pages->render('modelos/create_edit_model', ['message' => $peticion]);
+                    $this->pages->render('modelos/create_edit_model', ['message' => $peticion, "datos_guardados" => $datos]);
                 } else {
                     $this->pages->render('usuario/profile');
                 }
@@ -61,24 +61,22 @@ class PeticionController
         } else {
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $message = ['email' => "", 'desc' => "", 'titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+                $_POST['data']['price'] = number_format($_POST['data']['price'], 2, '.', '');
                 $datos = $_POST['data'];
                 $archivos = $_FILES;
                 $datos['archivo_modelo'] = $archivos['model_file'];
                 $datos['foto_modelo'] = $archivos['model_photo'];
                 $datos['id_usuario'] = $_SESSION['identity']->id;
-                $this->intercontroller->crearModelo($datos);
-
+                
                 $usuario = $this->intercontroller->obtenerUsuario($_SESSION['identity']->email);
-
                 $peticionCreador = $this->peticion->guardarPeticionCreador($message, $datos, $usuario);
                 if($peticionCreador === true){
-                    header("Location".$_ENV['BASE_URL']."profile/");
+                    return true;
                 }else{
-                    $this -> pages -> render('usuario/creatorform', ['message' => $peticionCreador]);
+                    return $peticionCreador;
                 }
             } else {
-                $this->pages->render('usuario/profile');
+                Utils::irProfile();
             }
 
         }
@@ -87,17 +85,35 @@ class PeticionController
 
     public function serCreador()
     {
+        if(!Utils::isCreator() && Utils::isLogged()){
+            // if($this -> existePeticion($_SESSION['identity'] -> id, 'BC') === true){
+            //     $_SESSION['peticion_mandada'] = true;
+            //     Utils::irProfile();
+            //     return;
+            // }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->solicitud();
-
-            // TODO: MANDAR LOS DATOS Y CREAR LA PETICION DE SER CREADOR
-
-            $this->pages->render('usuario/profile');
-
-        } else {
-            $this->pages->render('usuario/creatorform');
+            $_SESSION['peticion_mandada'] = false;
+            $message = ['email' => "", 'desc' => "", 'titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $solicitud = $this -> solicitud($message);
+                if($solicitud !== true){
+                    var_dump($solicitud);
+                    $this -> pages -> render('usuario/creatorform', ['message' => $solicitud, 'datos_guardados' => $_POST['data']]);
+                }else{                    
+                    Utils::irProfile();
+                }
+            } else {
+                $this->pages->render('usuario/creatorform',  ['message' => $message, 'datos_guardados' => []]);
+            }
+        }else if(!Utils::isLogged()){
+            Utils::irLogin();
+        }else{
+            Utils::irModels();
         }
+    }
+
+    public function existePeticion($idusuario, $tipo){
+        return $this -> peticion -> existePeticion($idusuario, $tipo);
     }
 
     public function obtenerCreatorsPendientes()
@@ -109,9 +125,24 @@ class PeticionController
     {
 
         $modelo_creador = $this->peticion->obtenerPeticionCreador($id);
+        $id_usuario = $modelo_creador[0] -> id_usuario;
+        $usuario = $this->intercontroller->obtenerUsuarioPorId($id_usuario);
+        $peticion = $this -> peticion -> obtenerPeticion($modelo_creador[0] -> id);
 
-        $this -> pages -> render('admin/requests/creators', ['modelo' => $modelo_creador]);
+        $this -> pages -> render('admin/requests/creators', ['modelo' => $modelo_creador, 'usuario' => $usuario, 'peticion' => $peticion]);
 
+    }
+
+    public function borrarPeticion($id){
+        return $this -> peticion -> borrarPeticion($id);
+    }
+
+    public function obtenerPeticion($id_modelo){
+        return $this -> peticion -> obtenerPeticion($id_modelo);
+    }
+
+    public function obtenerPeticionPorId($id){
+        return $this -> peticion -> obtenerPeticionPorId($id);
     }
 
 
@@ -120,10 +151,22 @@ class PeticionController
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
                 $delete = $this->intercontroller->borrarModelo($id);
+                $deletePE = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
                 if ($delete) {
                     $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
                 } else {
-                    $this->pages->render('admin/requests', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                }
+            }
+
+            elseif ($type === 'BC') {
+
+                $deleteMO = $this->intercontroller->borrarModelo($this -> obtenerPeticion($id)->id_modelo);
+                $deletePE = $this -> borrarPeticion($id);
+                if ($deleteMO && $deletePE) {
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                } else {
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
                 }
             }
         } else {
@@ -136,8 +179,23 @@ class PeticionController
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
                 $insert = $this->intercontroller->cambiarEstadoModelo($id);
+                $deletePE = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
                 if ($insert) {
-                    // $this -> peticion -> aceptarPeticion($id_peticion);
+                    //$this -> peticion -> aceptarPeticion($id_peticion);
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                } else {
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                }
+            }
+
+            elseif ($type === 'BC') {
+
+                $insert = $this->intercontroller->cambiarEstadoModelo($this -> obtenerPeticionPorId($id)->id_modelo);
+                $id_usuario = $this -> obtenerPeticionPorId($id) -> id_usuario;
+                $deletePE = $this -> borrarPeticion($id);
+
+                $this -> intercontroller -> cambiaRol($id_usuario, 'ROLE_CREATOR');
+                if ($insert && $deletePE) {
                     $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
                 } else {
                     $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);

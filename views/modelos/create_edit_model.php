@@ -15,13 +15,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
         <form action="<?php $_ENV['BASE_URL'] ?>../creator/request" method="POST" class="form" enctype="multipart/form-data">
             <div class="model-form">
 
-                <div class="double-input-section">
+            <div class="double-input-section">
                     <div class="input-container">
-                        <input type="text" name="data[title]" placeholder="Title" >
+                        <input type="text" value="<?= $datos_guardados['title'] ?? "" ?>" name="data[title]" placeholder="Title">
                         <span class="required requiredtitle">*</span>
                     </div>
                     <div class="input-container">
-                        <input type="text" name="data[price]" placeholder="Price" >
+                        <input type="text" id="price" value="<?= $datos_guardados['price'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
                         <span class="required">*</span>
                     </div>
                 </div>
@@ -32,7 +32,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <?= $message['precio'] === "" ? "" : $error_img . $message['precio']; ?>
                 </span>
                 <div class="input-container">
-                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Model Description" ></textarea>
+                    <textarea name="data[descripcion_modelo]" id="descripcion_modelo" rows="10" placeholder="Model Description"><?= $datos_guardados['descripcion_modelo'] ?? "" ?></textarea>
                     <span class="required">*</span>
                 </div>
                 <span class="red-error">
@@ -44,7 +44,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <div>
                         <span class="required">*</span>
                         <input class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
-                        <input type="file" name="model_file" id="file" hidden required>
+                        <input type="file" name="model_file" id="file" hidden>
                     </div>
                 </div>
                 <span class="red-error">
@@ -56,7 +56,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <div>
                         <span class="required">*</span>
                         <input class="selectfileinput2" id="inputImgName2" type="text" placeholder="Model-photo.jpg" readonly>
-                        <input type="file" name="model_photo" id="file2" hidden required>
+                        <input type="file" name="model_photo" id="file2" hidden>
                     </div>
                 </div>
                 <span class="red-error">

@@ -14,5 +14,16 @@ class Pages{
         require_once "../views/$pageName.php";
         // require_once "views/layout/footer.php";
     }
+
+    public static function render2(string $pageName, array $params = null): void{
+        if($params != null){
+            foreach($params as $name => $value){
+                $$name = $value;
+            }
+        }
+        // require_once "views/layout/header.php";
+        require_once "../views/$pageName.php";
+        // require_once "views/layout/footer.php";
+    }
 }
 ?>

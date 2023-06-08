@@ -5,28 +5,28 @@ namespace Models;
 use Lib\BaseDatos;
 use PDO;
 use PDOException;
-use Lib\Security;
 use Lib\Utils;
 
 
 class Comentario
 {
 
-    private BaseDatos $conexion;
 	private string $id;
 	private string $id_modelo;
 	private string $id_usuario;
 	private string $fecha_subida;
 	private string $reportado;
 	private string $contenido;
+    private BaseDatos $conexion;
 
     public function __construct($id, $id_modelo, $id_usuario, $fecha_subida, $reportado, $contenido){
-		$this->conexion = new BaseDatos();
 		$this->id = $id;
 		$this->id_modelo = $id_modelo;
 		$this->id_usuario = $id_usuario;
 		$this->reportado = $reportado;
 		$this->fecha_subida = $fecha_subida;
+		$this->contenido = $contenido;
+		$this->conexion = new BaseDatos();
 
     }
 
@@ -44,7 +44,76 @@ class Comentario
 	}
 
 	
+	public function comentar($idmodelo, $comentario, $message){
+		$validacion = $this -> validarComentario($comentario, $message);
+		if($validacion === true){
+			$fecha_comentario = Date("Y-m-d H:i:s");
+			$consulta = $this -> conexion -> prepara('INSERT INTO comentarios(id_usuario, id_modelo, fecha_subida, contenido) VALUES (:id_usuario, :id_modelo, :fecha_subida, :contenido)');
+			$consulta -> bindParam('id_usuario', $_SESSION['identity'] -> id);
+			$consulta -> bindParam('id_modelo', $idmodelo);
+			$consulta -> bindParam('fecha_subida', $fecha_comentario);
+			$consulta -> bindParam('contenido', $comentario);
+			try {
+				$consulta -> execute();
+				return true;
+			} catch (PDOException $err) {
+				echo 'Error en la consulta'.$err;
+				return false;
+			}
+		}else{
+			return $validacion;
+		}
+
+	}
+
+
+	public function obtenerComentarios($idmodelo): ?array
+	{
+		// DEVUELVE UN ARRAY DE OBJETOS MODELO
+			$consulta = $this->conexion->prepara("SELECT * FROM comentarios WHERE id_modelo=:id_modelo ORDER BY id");
+			$consulta->bindParam(':id_modelo', $idmodelo);
+			try {
+				$consulta -> execute();
+				$comentarios = $consulta -> fetchAll();
+				return $this->getAll($comentarios);
+			} catch (PDOException $err) {
+				echo 'Error en la consulta'.$err;
+				return false;
+			}
+		}
 	
+
+	public function getAll($comentarios): ?array
+	{
+		// DEVUELVE UN ARRAY DE COMENTARIOS
+		$comentarios_datos = [];
+		foreach ($comentarios as $datos) {
+			$comentarios_datos[] = Comentario::fromArray($datos);
+		}
+		return $comentarios_datos;
+	}
+
+	
+	public function validarComentario($comentario, $message){	
+		$commentval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
+
+		
+		//TODO: || strlen(comentario) < 40
+		if (empty($comentario) || preg_match($commentval, $comentario) === 0  ) {
+			$message['comment'] = "The comment can only contain letters and spaces and a minimum of 20 characters";
+		} else {
+			$message['comment'] = "";
+		}
+
+
+
+		if (Utils::comprobarErrores($message)) {
+			return true;
+		}
+		return $message;
+	}
+
+
 	/**
 	 * Get the value of id
 	 */ 
@@ -164,6 +233,8 @@ class Comentario
 		
 		return $this;
 	}
+
+
 	
 }
 ?>

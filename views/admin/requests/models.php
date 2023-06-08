@@ -97,6 +97,7 @@ $peticionController = new PeticionController();
         justify-content: space-around;
         align-items: center;
         background-color: var(--bg-color);
+        left: 0;
     }
 
     .user-opt a {
@@ -118,7 +119,7 @@ $peticionController = new PeticionController();
     <section>
         <table id="requests">
             <?php
-            $pendientes = $modeloController->obtenerPendientes();
+            $pendientes = $modeloController->obtenerModelosPendientes();
 
             if (!empty($pendientes)) : ?>
                 <tr>
@@ -149,12 +150,12 @@ $peticionController = new PeticionController();
     <?php else : ?>
         <p>No se encontraron resultados.</p>
     <?php endif; ?>
-    </section>
-    <div class="user-opt">
-        <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/MO/id=">Rechazar Petición</a>
-        <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/MO/id=">Aceptar Petición</a>
-    </div>
+</section>
 
+<div class="user-opt">
+    <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/MO/id=">Rechazar Petición</a>
+    <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/MO/id=">Aceptar Petición</a>
+</div>
 
     <section>
     <table>
