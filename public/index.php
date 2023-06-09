@@ -13,8 +13,7 @@ use Controllers\PeticionController;
 use Controllers\LikeController;
 use Controllers\FavoritosController;
 use Controllers\ComentariosController;
-
-
+use Controllers\VentasController;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
@@ -66,10 +65,6 @@ Router::add('GET', '/profile', function () {
     (new UsuarioController())->perfil();
 });
 
-// Router::add('GET','/usuario/getall',function(){
-//     (new UsuarioController()) -> getall();
-// });
-
 Router::add('GET', '/profile/settings', function () {
     (new UsuarioController())->update();
 });
@@ -87,8 +82,8 @@ Router::add('POST', '/userprofile/update', function () {
 });
 
 
-Router::add('GET', '/model/author', function () {
-    (new UsuarioController())->autor();
+Router::add('GET', '/model/author/id=:id', function (int $id) {
+    (new UsuarioController())->autor($id);
 });
 
 Router::add('GET', '/home', function () {
@@ -112,9 +107,8 @@ Router::add('GET', '/models/view/id=:id', function (int $id) {
     (new ModeloController())->mostrarModelo($id);
 });
 
-Router::add('POST', '/modelbuy/id=:id', function (int $id) {
-    var_dump($id); die;
-    (new ModeloController())->mostrarModelo($id);
+Router::add('POST', '/model/buy/id=:id', function (int $id) {
+    (new VentasController())->comprar($id);
 });
 
 Router::add('GET', '/model/like/id=:id', function (int $id) {
@@ -138,6 +132,10 @@ Router::add('POST', '/model/view/comment/id=:id', function (int $id) {
     (new ComentariosController())->comentar($id);
 });
 
+Router::add('GET', '/model/view/comment/report/id=:id', function (int $id) {
+    (new PeticionController())->solicitud(null, 'rep', $id);
+});
+
 
 
 Router::add('GET', '/contact', function () {
@@ -154,6 +152,18 @@ Router::add('GET', 'profile/becreator', function () {
 
 Router::add('POST', 'profile/becreator', function () {
     (new PeticionController())->serCreador();
+});
+
+Router::add('GET', 'profile/author/id=:id', function (int $id) {
+    (new UsuarioController())->autor($id);
+});
+
+Router::add('GET', 'profile/author/like/id=:id', function (int $id) {
+    (new LikeController())->like($id, $autor = true);
+});
+
+Router::add('GET', 'profile/author/fav/id=:id', function (int $id) {
+    (new FavoritosController())->favorito($id, $autor = true);
 });
 
 //CREADOR
@@ -179,6 +189,10 @@ Router::add('POST', 'admin/requests', function () {
 
 Router::add('GET', 'admin/requests/creators/id=:id', function (int $id) {
     (new PeticionController())->obtenerCreador($id);
+});
+
+Router::add('GET', 'admin/requests/comments/id=:id', function (int $id) {
+    (new PeticionController())->obtenerComentario($id);
 });
 
 Router::add('GET', 'admin/users', function () {

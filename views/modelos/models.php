@@ -6,6 +6,8 @@ use Controllers\FavoritosController;
 
 $likeC = new LikeController();
 $favC = new FavoritosController();
+$usuarioC = new UsuarioController();
+
 
 $estilos = ['models'];
 foreach ($estilos as $estilo) :  ?>
@@ -67,7 +69,7 @@ require_once '../views/layout/header.php';
                     <div class="model--modelinfo">
                         <div class="infomodel">
                             <div class="model--title"><?= $modelo->getTitulo() ?></div>
-                            <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>model/author" class="linkpurple"><?= UsuarioController::obtenerNombreUsuario($modelo->getId_usuario())[0]['nombre'] ?></a></div>
+                            <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>profile/author/id=<?= $modelo->getId_usuario() ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->getId_usuario())->nombre ?></a></div>
                         </div>
                         <div class="model--likesfavs textshadowlight">
                             <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/like/id=<?= $modelo->getId() ?>'">

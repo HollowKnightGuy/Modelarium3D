@@ -7,12 +7,23 @@ endforeach;
 require_once '../views/layout/header.php';
 
 use Controllers\UsuarioController;
+use Controllers\VentasController;
+
 $_SESSION['scripts'] = ['psmain']; 
 
 $usuarioC = new UsuarioController;
+$ventasC = new VentasController;
+
 $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
+
+$totalventas = $ventasC -> obtenerVentasUsuario($_SESSION['identity']->id)[0]['total_ventas'];
+$precio = number_format($totalventas, 2, ',', '');
+$pparte1 = explode(',', $precio)[0];
+$pparte2 = explode(',', $precio)[1];
+
 ?>
+
 
 
 <?php foreach ($_SESSION['scripts'] as $script) : ?>
@@ -108,7 +119,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
             <h1>Earnings</h1>
             <span>You Have Already Earn:</span>
             <div class="model--price textshadowlight">
-                <span class="price--bnumber">19</span><span class="price-snumber">,95€</span>
+                <span class="price--bnumber"><?= $pparte1 ?></span><span class="price-snumber">,<?= $pparte2 ?>€</span>
             </div>
             <span>If you have any question about your earnings check out our <a class=" profsetlink linkpurple" style="cursor:pointer; color:var(--contact-input-color); width: 10px; display:inline-block">FAQs</a></span>
         </article>

@@ -26,7 +26,7 @@ class PeticionController
 
 
 
-    public function solicitud($message = null)
+    public function solicitud($message = null, $comentario = null, $id_comentario = null)
     {
 
         if (Utils::isCreator()) {
@@ -57,7 +57,24 @@ class PeticionController
                 $this->pages->render('admin/requests/models');
             }
 
+        }else if($comentario === 'rep' and $id_comentario !== null){
+            if(Utils::isLogged()){
+                $comentarioObj = $this -> intercontroller -> obtenerComentarioPorId($id_comentario);
+                if($comentarioObj -> reportado !== NULL){
+                    $_SESSION['esta_reportado'] = "This comment is already reported";
+                    Utils::irView($comentarioObj -> id_modelo);
+                }else{
+                    $_SESSION['esta_reportado'] = "";
 
+                    // $this -> intercontroller -> obtenerComentario($id_comentario);
+                    $reportado = true;
+                    $this -> peticion -> guardarPeticionComentarioRep($comentarioObj);
+                    $this -> intercontroller -> cambiarEstadoComentario($reportado, $id_comentario);
+                    Utils::irView($comentarioObj -> id_modelo);
+                }
+            }else{
+                Utils::irLogin();
+            }
         } else {
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -76,7 +93,11 @@ class PeticionController
                     return $peticionCreador;
                 }
             } else {
-                Utils::irProfile();
+                if(Utils::isLogged()){
+                    Utils::irProfile();
+                }else{
+                    Utils::irLogin();
+                }
             }
 
         }
@@ -121,6 +142,11 @@ class PeticionController
         return $this->peticion->obtenerCreatorsPendientes();
     }
 
+    public function obtenerComentariosPendientes()
+    {
+        return $this->peticion->obtenerComentariosPendientes();
+    }
+
     public function obtenerCreador($id)
     {
 
@@ -133,12 +159,27 @@ class PeticionController
 
     }
 
+    public function obtenerComentario($id_comentario)
+    {
+        $comentario = $this -> intercontroller -> obtenerComentarioPorId($id_comentario);
+        $modelo = $this -> intercontroller -> obtenerModeloPorId($comentario -> id_modelo);
+        $usuario = $this->intercontroller->obtenerUsuarioPorId($comentario -> id_usuario);
+        $peticion = $this -> peticion -> obtenerPeticionComentario($comentario -> id);
+
+        $this -> pages -> render('admin/requests/comments', ['modelo' => $modelo, 'usuario' => $usuario, 'comentario' => $comentario, 'peticion' => $peticion]);
+
+    }
+
     public function borrarPeticion($id){
         return $this -> peticion -> borrarPeticion($id);
     }
 
     public function obtenerPeticion($id_modelo){
         return $this -> peticion -> obtenerPeticion($id_modelo);
+    }
+
+    public function obtenerPeticionComentario($id_comentario){
+        return $this -> peticion -> obtenerPeticionComentario($id_comentario);
     }
 
     public function obtenerPeticionPorId($id){
@@ -151,7 +192,7 @@ class PeticionController
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
                 $delete = $this->intercontroller->borrarModelo($id);
-                $deletePE = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
+                $borrarPeticion = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
                 if ($delete) {
                     $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
                 } else {
@@ -161,9 +202,19 @@ class PeticionController
 
             elseif ($type === 'BC') {
 
-                $deleteMO = $this->intercontroller->borrarModelo($this -> obtenerPeticion($id)->id_modelo);
-                $deletePE = $this -> borrarPeticion($id);
-                if ($deleteMO && $deletePE) {
+                $delete = $this->intercontroller->borrarModelo($this -> obtenerPeticion($id)->id_modelo);
+                $borrarPeticion = $this -> borrarPeticion($id);
+                if ($delete && $borrarPeticion) {
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                } else {
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                }
+            }
+            elseif ($type === 'CO') {
+
+                $delete = $this->intercontroller->borrarComentario($this -> obtenerPeticionPorId($id)->id_comentario);
+                $borrarPeticion = $this -> borrarPeticion($id);
+                if ($deleteMO && $borrarPeticion) {
                     $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
                 } else {
                     $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
@@ -178,9 +229,9 @@ class PeticionController
     {
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
-                $insert = $this->intercontroller->cambiarEstadoModelo($id);
-                $deletePE = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
-                if ($insert) {
+                $cambiarEstado = $this->intercontroller->cambiarEstadoModelo($id);
+                $borrarPeticion = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
+                if ($cambiarEstado) {
                     //$this -> peticion -> aceptarPeticion($id_peticion);
                     $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
                 } else {
@@ -190,12 +241,21 @@ class PeticionController
 
             elseif ($type === 'BC') {
 
-                $insert = $this->intercontroller->cambiarEstadoModelo($this -> obtenerPeticionPorId($id)->id_modelo);
+                $cambiarEstado = $this->intercontroller->cambiarEstadoModelo($this -> obtenerPeticionPorId($id)->id_modelo);
                 $id_usuario = $this -> obtenerPeticionPorId($id) -> id_usuario;
-                $deletePE = $this -> borrarPeticion($id);
+                $borrarPeticion = $this -> borrarPeticion($id);
 
                 $this -> intercontroller -> cambiaRol($id_usuario, 'ROLE_CREATOR');
-                if ($insert && $deletePE) {
+                if ($cambiarEstado && $borrarPeticion) {
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                } else {
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                }
+                
+            }elseif ($type === 'CO') {
+                $cambiarEstado = $this -> intercontroller -> cambiarEstadoComentario(false, $this -> obtenerPeticionPorId($id)->id_comentario );
+                $borrarPeticion = $this -> borrarPeticion($id);
+                if ($cambiarEstado && $borrarPeticion) {
                     $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
                 } else {
                     $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);

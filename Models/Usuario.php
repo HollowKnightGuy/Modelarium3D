@@ -414,6 +414,18 @@ class Usuario
 		}
 	}
 
+	public function obtenerFotoUsuario($id){
+        $consulta = $this -> conexion -> prepara("SELECT foto_perfil FROM usuarios WHERE id = :id");
+		$consulta -> bindParam(':id', $id, PDO::PARAM_INT);
+
+		try {
+			$consulta -> execute();
+			return $consulta->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			exit($e->getMessage());
+		}
+	}
+
 	public function cambiaRol($id_usuario, $rol) {
 		$consulta = $this->conexion->prepara("UPDATE usuarios SET rol = :rol WHERE id = :id_usuario");
 		$consulta->bindParam(':rol', $rol, PDO::PARAM_STR);

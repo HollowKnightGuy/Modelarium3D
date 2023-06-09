@@ -113,6 +113,47 @@ class Comentario
 		return $message;
 	}
 
+	public function cambiarEstadoComentario($reportado, $id_comentario){
+        if($reportado){
+			$consulta = $this -> conexion -> prepara("UPDATE comentarios SET reportado=1 WHERE id=:id_comentario");
+		}else{
+			$consulta = $this -> conexion -> prepara("UPDATE comentarios SET reportado=NULL WHERE id=:id_comentario");
+		}
+		$consulta -> bindParam(":id_comentario", $id_comentario);
+		try {
+			$consulta -> execute();
+			return true;
+		} catch (PDOException $err) {
+			echo 'Error en la consulta'.$err;
+			return false;
+		}
+    }
+
+	public function obtenerComentarioPorId($id_comentario){
+		$consulta = $this -> conexion -> prepara("SELECT * FROM comentarios WHERE id=:id_comentario");
+		$consulta -> bindParam(":id_comentario", $id_comentario);
+		try {
+			$consulta -> execute();
+			return $consulta -> fetch(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			echo 'Error en la consulta'.$err;
+			return false;
+		}
+	}
+
+	public function borrarComentario($id_comentario){
+		$consulta = $this -> conexion -> prepara("DELETE FROM comentarios WHERE id=:id_comentario");
+		$consulta -> bindParam(":id_comentario", $id_comentario);
+		try {
+			$consulta -> execute();
+			return true;
+		} catch (PDOException $err) {
+			echo 'Error en la consulta'.$err;
+			return false;
+		}
+	}
+
+
 
 	/**
 	 * Get the value of id

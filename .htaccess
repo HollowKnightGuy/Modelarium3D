@@ -7,4 +7,5 @@
     #ErrorDocument 404 http://localhost/modelarium3D-php/
 
     RewriteRule ^.*$ public/index.php/ [QSA,L]
+    Rewriterule ^models/Z([0-9]+)/?$ /models/view/id=$1
 </IfModule>

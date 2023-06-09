@@ -3,6 +3,7 @@
 namespace Controllers;
 use Controllers\UsuarioController;
 use Controllers\ModeloController;
+use Controllers\ComentariosController;
 
 
 
@@ -10,12 +11,14 @@ class InterController{
 
     private UsuarioController $usuarioC;
     private ModeloController $modeloC;
+    private ComentariosController $comentarioC;
 
 
 
     public function __construct(){
         $this -> usuarioC = new UsuarioController();
         $this -> modeloC = new ModeloController();
+        $this -> comentarioC = new ComentariosController();
     }
     
     public function obtenerUsuario($email){
@@ -40,6 +43,10 @@ class InterController{
 
     public function obtenerModelo($id_usuario, $titulo){
         return $this -> modeloC -> obtenerModelo($id_usuario, $titulo);
+    }
+
+    public function mostrarModelo($id_modelo){
+        return $this -> modeloC -> mostrarModelo($id_modelo);
     }
 
     public function like($idmodelo){
@@ -69,6 +76,15 @@ class InterController{
 
     public function obtenerModelosUsuario($idusuario){
         return $this -> modeloC -> obtenerModelosUsuario($idusuario);
+    }
+    public function cambiarEstadoComentario($reportado, $id_comentario){
+        return $this -> comentarioC -> cambiarEstadoComentario($reportado, $id_comentario);
+    }
+    public function obtenerComentarioPorId($id_comentario){
+        return $this -> comentarioC -> obtenerComentarioPorId($id_comentario);
+    }
+    public function borrarComentario($id_comentario){
+        return $this -> comentarioC -> borrarComentario($id_comentario);
     }
 }
 ?>

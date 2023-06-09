@@ -171,6 +171,48 @@ class Peticion
 	}
 
 
+	public function guardarPeticionComentarioRep($comentario){
+		return $this -> insertarPComentarioRep($comentario);
+	}
+
+	public function insertarPComentarioRep($comentario){
+		$fecha_peticion = Date("Y-m-d H:i:s");
+		$tipo = 'CO';
+		$estado = 'pendiente';
+		$consulta = $this -> conexion -> prepara("INSERT INTO peticiones(
+			id_modelo, id_usuario, id_comentario, tipo, estado, fecha_peticion
+			) 
+			VALUES(
+				:id_modelo,:id_usuario,:id_comentario,:tipo,:estado,:fecha_peticion
+				)");
+		$consulta -> bindParam(':id_modelo', $comentario -> id_modelo, PDO::PARAM_STR);
+		$consulta -> bindParam(':id_comentario', $comentario -> id, PDO::PARAM_STR);
+		$consulta -> bindParam(':id_usuario', $comentario -> id_usuario, PDO::PARAM_STR);
+		$consulta -> bindParam(':tipo', $tipo, PDO::PARAM_STR);
+		$consulta -> bindParam(':estado', $estado, PDO::PARAM_STR);
+		$consulta -> bindParam(':fecha_peticion', $fecha_peticion, PDO::PARAM_STR);
+
+		try {
+			$consulta -> execute();
+			return true;
+		} catch (PDOException $err) {
+			echo 'Error en la consulta'.$err;
+			return false;
+		}
+	}
+
+	public function obtenerComentariosPendientes(){
+		$consulta = $this->conexion->prepara("SELECT * FROM peticiones WHERE estado = 'pendiente' AND tipo = 'CO'");
+		try {
+			$consulta->execute();
+			return $consulta->fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+
 
 	public function validarPModelo($datosavalidar, $message){	
 			$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
@@ -316,6 +358,21 @@ class Peticion
 				return false;
 			}
 		}
+
+		
+		public function obtenerPeticionComentario($id_comentario){
+
+			$consulta = $this->conexion->prepara("SELECT * FROM peticiones WHERE id_comentario = :id_comentario");
+			$consulta->bindParam(":id_comentario", $id_comentario);
+			try {
+				$consulta->execute();
+				return $consulta->fetch(PDO::FETCH_OBJ);
+			} catch (PDOException $err) {
+				echo "Error en la consulta: " . $err->getMessage();
+				return false;
+			}
+		}
+
 
 		public function obtenerPeticionPorId($id){
 

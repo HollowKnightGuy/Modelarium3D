@@ -65,6 +65,14 @@ class Utils{
         }
     }
 
+    public static function idLoggedUsuario(){
+        if(isset($_SESSION['identity'])){
+            return $_SESSION['identity']->id;
+        }else{
+            return false;
+        }
+    }
+
     
 	public static function validarImagenPerfil($img, $message):array{
         $img = Utils::propsImg($img);
@@ -141,6 +149,11 @@ class Utils{
 
     public static function irView($idmodelo){
         header("Location:".$_ENV['BASE_URL']."models/view/id=".$idmodelo);
+    }
+
+    
+    public static function irAutor($idautor){
+        header("Location:".$_ENV['BASE_URL']."profile/autor/id=".$idautor);
     }
 
     public static function irProfile(){

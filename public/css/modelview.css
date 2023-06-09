@@ -707,6 +707,13 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   gap: 0.5rem;
 }
 
+.comment-date{
+  position: relative;
+  color: var(--dark-grey-color);
+  font-size: var(--fs-200);
+  top: 3px;
+}
+
 .comment-1 form{
   display: flex;
   gap: 0.5rem;
@@ -742,6 +749,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 }
 
 .report-flag {
+  cursor: pointer;
   margin-top: 10px;
 }
 

@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // RESPONSIVE MENU OF HEADER
     
     $('.menu').click(function(){
-        console.log("main.js")
         $(this).toggleClass('open');
         $('.responsivemenu').toggleClass('isactive')
         if(menuBtn.className.includes('open')){

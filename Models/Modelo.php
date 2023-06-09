@@ -99,7 +99,7 @@ class Modelo
 
 	public function obtenerModelosUsuario($id_usuario){
 		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
-		WHERE id_usuario=:id_usuario");
+		WHERE id_usuario=:id_usuario AND estado = 'subido'");
 		$consulta->bindParam(':id_usuario', $id_usuario);
 		try {
 			$consulta->execute();

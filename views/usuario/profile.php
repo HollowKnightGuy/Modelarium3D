@@ -7,13 +7,31 @@ endforeach;
 require_once '../views/layout/header.php';
 
 use Controllers\UsuarioController;
+use Controllers\ModeloController;
+use Controllers\VentasController;
+use Controllers\LikeController;
+use Controllers\FavoritosController;
+
+
+
+use Lib\Utils;
 
 $usuarioC = new UsuarioController();
+$modeloC = new ModeloController();
+$ventasC = new VentasController();
+$likeC = new LikeController();
+$favC = new FavoritosController();
+
+
+
+
+$modelosUsuario = $modeloC->obtenerModelosUsuario(Utils::idLoggedUsuario());
+
 
 if (isset($_SESSION['identity'])) {
     $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 }
-$error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error>';
+$error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
 
 ?>
 
@@ -112,37 +130,48 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
         <div class="profile-models">
 
             <section class="models">
-                <article class="profile-section profile-section-models">
-                    <div class="model">
-                        <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/arcade.png" alt="model">
-                        </div>
 
-                        <div class="model--modelinfo">
-                            <div class="infomodel">
-                                <div class="model--title">Arcade Machine</div>
-                                <div class="model--author ">Author: <a href="author.html" class="linkpurple">Pablo Cid</a></div>
-                            </div>
-                            <div class="model--likesfavs textshadowlight">
-                                <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
-                                    <span>40</span>
+                <!-- TODO: este es de modelos creados, hacer que sea para los comprados -->
+
+                <?php
+                if (isset($modelosUsuario) && count($modelosUsuario) > 0) :?>
+                    <article class="profile-section profile-section-models">
+                            <?php foreach ($modelosUsuario as $modelo) : ?>
+                            <div class="model">
+                                <div class="model--model">
+                                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $modelo->foto_modelo ?>" alt="model">
                                 </div>
-                                <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
-                                    <span>40</span>
+
+                                <div class="model--modelinfo">
+                                    <div class="infomodel">
+                                        <div class="model--title"><?= $modelo->titulo ?></div>
+                                        <div class="model--author ">Author: <a href="profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
+                                    </div>
+                                    <div class="model--likesfavs textshadowlight">
+                                        <div class="model--likes">
+                                            <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
+                                            <span><?= $modelo->num_likes ?></span>
+                                        </div>
+                                        <div class="model--favs">
+                                            <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
+                                            <span><?= $modelo->num_favs ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-cards-button">
+                                    <div class="model--seebtn">
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = './modelview.html' ">DOWNLOAD</button>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-cards-button">
-                            <div class="model--seebtn">
-                                <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = './modelview.html' ">DOWNLOAD</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </article>
-
+                            <?php endforeach; ?>
+                        </article>
+                <?php else : ?>
+                    <article class="profile-section profile-section-models">
+                        <h1 class="purple">No hay modelos comprados</h1>
+                    </article>
+                <?php endif; ?>
                 <article class="profile-section profile-section-liked none">
                     <div class="model">
                         <div class="model--model">
@@ -210,8 +239,7 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
                         </div>
                     </div>
                 </article>
-
-                <?php if (isset($userdata->rol) && $userdata->rol == 'ROLE_CREATOR') : ?>
+                <?php if (isset($userdata->rol) && $userdata->rol === 'ROLE_CREATOR') : ?>
 
                     <article class="profile-section profile-section-created none">
                         <div class="model">
@@ -262,7 +290,6 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
                                     </div>
                                     <div class="model--favs">
                                         <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
-                                        BASE_URL_PUBLIC
                                     </div>
                                 </div>
                             </div>
@@ -280,6 +307,7 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
 </main>
 <script>
     const profileSections = document.getElementsByClassName("profile-section");
+    console.log(profileSections);
     const pLinks = document.getElementsByClassName("profile_link");
 
 
@@ -298,23 +326,24 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
     }
 
 
-    <?php if (isset($userdata->rol) && $userdata->rol == 'ROLE_CREATOR') : ?>
+    <?php if (isset($userdata->rol) && $userdata->rol === 'ROLE_CREATOR') :
+    ?>
 
         function changePState(s1, s2, s3, s4, s5) {
             profileSections[0].style.display = s1;
-            profileSections[1].style.display = s2;
-            profileSections[2].style.display = s3;
-            profileSections[3].style.display = s4;
+            profileSections[1].style.display = s3;
+            profileSections[2].style.display = s4;
+            profileSections[3].style.display = s2;
             profileSections[4].style.display = s5;
 
 
             if (s1 !== "none") {
                 changePLinktates(lastclickedp, 0);
-            } else if (s2 !== "none") {
-                changePLinktates(lastclickedp, 1);
             } else if (s3 !== "none") {
-                changePLinktates(lastclickedp, 2);
+                changePLinktates(lastclickedp, 1);
             } else if (s4 !== "none") {
+                changePLinktates(lastclickedp, 2);
+            } else if (s2 !== "none") {
                 changePLinktates(lastclickedp, 3);
             } else if (s5 !== "none") {
                 changePLinktates(lastclickedp, 4);
@@ -322,7 +351,7 @@ $error_img = '<img src='.$_ENV['BASE_URL_PUBLIC'].'img/icons/error.svg alt=error
         }
     <?php else : ?>
 
-        function changePState(s1, s2, s3, s4, s5) {
+        function changePState(s1,s2, s3, s4,s5) {
             profileSections[0].style.display = s1;
             profileSections[1].style.display = s3;
             profileSections[2].style.display = s4;

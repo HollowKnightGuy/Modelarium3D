@@ -157,16 +157,16 @@ class UsuarioController
         }
     }
 
-    public function autor()
+    public function autor($id)
     {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $datos = $_POST['data'];
 
 
-            $this->pages->render('usuario/author');
+            $this->pages->render('usuario/author', ['id_autor' => $id]);
         } else {
-            $this->pages->render('usuario/author');
+            $this->pages->render('usuario/author', ['id_autor' => $id]);
         }
     }
 
@@ -201,6 +201,12 @@ class UsuarioController
     {
         $usuario = new Usuario("", "", "", "", "", "", "", "", "", "");
         return $usuario->obtenerNombreUsuario($id);
+    }
+
+    public static function obtenerFotoUsuario($id)
+    {
+        $usuario = new Usuario("", "", "", "", "", "", "", "", "", "");
+        return $usuario->obtenerFotoUsuario($id);
     }
 
     public function cambiaRol($id_usuario, $rol){

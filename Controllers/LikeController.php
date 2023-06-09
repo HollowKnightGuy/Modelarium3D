@@ -22,11 +22,14 @@
             return $this -> like -> comprobarLike($idusuario, $idmodelo);
         }
 
-        public function like($idmodelo, $view = false){
+        public function obtenerModelosLiked($id_usuario){
+            return $this -> obtenerModelosLiked($id_usuario);
+        }
+
+        public function like($idmodelo, $view = false, $autor = false, $autorid = null){
             if(Utils::isLogged()){
                 $usuarioDadoLike = $this -> comprobarLike($_SESSION['identity']-> id, $idmodelo);
 
-                $idmodelo = $this -> intercontroller -> obtenerModeloPorId($idmodelo)[0] -> id;
 
                 if($usuarioDadoLike === false || $usuarioDadoLike === null){
                     $insert = $this -> like -> insertLike($_SESSION['identity'] -> id, $idmodelo);
@@ -36,6 +39,11 @@
                     }
                     else if($this -> intercontroller -> like($idmodelo)){
                         $_SESSION['error_like'] = "";
+                        if($view === true) Utils::irView($idmodelo);
+                        if($autor === true){
+                            $idautor = $this -> intercontroller -> obtenerModeloPorId($idmodelo)[0]->id_usuario;
+                            Utils::irAutor($idautor);
+                        }
                         $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }else{
@@ -46,6 +54,11 @@
                     }
                     else if($this -> intercontroller -> revertirLike($idmodelo)){
                         $_SESSION['error_like'] = "";
+                        if($view === true) Utils::irView($idmodelo);
+                        if($autor === true){
+                            $idautor = $this -> intercontroller -> obtenerModeloPorId($idmodelo)[0]->id_usuario;
+                            Utils::irAutor($idautor);
+                        }     
                         $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }

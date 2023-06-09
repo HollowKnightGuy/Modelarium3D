@@ -70,7 +70,6 @@ tr:first-child:hover{
             <th>Descripción</th>
             <th>Foto Perfil</th>
             <th>Banner</th>
-            <th>Nº Modelos</th>
             <th>Descuento</th>
             <th>Fecha Creacion</th>
         </tr>
@@ -81,10 +80,9 @@ tr:first-child:hover{
                 <td><?= $usuario['nombre'] === "" ? "-" : $usuario['nombre'] ?></td>
                 <td><?= $usuario['email'] === "" ? "-" : $usuario['email'] ?></td>
                 <td><?= $usuario['descripcion'] === "" ? "-" : $usuario['descripcion'] ?></td>
-                <td><?= $usuario['foto_perfil'] === "" ? "-" : $usuario['foto_perfil'] ?></td>
-                <td><?= $usuario['banner'] === null ? "default.jpg" : $usuario['banner'] ?></td>
-                <td><?= $usuario['num_modelos'] === "" || $usuario['num_modelos'] === null ? "-" : $usuario['num_modelos'] ?></td>
-                <td><?= $usuario['descuento'] === "" || $usuario['descuento'] === null ? "-" : $usuario['descuento'] ?></td>
+                <td><img width="40px" src="<?= $usuario['foto_perfil'] === "" ? $_ENV['BASE_URL_PUBLIC']."img/default/profile.jpg" : $_ENV['BASE_URL_PUBLIC']."img/user/profilephoto/".$usuario['foto_perfil'] ?>" ></td>
+                <td><img width="100px" src="<?= $usuario['banner'] === null ? $_ENV['BASE_URL_PUBLIC']."img/default/banner.jpg" : $_ENV['BASE_URL_PUBLIC']."img/user/profilebanner/".$usuario['banner'] ?>" ></td>
+                <td><?= $usuario['ganancias'] === "" || $usuario['ganancias'] === null ? "-" : $usuario['ganancias'] ?></td>
                 <td><?= $usuario['fecha_creacion'] === "" ? "-" : $usuario['fecha_creacion'] ?></td>
             </tr>
         <?php endforeach; ?>

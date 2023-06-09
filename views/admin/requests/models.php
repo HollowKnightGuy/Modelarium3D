@@ -5,7 +5,7 @@ $estilos = 'about'; ?>
 require_once '../views/layout/header.php';
 
 use Controllers\ModeloController;
-use COntrollers\PeticionController;
+use Controllers\PeticionController;
 
 $modeloController = new ModeloController();
 $peticionController = new PeticionController();
@@ -107,97 +107,142 @@ $peticionController = new PeticionController();
 </style>
 
 <div class="container">
-
     <h1 class="title">Requests</h1>
 
     <ul class="links">
-        <li class="section">Models</li>
-        <li class="section">Comments</li>
-        <li class="section">Creators</li>
+        <li class="section" onclick="changeReqstate('block', 'none', 'none')">Models</li>
+        <li class="section" onclick="changeReqstate('none', 'block', 'none')">Creators</li>
+        <li class="section" onclick="changeReqstate('none', 'none', 'block')">Comments</li>
     </ul>
 
-    <section>
-        <table id="requests">
-            <?php
-            $pendientes = $modeloController->obtenerModelosPendientes();
+    <div class="section-request">
+        <section>
+            <table id="requests">
+                <?php
+                $pendientes = $modeloController->obtenerModelosPendientes();
 
-            if (!empty($pendientes)) : ?>
-                <tr>
-                    <?php foreach ($pendientes[0] as $columna => $valor) : ?>
-                        <th><?= $columna ?></th>
+                if (!empty($pendientes)) :
+                ?>
+                    <tr>
+                        <?php foreach ($pendientes[0] as $columna => $valor) : ?>
+                            <th><?= $columna ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                    <?php foreach ($pendientes as $pendiente) : ?>
+                        <tr class="transition request">
+                            <?php foreach ($pendiente as $valor) :
+                                if ($valor == $pendiente->foto_modelo) : ?>
+                                    <td><img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $valor ?>" alt="<?= $valor ?>" width="80px" /></td>
+                                <?php else : ?>
+                                    <?php if ($valor == $pendiente->id) : ?>
+                                        <td id="<?= $valor ?>"><?= $valor ?></td>
+                                    <?php else : ?>
+                                        <td><?= $valor ?></td>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </tr>
                     <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="5">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+        </section>
+
+        <div class="user-opt">
+            <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/MO/id=">Rechazar Petición</a>
+            <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/MO/id=">Aceptar Petición</a>
+        </div>
+    </div>
+
+    <div class="section-request" style="display: none;">
+        <section>
+            <table>
+                <?php
+                $pendientes = $peticionController->obtenerCreatorsPendientes();
+
+                if (!empty($pendientes)) :
+                ?>
+                    <tr>
+                        <?php foreach ($pendientes[0] as $columna => $valor) :
+                            if ($columna != 'id_comentario' && $columna != 'tipo') : ?>
+                                <th><?= $columna ?></th>
+                            <?php endif;
+                        endforeach; ?>
+                    </tr>
 
                     <?php foreach ($pendientes as $pendiente) : ?>
-                <tr class="transition request">
-                    <?php foreach ($pendiente as $valor) :
-                            if ($valor == $pendiente->foto_modelo) : ?>
-                            <td><img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $valor ?>" alt="<?= $valor ?>" width=80px /></td>
-                        <?php else : ?>
-                            <?php if ($valor == $pendiente->id) : ?>
-                                <td id="<?= $valor ?>"><?= $valor ?></td>
-                            <?php else : ?>
-                                <td><?= $valor ?></td>
-                            <?php endif; ?>
-                        <?php endif; ?>
-
+                        <tr class="transition" onclick="redirectToPage('<?= $pendiente->id ?>', 'requests/creators/')">
+                            <?php foreach ($pendiente as $columna => $valor) :
+                                if ($columna != 'id_comentario' && $columna != 'tipo') :
+                                    if ($valor == $pendiente->id) : ?>
+                                        <td id="<?= $valor ?>"><?= $valor ?></td>
+                                    <?php else : ?>
+                                        <td><?= $valor ?></td>
+                                    <?php endif;
+                                endif;
+                            endforeach; ?>
+                        </tr>
                     <?php endforeach; ?>
-                </tr>
-            <?php endforeach; ?>
-
-            </tr>
-
-        </table>
-    <?php else : ?>
-        <p>No se encontraron resultados.</p>
-    <?php endif; ?>
-</section>
-
-<div class="user-opt">
-    <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/MO/id=">Rechazar Petición</a>
-    <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/MO/id=">Aceptar Petición</a>
-</div>
-
+                <?php else : ?>
+                    <tr>
+                        <td colspan="5">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+        </section>
+    </div>
+    <div class="section-request" style="display: none;">
     <section>
-    <table>
-    <?php
-    $pendientes = $peticionController->obtenerCreatorsPendientes();
+            <table>
+                <?php
+                $pendientes = $peticionController->obtenerComentariosPendientes();
+                if (!empty($pendientes)) :
+                ?>
+                    <tr>
+                        <?php foreach ($pendientes[0] as $columna => $valor) :
+                            if ($columna != 'tipo') : ?>
+                                <th><?= $columna ?></th>
+                            <?php endif;
+                        endforeach; ?>
+                    </tr>
 
-    if (!empty($pendientes)) :
-        ?>
-        <tr>
-            <?php foreach ($pendientes[0] as $columna => $valor) :
-                if ($columna != 'id_comentario' && $columna != 'tipo') : ?>
-                    <th><?= $columna ?></th>
-                <?php endif;
-            endforeach; ?>
-        </tr>
-
-        <?php foreach ($pendientes as $pendiente) : ?>
-            <tr class="transition" onclick="redirectToPage('<?= $pendiente->id ?>', 'requests/creators/')">
-                <?php foreach ($pendiente as $columna => $valor) :
-                    if ($columna != 'id_comentario' && $columna != 'tipo') :
-                        if ($valor == $pendiente->id) : ?>
-                            <td id="<?= $valor ?>"><?= $valor ?></td>
-                        <?php else : ?>
-                            <td><?= $valor ?></td>
-                        <?php endif;
-                    endif;
-                endforeach; ?>
-            </tr>
-        <?php endforeach; ?>
-
-</table>
-
-    <?php else : ?>
-        <p>No se encontraron resultados.</p>
-    <?php endif; ?>
-    </section>
+                    <?php foreach ($pendientes as $pendiente) :  ?>
+                        
+                        <tr class="transition" onclick="redirectToPage('<?= $pendiente -> id_comentario ?>', 'requests/comments/')">
+                            <?php foreach ($pendiente as $columna => $valor) :
+                                if ($columna != 'tipo') :
+                                    if ($valor == $pendiente->id) : ?>
+                                        <td id="<?= $valor ?>"><?= $valor ?></td>
+                                    <?php else : ?>
+                                        <td><?= $valor ?></td>
+                                    <?php endif;
+                                endif;
+                            endforeach; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="5">No se encontraron resultados.</td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+        </section>
+    </div>
+</div>
 </div>
 <script>
+
     const requests = document.getElementsByClassName("requests");
     const rechazarbtn = document.getElementById("rechazarbtn");
     const aceptarbtn = document.getElementById("aceptarbtn");
+    const adminLinks = document.getElementsByClassName("section");
+    const sectionReq = document.getElementsByClassName("section-request")
     let lastclicked;
+
+
     $(".request").on("click", function(e) {
         let iduser = e.target.parentElement.children[0].attributes['id'].nodeValue;
         if (lastclicked != undefined) {
@@ -221,5 +266,34 @@ $peticionController = new PeticionController();
 
     function redirectToPage(id, enlace) {
         window.location.href = enlace + 'id=' + id;
+    }
+
+
+    let lastclickedp
+
+
+
+    function changeRLinkstates(link, newlink) {
+        if (typeof link != "undefined") {
+            link.classList.toggle("plink-clicked")
+        }
+        lastclickedp = adminLinks[newlink];
+        adminLinks[newlink].classList.toggle("plink-clicked");
+    }
+
+    function changeReqstate(s1, s2, s3) {
+        console.log(s1)
+        sectionReq[0].style.display = s1;
+        sectionReq[1].style.display = s2;
+        sectionReq[2].style.display = s3;
+
+
+        if (s1 !== "none") {
+            changeRLinkstates(lastclickedp, 0);
+        } else if (s2 !== "none") {
+            changeRLinkstates(lastclickedp, 1);
+        } else if (s3 !== "none") {
+            changeRLinkstates(lastclickedp, 2);
+        }
     }
 </script>
