@@ -43,10 +43,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                 <input type="file" name="file" id="file" hidden required>
             </div>
         </div>
-        <span class="red-error">
-
-            <?= $message['imagen'] === "" ? "Format allowed: .png .jpg .jpeg" : $error_img . $message['imagen']; ?>
-        </span>
+        <?php if ($message['imagen'] === "") : ?>
+            <span>Format allowed: .png .jpg .jpeg. <br> Max size: 150Kb</span>
+        <?php else : ?>
+            <span class="red-error">
+                <?= $error_img . $message['imagen'] ?>
+            </span>
+        <?php endif; ?>
 
         <div class="input-container">
             <textarea name="data[desc]" id="desc" rows="10" placeholder="Profile Description"><?= $datos_guardados['desc'] ?? "" ?></textarea>

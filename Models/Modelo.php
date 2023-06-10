@@ -119,9 +119,9 @@ class Modelo
 		$id_usuario = $datos['id_usuario'];
 		$archivo_modelo = $datos['archivo_modelo']['name'];
 		$foto_modelo = $datos['foto_modelo']['name'];
-		
+		$fecha_subida = Date("Y-m-d H:i:s");
 		$consulta = $this->conexion->prepara("INSERT INTO modelos(
-			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio
+			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio, fecha_subida
 			) 
 			VALUES(
 				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio
@@ -132,6 +132,7 @@ class Modelo
 		$consulta->bindParam(':archivo_modelo', $archivo_modelo, PDO::PARAM_STR);
 		$consulta->bindParam(':foto_modelo', $foto_modelo, PDO::PARAM_STR);
 		$consulta->bindParam(':precio', $precio, PDO::PARAM_STR);
+		$consulta->bindParam(':fecha_subida', $fecha_subida);
 		
 		try {
 			$consulta->execute();
@@ -252,16 +253,17 @@ class Modelo
 		$consulta->bindParam(':id', $idmodelo);
 		try {
 			$consulta->execute();
-			return $consulta->fetchAll(PDO::FETCH_OBJ);
+			return $consulta->fetch(PDO::FETCH_OBJ);
 		} catch (PDOException $err) {
 			echo "Error en la consulta: " . $err->getMessage();
 			return false;
 		}
 	}
+	
 
 	public function like($idmodelo){
 		$modelo = $this->obtenerModeloPorId($idmodelo);
-		$num_likes = $modelo[0]->num_likes;
+		$num_likes = $modelo->num_likes;
 
 
 		if ($num_likes === null) {
@@ -282,7 +284,7 @@ class Modelo
 
 	public function revertirLike($idmodelo){
 		$modelo = $this->obtenerModeloPorId($idmodelo);
-		$num_likes = $modelo[0]->num_likes;
+		$num_likes = $modelo->num_likes;
 
 
 		if ($num_likes === 1) {
@@ -304,7 +306,7 @@ class Modelo
 
 	public function favorito($idmodelo){
 		$modelo = $this->obtenerModeloPorId($idmodelo);
-		$num_favs = $modelo[0]->num_favs;
+		$num_favs = $modelo->num_favs;
 
 
 		if ($num_favs === null) {
@@ -325,7 +327,7 @@ class Modelo
 
 	public function revertirFavorito($idmodelo){
 		$modelo = $this->obtenerModeloPorId($idmodelo);
-		$num_favs = $modelo[0]->num_favs;
+		$num_favs = $modelo->num_favs;
 
 
 		if ($num_favs === 1) {
@@ -343,6 +345,86 @@ class Modelo
 			return false;
 		}
 	}
+
+
+	public function obtenerModelosBuscar($texto): ?array {
+		$texto = strtolower($texto);
+		$consult = $this -> conexion -> prepara("SELECT * FROM modelos WHERE LOWER(titulo) LIKE :posib1 OR LOWER(titulo) LIKE :posib2 OR LOWER(titulo) LIKE :posib3");
+		$posib1 = "%$texto%";
+		$posib2 = "$texto%";
+		$posib3 = "%$texto";
+		$consult -> bindParam(':posib1', $posib1);
+		$consult -> bindParam(':posib2', $posib2);
+		$consult -> bindParam(':posib3', $posib3);
+		try{
+			$consult -> execute();
+			$datos = $consult -> fetchAll();
+			$modelos = [];
+			foreach($datos as $modelo){
+				$modelos[] = Modelo::fromArray($modelo);
+			}
+			return $modelos;
+		}catch(PDOException $err){
+			// echo "No se ha podido introducir la ruta. Intentelo de nuevo";
+			echo $err;
+			return false;
+		}
+	}
+
+	public function cambiarPrivado($id_modelo) {
+		try {
+			$consulta = $this->conexion->prepara("SELECT privado FROM modelos WHERE id = :id_modelo");
+			$consulta->bindParam(':id_modelo', $id_modelo, PDO::PARAM_INT);
+			$consulta->execute();
+			$resultado = $consulta->fetch();
+	
+			if ($resultado[0] == false) {
+				$consulta = $this->conexion->prepara("UPDATE modelos SET privado = true WHERE id = :id_modelo");
+			} else {
+				$consulta = $this->conexion->prepara("UPDATE modelos SET privado = false WHERE id = :id_modelo");
+			}
+	
+			$consulta->bindParam(':id_modelo', $id_modelo, PDO::PARAM_INT);
+			$consulta->execute();
+		} catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function isPrivado($id_modelo){
+		$consulta = $this->conexion->prepara("SELECT privado FROM modelos WHERE id = :id_modelo");
+		$consulta->bindParam(':id_modelo', $id_modelo, PDO::PARAM_INT);
+
+		try{
+			$consulta->execute();
+			$resultado = $consulta->fetch();
+			return $resultado[0];
+		}catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function obtenerModelosPrivadosUsuario($id_usuario){
+
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE id_usuario = :id_usuario AND privado = 1");
+		$consulta->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+
+		try{
+			$consulta->execute();
+			$resultado = $consulta->fetchAll();
+			$modelos = [];
+			foreach($resultado as $modelo){
+				$modelos[] = Modelo::fromArray($modelo);
+			}
+			return $modelos;
+		}catch (PDOException $err) {
+			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+	
 
 	/**
 	 * Get the value of id

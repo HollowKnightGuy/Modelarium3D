@@ -75,7 +75,7 @@ require_once '../views/layout/header.php';
 
 <div class="model">
     <h1 class="title">Model Commented</h1>
-    <?php $modelo = $modelo[0] ?>
+    <?php $modelo ?>
     <table>
         <?php foreach ($modelo as $key => $value) : ?>
             <?php if ($key === "foto_modelo") : ?>

@@ -37,14 +37,15 @@
 
         public function obtenerModelosLiked($id_usuario){
 
-            $cons = $this->conexion->prepara("SELECT * FROM likes WHERE id_usuario = :idusuario");
-            $cons->bindParam(":idusuario", $idusuario);
+            $cons = $this->conexion->prepara("SELECT * FROM likes WHERE id_usuario = :id_usuario");
+            $cons->bindParam(":id_usuario", $id_usuario);
             try {
                 $cons->execute();
-                if ($cons && $cons->rowCount() == 1) {
-                    return $cons->fetch(PDO::FETCH_OBJ);
+                if ($cons && $cons->rowCount() >= 1) {
+                    return $cons->fetchAll(PDO::FETCH_OBJ);
                 }
             } catch (PDOException $err) {
+                echo "Error en la consulta".$err;
                 return false;
             }
         }

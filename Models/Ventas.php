@@ -102,6 +102,17 @@ class Ventas
 		
 	}
 
+	public function obtenerComprasUsuario($id_usuario){
+		$consulta = $this ->conexion->prepara('SELECT m.* FROM modelos m INNER JOIN ventas v ON m.id = v.id_modelo WHERE v.id_usuario_comprador = :id_usuario');
+
+		$consulta->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+		$consulta->execute();
+	
+		$resultados = $consulta->fetchAll(PDO::FETCH_OBJ);
+
+		return $resultados;
+	}
+
 
 
     

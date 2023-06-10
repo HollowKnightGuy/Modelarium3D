@@ -43,7 +43,7 @@ $modelos_creador = $modeloC -> obtenerModelosUsuario($creador->id);
         <div class="models">
 
             <?php foreach ($modelos_creador as $modelo) : ?>
-                <?php if(isset($_SESSION['identity'])){
+                <?php if(Utils::isLogged()){
                     $likeEnModelo = $likeC->comprobarLike(Utils::idLoggedUsuario(), $modelo->id);
                     $favEnModelo = $favC->comprobarFavorito(Utils::idLoggedUsuario(), $modelo->id);
                 }?>
@@ -58,7 +58,7 @@ $modelos_creador = $modeloC -> obtenerModelosUsuario($creador->id);
                                         <div class="model--author ">Author: <a href="profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
                                     </div>
                                     <div class="model--likesfavs textshadowlight">
-                                    <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/author/like/id=<?= $id_autor ?>'">
+                                    <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/author/like/id=<?= $modelo -> id ?>'">
                                         <?php if (isset($likeEnModelo) && $likeEnModelo != null) : ?>
                                             <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
                                         <?php else : ?>
@@ -66,7 +66,7 @@ $modelos_creador = $modeloC -> obtenerModelosUsuario($creador->id);
                                         <?php endif; ?>
                                         <span><?= $modelo->num_likes === null ? 0 : $modelo->num_likes ?></span>
                                     </div>
-                                    <div class="model--favs" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/author/fav/id=<?= $id_autor ?>'">
+                                    <div class="model--favs" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/author/fav/id=<?= $modelo -> id ?>'">
                                         <?php if (isset($favEnModelo) && $favEnModelo != null) : ?>
                                             <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="star">
 

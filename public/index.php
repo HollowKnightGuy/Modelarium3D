@@ -14,12 +14,13 @@ use Controllers\LikeController;
 use Controllers\FavoritosController;
 use Controllers\ComentariosController;
 use Controllers\VentasController;
+use Lib\Utils;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
 ?>
-<?php if (isset($_SESSION['identity']) && $_SESSION['identity']->rol === 'ROLE_ADMIN') : ?>
+<?php if (Utils::isLogged() && $_SESSION['identity']->rol === 'ROLE_ADMIN') : ?>
     <script type='module' src='<?= $_ENV["BASE_URL_PUBLIC"] ?>js/adminmain.js' defer></script>
 <?php else : ?>
     <script type='module' src='<?= $_ENV["BASE_URL_PUBLIC"] ?>js/main.js' defer></script>
@@ -119,6 +120,10 @@ Router::add('GET', '/model/fav/id=:id', function (int $id) {
     (new FavoritosController())->favorito($id);
 });
 
+Router::add('POST', '/models/search', function (){
+    (new ModeloController()) -> buscar();
+});
+
 
 Router::add('GET', '/model/likeview/id=:id', function (int $id) {
     (new LikeController())->like($id, true);
@@ -158,13 +163,26 @@ Router::add('GET', 'profile/author/id=:id', function (int $id) {
     (new UsuarioController())->autor($id);
 });
 
+Router::add('GET', 'profile/visible/id=:id', function (int $id) {
+    (new ModeloController())->cambiarPrivado($id);
+});
+
 Router::add('GET', 'profile/author/like/id=:id', function (int $id) {
-    (new LikeController())->like($id, $autor = true);
+    (new LikeController())->like($id, false ,$autor = true);
 });
 
 Router::add('GET', 'profile/author/fav/id=:id', function (int $id) {
-    (new FavoritosController())->favorito($id, $autor = true);
+    (new FavoritosController())->favorito($id, false ,$autor = true);
 });
+
+Router::add('GET', 'profile/like/id=:id', function (int $id) {
+    (new LikeController())->like($id, false , false, true);
+});
+
+Router::add('GET', 'profile/fav/id=:id', function (int $id) {
+    (new FavoritosController())->favorito($id, false , false, true);
+});
+
 
 //CREADOR
 
@@ -243,7 +261,7 @@ Router::add('GET', 'admin/acceptrequest/BC/id=:id', function (int $id) {
 });
 
 
-Router::add('GET', 'admin/denytrequest/CO/id=:id', function (int $id) {
+Router::add('GET', 'admin/denyrequest/CO/id=:id', function (int $id) {
     (new PeticionController())->rechazarSolicitud('CO', $id);
 });
 Router::add('GET', 'admin/acceptrequest/CO/id=:id', function (int $id) {
@@ -260,7 +278,7 @@ Router::dispatch();
 
 
 <script>
-    <?php if (isset($_SESSION['identity']) && $_SESSION['identity'] !== false) : ?>
+    <?php if (Utils::isLogged() && $_SESSION['identity'] !== false) : ?>
         const backAccountLink = document.getElementById("back-account-responsive-link");
         const accountLink = document.getElementById("account-responsive-link");
 

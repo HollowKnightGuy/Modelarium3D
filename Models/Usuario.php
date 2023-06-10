@@ -438,13 +438,6 @@ class Usuario
 			exit($e->getMessage());
 		}
 	}
-	
-
-	// public function sercreador($datos, $archivos, $usuario){
-	// 	var_dump($datos, $archivos, $usuario); die;
-		
-	// }
-
 
 	public function getId(): string
 	{

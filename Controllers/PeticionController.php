@@ -60,6 +60,10 @@ class PeticionController
         }else if($comentario === 'rep' and $id_comentario !== null){
             if(Utils::isLogged()){
                 $comentarioObj = $this -> intercontroller -> obtenerComentarioPorId($id_comentario);
+                if($comentarioObj -> id === Utils::idLoggedUsuario()){
+                    $this -> pages -> render('modelos/modelview', ['error_reportar_tu_comentario' => 'You can'."'".'report your comment']);
+                    return false;
+                }
                 if($comentarioObj -> reportado !== NULL){
                     $_SESSION['esta_reportado'] = "This comment is already reported";
                     Utils::irView($comentarioObj -> id_modelo);
@@ -118,7 +122,6 @@ class PeticionController
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $solicitud = $this -> solicitud($message);
                 if($solicitud !== true){
-                    var_dump($solicitud);
                     $this -> pages -> render('usuario/creatorform', ['message' => $solicitud, 'datos_guardados' => $_POST['data']]);
                 }else{                    
                     Utils::irProfile();
@@ -177,16 +180,16 @@ class PeticionController
     public function obtenerPeticion($id_modelo){
         return $this -> peticion -> obtenerPeticion($id_modelo);
     }
-
+    
     public function obtenerPeticionComentario($id_comentario){
         return $this -> peticion -> obtenerPeticionComentario($id_comentario);
     }
-
+    
     public function obtenerPeticionPorId($id){
         return $this -> peticion -> obtenerPeticionPorId($id);
     }
-
-
+    
+    
     public function rechazarSolicitud($type, $id)
     {
         if (Utils::isAdmin()) {
@@ -211,13 +214,12 @@ class PeticionController
                 }
             }
             elseif ($type === 'CO') {
-
-                $delete = $this->intercontroller->borrarComentario($this -> obtenerPeticionPorId($id)->id_comentario);
+                $cambiarEstado = $this -> intercontroller -> cambiarEstadoComentario(false, $this -> obtenerPeticionPorId($id)->id_comentario );
                 $borrarPeticion = $this -> borrarPeticion($id);
-                if ($deleteMO && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                if ($cambiarEstado && $borrarPeticion) {
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
                 } else {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
                 }
             }
         } else {
@@ -253,12 +255,13 @@ class PeticionController
                 }
                 
             }elseif ($type === 'CO') {
-                $cambiarEstado = $this -> intercontroller -> cambiarEstadoComentario(false, $this -> obtenerPeticionPorId($id)->id_comentario );
+                $id_comentario = $this -> obtenerPeticionPorId($id) -> id_comentario;
                 $borrarPeticion = $this -> borrarPeticion($id);
-                if ($cambiarEstado && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                $delete = $this->intercontroller->borrarComentario($id_comentario);
+                if ($delete && $borrarPeticion) {
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
                 } else {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
                 }
             }
         } else {

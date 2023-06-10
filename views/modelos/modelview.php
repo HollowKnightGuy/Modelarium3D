@@ -34,7 +34,7 @@ if (!isset($message)) {
 $precio = number_format($modelo->precio, 2, ',', '');
 $pparte1 = explode(',', $precio)[0];
 $pparte2 = explode(',', $precio)[1];
-if (isset($_SESSION['identity'])) {
+if (Utils::isLogged()) {
     $likeEnModelo = $likeC->comprobarLike($_SESSION['identity']->id, $modelo->id);
     $favEnModelo = $favC->comprobarFavorito($_SESSION['identity']->id, $modelo->id);
 }
@@ -72,9 +72,8 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <?php endif; ?>
                     <span><?= $modelo->num_likes ?> Likes</span>
                     <?php if (isset($favEnModelo) && $favEnModelo != null) : ?>
-                        <img onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/favview/id=<?= $modelo->id ?>'" class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="star">
-                        <img class="favs-img" hidden src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg">
-
+                        <img onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/favview/id=<?= $modelo->id ?>'" class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="star">
+                        <img class="favs-img" hidden src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg">
                     <?php else : ?>
                         <img class="favs-img" hidden src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg">
                         <img onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/favview/id=<?= $modelo->id ?>'" class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="star">
@@ -93,13 +92,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     </div>
                 </div>
                 <?php 
-                if(isset($_SESSION['identity'])){
+                if(Utils::isLogged()){
                     $comprobacion_venta = $ventasC -> comprobarVenta($modelo->id);
                 }else{
                     $comprobacion_venta = false;
                 }
                 
-                if($comprobacion_venta || $modelo->id_usuario == Utils::isLogged()) :?>
+                if($comprobacion_venta && $modelo->id_usuario == Utils::isLogged()) :?>
 
                 <div class="model-info-2-btn">
                     <button type="submit" name="action" value="buyNow" class="defaultbtn buynow-btn boxshadow">DOWNLOAD</button>
@@ -130,9 +129,8 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
         <div class="cont-comment-1">
             <div class="comment-user-info">
-                <img class="profileimg-comment" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/<?= isset($_SESSION['identity']) ? 'user/profilephoto/' . UsuarioController::obtenerFotoUsuario($_SESSION['identity']->id)[0]['foto_perfil']  : '/default/profile.jpg' ?>" alt="">
+                <img class="profileimg-comment" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/<?= Utils::isLogged() ? 'user/profilephoto/' . UsuarioController::obtenerFotoUsuario($_SESSION['identity']->id)[0]['foto_perfil']  : '/default/profile.jpg' ?>" alt="">
                 <h1 class="username-modelview">You</h1>
-                <span class="grey"></span><?= isset($_SESSION['identity']) ? explode("_", $_SESSION['identity']->rol)[1] : '' ?></span>
             </div>
 
             <div class="comment-1">
@@ -146,6 +144,10 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                 <?php if(isset($_SESSION['esta_reportado'])): ?>
                     <?= $_SESSION['esta_reportado'] === "" ? "" : $error_img . $_SESSION['esta_reportado']; ?>
                 <?php endif; ?>
+                <?php if(isset($error_reportar_tu_comentario) && $error_reportar_tu_comentario != ""){
+                    echo $error_img.$error_reportar_tu_comentario;
+                } ?>
+                    
             </span>
         </div>
         <?php foreach ($comentarios as $comentario) : ?>
@@ -153,7 +155,11 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                 <div class="comment-user-info">
                     <img class="profileimg-comment" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/user/profilephoto/<?=UsuarioController::obtenerFotoUsuario($comentario->getId_usuario())[0]['foto_perfil'] ?>" alt="">
                     <h1 class="username-modelview">
-                        <?= isset($_SESSION['identity']) && $comentario->getId_usuario() === $_SESSION['identity'] -> id ? "You" : UsuarioController::obtenerNombreUsuario($comentario->getId_usuario())[0]['nombre'] ?>
+                        <?php if($comentario -> getId_usuario() == Utils::idLoggedUsuario()): ?>
+                            You
+                        <?php else: ?>
+                            <?= Utils::isLogged() && $comentario->getId_usuario() === $_SESSION['identity'] -> id ? "You" : UsuarioController::obtenerNombreUsuario($comentario->getId_usuario())[0]['nombre'] ?>
+                        <?php endif; ?>
                     </h1>
                     <span class="comment-date"><?= explode(" ",$comentario -> getFecha_subida())[0] ?></span>
                 </div>
@@ -162,7 +168,9 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <div class="comment-2">
                         <p><?= $comentario->getContenido() ?? "" ?></p>
                     </div>
-                    <img onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/view/comment/report/id=<?= $comentario->getId() ?>'" class="report-flag" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/red-flag.svg" alt="report flag">
+                    <?php if($comentario -> getId_usuario() != Utils::idLoggedUsuario()): ?>
+                        <img onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/view/comment/report/id=<?= $comentario->getId() ?>'" class="report-flag" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/red-flag.svg" alt="report flag">
+                    <?php endif; ?>
                 </div>
 
             </div>

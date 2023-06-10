@@ -77,9 +77,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                         <input type="file" name="model_file" id="file" hidden>
                     </div>
                 </div>
-                <span class="red-error">
-                    <?= $message['modelo_glb'] === "" ? "Format allowed: .glb" : $error_img . $message['modelo_glb']; ?>
-                </span>
+                <?php if ($message['modelo_glb'] === "") : ?>
+                    <span>Format allowed: .glb <br> Max size: 300Kb</span>
+                <?php else : ?>
+                    <span class="red-error">
+                        <?= $error_img . $message['modelo_glb']; ?>
+                    </span>
+                <?php endif; ?>
                 <div class="input-container selectfilecontainer">
                     <input style="color:white; background-color:var(--primary-color)" type="button" value="Select Photo" class="select-file-btn transition" onclick="getFile2()">
                     </input>
@@ -89,9 +93,13 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                         <input type="file" name="model_photo" id="file2" hidden>
                     </div>
                 </div>
+                <?php if ($message['modelo_foto'] === "") : ?>
+                <span>Aspect Ratio recommended: 6/11. <br> Format allowed: .png .jpg .jpeg <br> Max size: 150Kb</span>
+                <?php else: ?>
                 <span class="red-error">
                     <?= $message['modelo_foto'] === "" ? "Aspect Ratio recommended: 6/11. Format allowed: .png .jpg .jpeg" : $error_img . $message['modelo_foto']; ?>
                 </span>
+                <?php endif;?>
             </div>
 
             <input class="submit transition" type="submit" value="BE A CREATOR">

@@ -11,7 +11,10 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <?php
-    if (isset($_SESSION['identity']) && $_SESSION['identity'] != false) {
+
+use Lib\Utils;
+
+    if (Utils::isLogged()) {
         $session = $_SESSION['identity'];
     } else {
         $session = false;
@@ -39,7 +42,7 @@
                     <span>|</span>
                 </li>
 
-                <?php if (!isset($_SESSION['admin'])) : ?>
+                <?php if (!Utils::isAdmin()) : ?>
 
                     <li class="dnoneresponsive header-link">
                         <a href="<?= $_ENV['BASE_URL'] ?>home">Home</a>
@@ -53,7 +56,7 @@
                 <?php endif; ?>
 
 
-                <?php if (isset($_SESSION['admin']) && $_SESSION['admin']) : ?>
+                <?php if (Utils::isAdmin()) : ?>
                     <li class="dnoneresponsive header-link">
                         <a href="<?= $_ENV['BASE_URL'] ?>admin/requests">Requests</a>
                     </li>
@@ -63,11 +66,11 @@
                     </li>
 
                 <?php endif; ?>
-                <?php if (!isset($_SESSION['admin']) || !$_SESSION['admin']) : ?>
+                <?php if (!Utils::isAdmin()) : ?>
                     <li class="header-link searcher">
-                        <form action="#" class="searchbar">
+                        <form action="<?= $_ENV['BASE_URL'] ?>models/search" method="POST" class="searchbar">
                             <input type="text" name="search">
-
+                            <input type="submit" hidden name="submit">
                             <img class="link-icon magn-glass" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/magn-glass.svg" alt="">
                         </form>
                     </li>
@@ -82,7 +85,7 @@
                     <?php endif; ?>
 
 
-                    <?php if (!isset($_SESSION['admin']) || !$_SESSION['admin']) : ?>
+                    <?php if (!Utils::isAdmin()) : ?>
 
                         <li class="header-link user-link transition">
                             <a href="<?= $_ENV['BASE_URL'] ?><?= $session ? 'profile' : 'login'; ?>">
@@ -119,7 +122,7 @@
             <ul class="responsivemenu transition">
                 <div id="general-menu-section">
 
-                    <?php if (!isset($_SESSION['admin'])) : ?>
+                    <?php if (!Utils::isAdmin()) : ?>
                     <li>
                         <a class="transition" href="<?= $_ENV['BASE_URL'] ?>home">
                             <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/home.svg" alt="home.svg">
@@ -147,7 +150,7 @@
                             </a>
                         </li>
                     <?php endif; ?>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin']) : ?>
+                    <?php if (Utils::isAdmin()) : ?>
                         <li>
                             <a class="transition" href="<?= $_ENV['BASE_URL'] ?>admin/users">
                                 <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/admin.svg" alt="admin.svg">

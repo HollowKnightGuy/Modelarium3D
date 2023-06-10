@@ -20,26 +20,25 @@
             
         }
 
-        public function enviarConfirmacion($email, $nombre, $apellidos){
+        public function enviarCorreoRegistro($email, $nombre){
 
             $mail = new PHPMailer();
-            $mail -> isSMTP();
-            $mail -> Host = 'sandbox.smtp.mailtrap.io';
+            $mail->isSMTP();
+            $mail->Host = 'sandbox.smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Port = 2525;
+            $mail->Username = '8aa69c861f0fc8';
+            $mail->Password = '2ce2a537889f8c';
 
-            $mail -> SMTPAuth = true;
-            $mail -> Username  =  '47e488037ff2c2';
-            $mail -> Password  =  '1f9da0719464fc';
-
-            $mail -> setFrom('proyectos-cursos@gmail.com','Modelarium');
+            $mail -> setFrom('modelarium3d@gmail.com','Modelarium 3D');
             $mail -> addAddress("$email");
 
             $mail -> isHTML(TRUE);
             $mail -> CharSet = "UTF-8";
             $mail -> Subject = "Correo de confirmación";
-
             $contenido = "<html>
                             <p>
-                                Hola ".$nombre." ".$apellidos." bienvenido al Proyecto de cursos, logueate ya en nuestra página y comienza a gestionar!
+                                Hola ".$nombre." bienvenido al Proyecto de cursos, logueate ya en nuestra página y comienza a gestionar!
                             </p>
                             <p>
                                 Presiona aquí: <a href = ".$_ENV['BASE_URL']."usuario/login>Log in</a>

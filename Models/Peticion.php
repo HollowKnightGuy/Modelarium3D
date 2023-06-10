@@ -226,8 +226,6 @@ class Peticion
 				$message['titulo'] = "";
 			}
 			if (empty($datosavalidar['price']) || !preg_match($precioval, $datosavalidar['price']) || strlen(explode(".", $datosavalidar['price'])[0]) > 2) {
-				var_dump($message);
-				
 				$message['precio'] = "The price must contain only numbers (Ex: XX.XX) max: €99.99";
 			} else {
 				$message['precio'] = "";

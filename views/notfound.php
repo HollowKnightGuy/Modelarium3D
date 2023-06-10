@@ -14,7 +14,7 @@ $error_img = '<img class="error-img" width="200px" src='.$_ENV['BASE_URL_PUBLIC'
     <style>
         .error{
             width: 100%;
-            height: 600px;
+            height: 380px;
             display: flex;
             flex-direction: column;
             align-items: center;

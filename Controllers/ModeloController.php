@@ -21,6 +21,15 @@ class ModeloController
         $this->modelo = new Modelo("", "", "", "", "", "", "", "", "", "", "", "", "", "");
     }
 
+    public function buscar():void{
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $texto = $_POST['search'];
+            $modelos = $this -> modelo -> ObtenerModelosBuscar($texto);
+            $this->pages->render('modelos/models', ['modelos' => $modelos]);
+        }
+    }
+
+
     public function showAll()
     {
         $modelos = $this->modelo->obtenerModelos();
@@ -60,16 +69,25 @@ class ModeloController
     public function borrar($id)
     {
         if(Utils::isCreator() || Utils::isAdmin()){
-            return $this->modelo->borrar($id);
+            if(Utils::isAdmin()){
+                return $this->modelo->borrar($id);
+            }else{
+                $modelo = $this -> obtenerModeloPorId($id);
+                if($modelo -> id_usuario === Utils::idLoggedUsuario() ){
+                    return $this->modelo->borrar($id);
+                }else{
+                    Utils::irProfile();
+                }
+            }
         }
     }
 
     public function mostrarModelo($id_modelo)
     {
         $modelo = $this -> obtenerModeloPorId($id_modelo);
-        if(!is_object($modelo[0])) Utils::irModels();
+        if(!is_object($modelo)) Utils::irModels();
         $comentarios = $this -> comentarioC -> obtenerComentarios($id_modelo);    
-        $this->pages->render("modelos/modelview", ['modelo' => $modelo[0], 'comentarios' => $comentarios]);
+        $this->pages->render("modelos/modelview", ['modelo' => $modelo, 'comentarios' => $comentarios]);
     }
 
     public function obtenerModelo($id_usuario, $titulo)
@@ -122,5 +140,18 @@ class ModeloController
         } else {
             Utils::irLogin();
         }
+    }
+
+    public function cambiarPrivado($id_modelo){
+        $this -> modelo -> cambiarPrivado($id_modelo);
+        header("Location: ".$_ENV['BASE_URL']."profile");
+    }
+
+    public function isPrivado($id_modelo){
+        return $this -> modelo -> isPrivado($id_modelo);
+    }
+
+    public function obtenerModelosPrivadosUsuario($id_usuario){
+        return $this -> modelo -> obtenerModelosPrivadosUsuario($id_usuario);
     }
 }

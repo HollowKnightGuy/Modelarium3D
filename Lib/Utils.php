@@ -3,15 +3,7 @@
 namespace Lib;
 
 class Utils{
-    public static function deleteSession($name):string{
-        // BORRA LA SESSION 
-        if(isset($_SESSION[$name])){
-            $_SESSION[$name] = null;
-            unset($_SESSION[$name]);
-        }
 
-        return $name;
-    }
     
         public static function isLogged():bool{
             // COMPRUEBA SI HAY ALGUIEN LOGUEADO
@@ -79,8 +71,6 @@ class Utils{
         if($img !== false){
             if ($img['tipo'] != 'jpg' && $img['tipo'] != 'jpeg' && $img['tipo'] != 'png') {
                 $message['imagen'] = "The image type must be jpg/jpeg/png";
-            } else if ($img['ancho'] != $img['alto']) {
-                $message['imagen'] = "Profile picture must be square";
             } else if ($img['peso'] > 150) {
                 $message['imagen'] = "The image of the maximum must weigh 150KB";
             }
@@ -93,8 +83,8 @@ class Utils{
         if($banner !== false){
             if ($banner['tipo'] != 'jpg' && $banner['tipo'] != 'jpeg' && $banner['tipo'] != 'png') {
                 $message['imagenbanner'] = "The image type must be jpg/jpeg/png";
-            }else if ($banner['peso'] > 75) {
-                $message['imagenbanner'] = "The image of the maximum must weigh 75KB";
+            }else if ($banner['peso'] > 125) {
+                $message['imagenbanner'] = "The image of the maximum must weigh 125KB";
             }
         }
 
@@ -110,7 +100,7 @@ class Utils{
             } else if ($img['ancho'] > $img['alto']) {
                 $message['modelo_foto'] = "The model image must be taller than it is wide";
             } else if ($img['peso'] > 150) {
-                $message['modelo_foto'] = "The image of the maximum must weigh 125KB";
+                $message['modelo_foto'] = "The image of the maximum must weigh 150KB";
             }
         }
 		return $message;
@@ -144,6 +134,7 @@ class Utils{
 
     
     public static function irModels(){
+
         header("Location:".$_ENV['BASE_URL']."models/");
     }
 
@@ -153,11 +144,16 @@ class Utils{
 
     
     public static function irAutor($idautor){
-        header("Location:".$_ENV['BASE_URL']."profile/autor/id=".$idautor);
+        header("Location:".$_ENV['BASE_URL']."profile/author/id=".$idautor);
     }
 
     public static function irProfile(){
         header("Location:".$_ENV['BASE_URL']."profile/");
+    }
+
+    public static function irRequest(){
+        header("Location:".$_ENV['BASE_URL']."admin/requests");
+
     }
 }
 

@@ -23,43 +23,49 @@
         }
 
         public function obtenerModelosLiked($id_usuario){
-            return $this -> obtenerModelosLiked($id_usuario);
+            return $this -> like -> obtenerModelosLiked($id_usuario);
         }
 
-        public function like($idmodelo, $view = false, $autor = false, $autorid = null){
+        public function like($idmodelo, $view = false, $autor = false, $profile = false){
             if(Utils::isLogged()){
                 $usuarioDadoLike = $this -> comprobarLike($_SESSION['identity']-> id, $idmodelo);
 
 
                 if($usuarioDadoLike === false || $usuarioDadoLike === null){
+                    
                     $insert = $this -> like -> insertLike($_SESSION['identity'] -> id, $idmodelo);
+                    //TODO: BUENAS 
                     if(!$insert){
-                        $_SESSION['error_like'] = "Ha habido un error al dar like, intentelo de nuevo";
                         $this -> pages -> render("modelos/models");
                     }
                     else if($this -> intercontroller -> like($idmodelo)){
-                        $_SESSION['error_like'] = "";
                         if($view === true) Utils::irView($idmodelo);
                         if($autor === true){
                             $idautor = $this -> intercontroller -> obtenerModeloPorId($idmodelo)[0]->id_usuario;
                             Utils::irAutor($idautor);
                         }
-                        $view ? Utils::irView($idmodelo) : Utils::irModels();
+                        if($profile === true){
+                            Utils::irProfile();
+                        }else{
+                            $view ? Utils::irView($idmodelo) : Utils::irModels();
+                        }
                     }
                 }else{
                     $revertir = $this -> like -> deleteLike($_SESSION['identity'] -> id, $idmodelo);
                     if(!$revertir){
-                        $_SESSION['error_like'] = "Ha habido un error al quitar like, intentelo de nuevo";
                         $this -> pages -> render("modelos/models");
                     }
                     else if($this -> intercontroller -> revertirLike($idmodelo)){
-                        $_SESSION['error_like'] = "";
                         if($view === true) Utils::irView($idmodelo);
                         if($autor === true){
                             $idautor = $this -> intercontroller -> obtenerModeloPorId($idmodelo)[0]->id_usuario;
                             Utils::irAutor($idautor);
+                        }
+                        if($profile === true){
+                            Utils::irProfile();
+                        }else{
+                            $view ? Utils::irView($idmodelo) : Utils::irModels();
                         }     
-                        $view ? Utils::irView($idmodelo) : Utils::irModels();
                     }
                 }
             }else{

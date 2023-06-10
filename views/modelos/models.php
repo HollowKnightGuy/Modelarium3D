@@ -3,6 +3,7 @@
 use Controllers\UsuarioController;
 use Controllers\LikeController;
 use Controllers\FavoritosController;
+use Lib\Utils;
 
 $likeC = new LikeController();
 $favC = new FavoritosController();
@@ -18,45 +19,17 @@ require_once '../views/layout/header.php';
 ?>
 
 <main>
+    <?php if (isset($modelos) && !empty($modelos)) : ?>
     <div class="models-header">
         <h1>All Models</h1>
-        <div class="models-header-select">
-            <div class="select transition">
-
-                <ul id="select" onclick="displaySelect()">
-                    <li class="select-option transition default" onclick="changeModelsState(0, this)">All Models</li>
-                    <li class="select-option transition" onclick="changeModelsState(1, this)">Level 1</li>
-                    <li class="select-option transition" onclick="changeModelsState(2, this)">Level 2</li>
-                    <li class="select-option transition" onclick="changeModelsState(3, this)">Level 3</li>
-                </ul>
-                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/down-arrow.svg" alt="">
-            </div>
-            <!-- <form action="<?= $_ENV['BASE_URL'] ?>models" id="models-form" hidden> -->
-            <select name="" id="form-select" onchange="console.log(2)" hidden>
-                <option value="0" selected>All Levels</option>
-                <option value="1">D1</option>
-                <option value="2">D2</option>
-                <option value="3">D3</option>
-            </select>
-            <!-- </form> -->
-
-        </div>
     </div>
-    <span class="red-error">
-        <?= isset($_SESSION['error_like']) && $_SESSION['error_like'] === "" ? "" : $_SESSION['error_like'] ?>
-        <br>
-        <br>
-        <?= isset($_SESSION['error_fav']) && $_SESSION['error_fav'] === "" ? "" : $_SESSION['error_fav'] ?>
-    </span>
-
 
     <div class="models">
-        <?php if (isset($modelos)) : ?>
             <?php foreach ($modelos as $modelo) :
                 $precio = number_format($modelo->getPrecio(), 2, ',', '');
                 $pparte1 = explode(',', $precio)[0];
                 $pparte2 = explode(',', $precio)[1];
-                if(isset($_SESSION['identity'])){
+                if(Utils::isLogged()){
                     $likeEnModelo = $likeC->comprobarLike($_SESSION['identity']->id, $modelo->getId());
                     $favEnModelo = $favC->comprobarFavorito($_SESSION['identity']->id, $modelo->getId());
                 }
@@ -103,29 +76,19 @@ require_once '../views/layout/header.php';
                     </div>
                 </div>
             <?php endforeach; ?>
-        <?php endif; ?>
+        </div>
+        <?php else: ?>
+            <div class="models-header">
+        <h1>No models found</h1>
     </div>
+        <?php endif; ?>
 </main>
 <script>
     let displayed = false;
     const ulSelect = document.getElementById("select");
     const ulOptions = document.getElementsByClassName("select-option");
-    const formSel = document.getElementById("form-select");
     const modelsForm = document.getElementById("models-form");
     const options = []
-    formSel.childNodes.forEach(element => {
-        if (element.nodeType === Node.ELEMENT_NODE) options.push(element)
-    });
-
-    function changeModelsState(option, element) {
-        for (let i = 0; i < 3; i++) {
-            ulOptions[i].classList.remove("default");
-        }
-
-        element.classList.toggle("default");
-        formSel.value = option;
-        modelsForm.submit()
-    }
 
 
     function displaySelect() {

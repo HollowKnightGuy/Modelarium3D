@@ -823,12 +823,15 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 
 .profile-img {
   width: 100px;
+  height: 100px;
   position: relative;
   z-index: 1;
   border-radius: 50%;
   background-color: white;
   border: solid 5px #212121;
   top: -60px;
+	object-fit:inherit;
+  overflow: hidden;
 }
 
 .profile-info {
@@ -966,6 +969,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .profile-img {
     width: 80px;
+    height: 80px;
   }
   .model-creator-svg {
     width: 16px;
@@ -995,6 +999,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .profile-img {
     width: 80px;
+    height: 80px;
   }
   .model-creator-svg {
     width: 16px;
@@ -1025,6 +1030,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .profile-img {
     width: 80px;
+    height: 80px;
   }
   .model-creator-svg {
     width: 13px;
@@ -1090,5 +1096,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .profile-img {
     width: 130px;
+    height: 130px;
   }
 }/*# sourceMappingURL=profile.css.map */

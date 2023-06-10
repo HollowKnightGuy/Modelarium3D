@@ -6,7 +6,7 @@ namespace Controllers;
 use Lib\Pages;
 use Lib\Utils;
 use Models\Usuario;
-
+use Lib\Email;
 
 class UsuarioController
 {
@@ -14,13 +14,14 @@ class UsuarioController
     private Utils $utils;
     private Pages $pages;
     private Usuario $usuario;
-
+    private Email $email;
 
     public function __construct()
     {
         $this->utils = new Utils();
         $this->pages = new Pages();
         $this->usuario = new Usuario(0, '', '', '', '', '', '', '', '', '');
+        $this->email = new Email();
     }
 
 
@@ -42,6 +43,7 @@ class UsuarioController
                         $this->pages->render('admin/users', ['usuarios' => $this->usuario->getall()]);
                     } else {
                         $this->login(true);
+                        $this -> email -> enviarCorreoRegistro($_SESSION['identity'] -> email, $_SESSION['identity'] -> nombre);
                     }
                 } else if (gettype($save) === "string") {
                     $this->pages->render('usuario/registerform', ['message' => $save, 'datos_guardados' => $_POST['data'], 'imagenval' => $_FILES]);
@@ -94,6 +96,9 @@ class UsuarioController
     public function cerrar_sesion()
     {
         unset($_SESSION['admin']);
+        unset($_SESSION['identity']);
+        unset($_SESSION['esta_reportado']);
+        unset($_SESSION['peticion_mandada']);
         unset($_SESSION['identity']);
 
         Utils::irModels();
@@ -212,4 +217,5 @@ class UsuarioController
     public function cambiaRol($id_usuario, $rol){
         return $this -> usuario -> cambiaRol($id_usuario, $rol);
     }
+
 }

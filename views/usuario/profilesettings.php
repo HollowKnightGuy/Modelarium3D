@@ -8,6 +8,7 @@ require_once '../views/layout/header.php';
 
 use Controllers\UsuarioController;
 use Controllers\VentasController;
+                                                                use Lib\Utils;
 
 $_SESSION['scripts'] = ['psmain']; 
 
@@ -16,8 +17,11 @@ $ventasC = new VentasController;
 
 $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
+if(Utils::isLogged() && count($ventasC -> obtenerVentasUsuario($_SESSION['identity']->id)) > 0){
+    $totalventas = $ventasC -> obtenerVentasUsuario($_SESSION['identity']->id)[0]['total_ventas'];
+}
+else{$totalventas = (00.00);}
 
-$totalventas = $ventasC -> obtenerVentasUsuario($_SESSION['identity']->id)[0]['total_ventas'];
 $precio = number_format($totalventas, 2, ',', '');
 $pparte1 = explode(',', $precio)[0];
 $pparte2 = explode(',', $precio)[1];

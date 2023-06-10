@@ -11,9 +11,6 @@ use Controllers\ModeloController;
 use Controllers\VentasController;
 use Controllers\LikeController;
 use Controllers\FavoritosController;
-
-
-
 use Lib\Utils;
 
 $usuarioC = new UsuarioController();
@@ -22,13 +19,13 @@ $ventasC = new VentasController();
 $likeC = new LikeController();
 $favC = new FavoritosController();
 
-
-
-
+$modelosComprados = $ventasC -> obtenerComprasUsuario(Utils::idLoggedUsuario());
+$modelosLikeUsuario = $likeC->obtenerModelosLiked(Utils::idLoggedUsuario());
+$modelosFavUsuario = $favC->obtenerModelosFav(Utils::idLoggedUsuario());
 $modelosUsuario = $modeloC->obtenerModelosUsuario(Utils::idLoggedUsuario());
+$modelosPrivadosUsuario = $modeloC->obtenerModelosPrivadosUsuario(Utils::idLoggedUsuario());
 
-
-if (isset($_SESSION['identity'])) {
+if (Utils::isLogged()) {
     $userdata = $usuarioC->obtenerUsuario($_SESSION['identity']->email);
 }
 $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=error>';
@@ -131,12 +128,15 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
             <section class="models">
 
-                <!-- TODO: este es de modelos creados, hacer que sea para los comprados -->
-
                 <?php
-                if (isset($modelosUsuario) && count($modelosUsuario) > 0) :?>
+                if (isset($modelosComprados) && count($modelosComprados) > 0) : ?>
                     <article class="profile-section profile-section-models">
-                            <?php foreach ($modelosUsuario as $modelo) : ?>
+                        <?php foreach ($modelosComprados as $modelo) : 
+                                    if (Utils::isLogged()) {
+                                        $likeEnModelo = $likeC->comprobarLike(Utils::idLoggedUsuario(), $modelo->id);
+                                        $favEnModelo = $favC->comprobarFavorito(Utils::idLoggedUsuario(), $modelo->id);
+                                    }
+                                    ?>
                             <div class="model">
                                 <div class="model--model">
                                     <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $modelo->foto_modelo ?>" alt="model">
@@ -145,163 +145,233 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                                 <div class="model--modelinfo">
                                     <div class="infomodel">
                                         <div class="model--title"><?= $modelo->titulo ?></div>
-                                        <div class="model--author ">Author: <a href="profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
+                                        <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
                                     </div>
                                     <div class="model--likesfavs textshadowlight">
-                                        <div class="model--likes">
-                                            <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
-                                            <span><?= $modelo->num_likes ?></span>
+                                        <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/like/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($likeEnModelo) && $likeEnModelo != null) : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
+                                            <?php else : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
+                                            <?php endif; ?>
+                                            <span><?= $modelo->num_likes === null ? 0: $modelo -> num_likes ?></span>
+
                                         </div>
-                                        <div class="model--favs">
-                                            <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
-                                            <span><?= $modelo->num_favs ?></span>
+                                        <div class="model--favs" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/fav/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($favEnModelo) && $favEnModelo != null) : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="star">
+
+                                            <?php else : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="star">
+                                            <?php endif; ?>
+
+                                            <span><?= $modelo->num_favs === null ? 0: $modelo -> num_favs ?></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="profile-cards-button">
                                     <div class="model--seebtn">
-                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = './modelview.html' ">DOWNLOAD</button>
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/view/id=<?= $modelo->id ?>'">SEE MORE</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </article>
+                <?php else : ?>
+                    <article class="profile-section profile-section-models">
+                        <h1 class="purple">You haven't bought any model yet</h1>
+                    </article>
+                <?php endif; ?>
+
+                <?php if (!empty($modelosLikeUsuario)) : ?>
+                    <article class="profile-section profile-section-models none">
+                        <?php foreach ($modelosLikeUsuario as $item):
+                            $id_modelo = $item->id_modelo;
+                            $modelo = $modeloC->obtenerModeloPorId($id_modelo);
+                            if (Utils::isLogged()) {
+                                $likeEnModelo = $likeC->comprobarLike(Utils::idLoggedUsuario(), $modelo->id);
+                                $favEnModelo = $favC->comprobarFavorito(Utils::idLoggedUsuario(), $modelo->id);
+                            }
+                        ?>
+                            <div class="model">
+                                <div class="model--model">
+                                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $modelo->foto_modelo ?>" alt="model">
+                                </div>
+
+                                <div class="model--modelinfo">
+                                    <div class="infomodel">
+                                        <div class="model--title"><?= $modelo->titulo ?></div>
+                                        <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
+                                    </div>
+                                    <div class="model--likesfavs textshadowlight">
+                                        <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/like/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($likeEnModelo) && $likeEnModelo != null) : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
+                                            <?php else : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
+                                            <?php endif; ?>
+                                            <span><?= $modelo->num_likes === null ? 0: $modelo -> num_likes ?></span>
+
+                                        </div>
+                                        <div class="model--favs" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/fav/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($favEnModelo) && $favEnModelo != null) : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="star">
+
+                                            <?php else : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="star">
+                                            <?php endif; ?>
+
+                                            <span><?= $modelo->num_favs === null ? 0: $modelo -> num_favs ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-cards-button">
+                                    <div class="model--seebtn">
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/view/id=<?= $modelo->id ?>'">SEE MORE</button>
                                     </div>
 
                                 </div>
                             </div>
                             <?php endforeach; ?>
-                        </article>
-                <?php else : ?>
-                    <article class="profile-section profile-section-models">
-                        <h1 class="purple">No hay modelos comprados</h1>
                     </article>
-                <?php endif; ?>
-                <article class="profile-section profile-section-liked none">
-                    <div class="model">
-                        <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/cactus.png" alt="model">
-                        </div>
-
-                        <div class="model--modelinfo">
-                            <div class="infomodel">
-                                <div class="model--title">Cactus</div>
-                                <div class="model--author ">Author: <a href="author.html" class="linkpurple">Pablo Cid</a></div>
-                            </div>
-                            <div class="model--likesfavs textshadowlight">
-                                <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
-                                    <span>40</span>
-                                </div>
-                                <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="heart">
-                                    <span>40</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="buy">
-                            <div class="model--seebtn">
-                                <button class="boxshadow defaultbtn transition" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>/models/view'">SEE MORE</button>
-                            </div>
-                            <div class="model--price textshadowlight">
-                                <span>4</span><span class="price-snumber">,99€</span>
-                            </div>
-                        </div>
-                    </div>
+            <?php else : ?>
+                <article class="profile-section profile-section-models none">
+                    <h1 class="purple">There is no models marked as Liked</h1>
                 </article>
+            <?php endif; ?>
 
-                <article class="profile-section profile-section-favorites none">
-                    <div class="model">
-                        <div class="model--model">
-                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/ipad.png" alt="model">
-                        </div>
 
-                        <div class="model--modelinfo">
-                            <div class="infomodel">
-                                <div class="model--title">Ipad</div>
-                                <div class="model--author ">Author: <a href="author.html" class="linkpurple">Pablo Cid</a></div>
-                            </div>
-                            <div class="model--likesfavs textshadowlight">
-                                <div class="model--likes">
-                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
-                                    <span>40</span>
+            <?php 
+
+            if (!empty($modelosFavUsuario)) : ?>
+                    <article class="profile-section profile-section-models none">
+                        <?php foreach ($modelosFavUsuario as $item) :
+                            $id_modelo = $item->id_modelo;
+                            $modelo = $modeloC->obtenerModeloPorId($id_modelo);
+                            if (Utils::isLogged()) {
+                                $likeEnModelo = $likeC->comprobarLike(Utils::idLoggedUsuario(), $modelo->id);
+                                $favEnModelo = $favC->comprobarFavorito(Utils::idLoggedUsuario(), $modelo->id);
+                            }
+                        ?>
+                            <div class="model">
+                                <div class="model--model">
+                                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $modelo->foto_modelo ?>" alt="model">
                                 </div>
-                                <div class="model--favs">
-                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="heart">
-                                    <span>40</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="buy">
-                            <div class="model--seebtn">
-                                <button class="boxshadow defaultbtn transition" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/view'">SEE MORE</button>
-                            </div>
-                            <div class="model--price textshadowlight">
-                                <span>4</span><span class="price-snumber">,99€</span>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <?php if (isset($userdata->rol) && $userdata->rol === 'ROLE_CREATOR') : ?>
-
-                    <article class="profile-section profile-section-created none">
-                        <div class="model">
-                            <div class="model--model">
-                                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/sofa.png" alt="model">
-                            </div>
-
-                            <div class="model--modelinfo">
-                                <div class="infomodel">
-                                    <div class="model--title">Lowpoly sofa</div>
-                                    <div class="model--author ">Author: <a href="author.html" class="linkpurple">You</a></div>
-                                </div>
-                                <div class="model--likesfavs textshadowlight">
-                                    <div class="model--likes">
-                                        <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/hidden.svg" alt="heart">
-
+                                <div class="model--modelinfo">
+                                    <div class="infomodel">
+                                        <div class="model--title"><?= $modelo->titulo ?></div>
+                                        <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>profile/author/id=<?= $modelo->id_usuario ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->id_usuario)->nombre ?></a></div>
                                     </div>
-                                    <div class="model--favs">
-                                        <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
+                                    <div class="model--likesfavs textshadowlight">
+                                        <div class="model--likes" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/like/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($likeEnModelo) && $likeEnModelo != null) : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart-red.svg" alt="heart">
+                                            <?php else : ?>
+                                                <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/heart.svg" alt="heart">
+                                            <?php endif; ?>
+                                            <span><?= $modelo->num_likes === null ? 0: $modelo -> num_likes ?></span>
 
+                                        </div>
+                                        <div class="model--favs" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>profile/fav/id=<?= $modelo->id ?>'">
+                                            <?php if (isset($favEnModelo) && $favEnModelo != null) : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star-yellow.svg" alt="star">
+
+                                            <?php else : ?>
+                                                <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/star.svg" alt="star">
+                                            <?php endif; ?>
+
+                                            <span><?= $modelo->num_favs === null ? 0: $modelo -> num_favs ?></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="profile-cards-button">
-                                <div class="model--seebtn">
-                                    <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>/models/create' ">EDIT</button>
+                                <div class="profile-cards-button">
+                                    <div class="model--seebtn">
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/view/id=<?= $modelo->id ?>'">SEE MORE</button>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
+                            <?php endforeach; ?>
                     </article>
-
+            <?php else : ?>
+                <article class="profile-section profile-section-models none">
+                    <h1 class="purple">There is no models marked as favorites</h1>
+                </article>
+            <?php endif; ?>
+            <?php if (isset($userdata->rol) && $userdata->rol === 'ROLE_CREATOR') : ?>
+                <?php if (!empty($modelosPrivadosUsuario)) : ?>
+                    <?php
+                if (isset($modelosPrivadosUsuario) && count($modelosPrivadosUsuario) > 0) : ?>
                     <article class="profile-section profile-section-hidden none">
-                        <div class="model">
-                            <div class="model--model">
-                                <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/chair.png" alt="model">
-                            </div>
-
-                            <div class="model--modelinfo">
-                                <div class="infomodel">
-                                    <div class="model--title">Desktop Chair</div>
-                                    <div class="model--author ">Author: <a href="author.html" class="linkpurple">You</a></div>
+                        <?php foreach ($modelosPrivadosUsuario as $modelo) : ?>
+                            <div class="model">
+                                <div class="model--model">
+                                    <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $modelo->getFoto_modelo() ?>" alt="model">
                                 </div>
-                                <div class="model--likesfavs textshadowlight">
-                                    <div class="model--likes">
-                                        <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/visible.svg" alt="heart">
 
+                                <div class="model--modelinfo">
+                                    <div class="infomodel">
+                                        <div class="model--title"><?= $modelo->getTitulo() ?></div>
+                                        <div class="model--author ">Author: <a href="<?= $_ENV['BASE_URL'] ?>profile/author/id=<?= $modelo->getId_usuario() ?>" class="linkpurple"><?= $usuarioC->obtenerUsuarioPorId($modelo->getId_usuario())->nombre ?></a></div>
                                     </div>
-                                    <div class="model--favs">
-                                        <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
+                                    <div class="model--likesfavs textshadowlight">
+                                        <div class="model--likes">
+                                            <a href="profile/visible/id=<?= $modelo->getId() ?>"><img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/visible.svg" alt="visible"></a>
+                                        </div>
+                                        <div class="model--favs">
+                                            <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="trashcan">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="profile-cards-button">
-                                <div class="model--seebtn">
-                                    <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/edit' ">EDIT</button>
-                                </div>
+                                <div class="profile-cards-button">
+                                    <div class="model--seebtn">
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/view/id=<?= $modelo->getId() ?>'">SEE MORE</button>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
+                    </article>
+                <?php else : ?>
+                    <article class="profile-section profile-hidden-models">
+                        <h1 class="purple">There's no models Hidden</h1>
                     </article>
                 <?php endif; ?>
+                <?php endif; ?>
+
+                <!-- HACER HIDDEN -->
+                <article class="profile-section profile-section-hidden none">
+                    <div class="model">
+                        <div class="model--model">
+                            <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/chair.png" alt="model">
+                        </div>
+
+                        <div class="model--modelinfo">
+                            <div class="infomodel">
+                                <div class="model--title">Desktop Chair</div>
+                                <div class="model--author ">Author: <a href="author.html" class="linkpurple">You</a></div>
+                            </div>
+                            <div class="model--likesfavs textshadowlight">
+                                <div class="model--likes">
+                                    <img class="likes-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/visible.svg" alt="heart">
+
+                                </div>
+                                <div class="model--favs">
+                                    <img class="favs-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/trashcan.svg" alt="heart">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-cards-button">
+                            <div class="model--seebtn">
+                                <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/edit/id=<?= $modelo->id ?>' ">EDIT</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </article>
+            <?php endif; ?>
             </section>
         </div>
 </main>
@@ -351,7 +421,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
         }
     <?php else : ?>
 
-        function changePState(s1,s2, s3, s4,s5) {
+        function changePState(s1, s2, s3, s4, s5) {
             profileSections[0].style.display = s1;
             profileSections[1].style.display = s3;
             profileSections[2].style.display = s4;

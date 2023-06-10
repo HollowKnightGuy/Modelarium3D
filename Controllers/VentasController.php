@@ -31,7 +31,7 @@ class VentasController
                     $id_modelo = $id;
                     $id_usuario_comprador = $_SESSION['identity']->id;
             
-                    $modelo = $this -> intercontroller -> obtenerModeloPorId($id_modelo)[0];
+                    $modelo = $this -> intercontroller -> obtenerModeloPorId($id_modelo);
             
                     $this -> ventas -> comprar($modelo, $id_usuario_comprador);
             
@@ -63,5 +63,9 @@ class VentasController
 
     public function obtenerVentasUsuario($id_usuario_creador){
         return $this -> ventas -> obtenerVentasUsuario(($id_usuario_creador));
+    }
+
+    public function obtenerComprasUsuario($id_usuario){
+        return $this -> ventas -> obtenerComprasUsuario(($id_usuario));
     }
 }
