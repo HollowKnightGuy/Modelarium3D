@@ -5,7 +5,7 @@ use Controllers\ComentariosController;
 use Models\Modelo;
 use Lib\Pages;
 use Lib\Utils;
-
+use Controllers\VentasController;
 class ModeloController
 {
 
@@ -13,7 +13,6 @@ class ModeloController
     private Pages $pages;
     private ComentariosController $comentarioC;
     private Modelo $modelo;
-
     public function __construct()
     {
         $this->pages = new Pages();
@@ -52,10 +51,14 @@ class ModeloController
         }
     }
 
-    public function editar()
+    public function editar($id_modelo)
     {
         if(Utils::isCreator() || Utils::isAdmin()){
-            $this->pages->render("modelos/create_edit_model");
+            $modelo = $this -> obtenerModeloPorId($id_modelo);
+
+            $message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+            $datos_guardados = ['titulo' => $modelo->titulo, 'precio' => $modelo->precio, 'descripcion_modelo' => $modelo->descripcion, 'modelo_glb' => $modelo->archivo_modelo, 'modelo_foto' => $modelo->foto_modelo];
+            $this->pages->render("modelos/create_edit_model", ['message' => $message, 'datos_guardados' => $datos_guardados]);
         }else{
             Utils::irModels();
         }
@@ -103,6 +106,11 @@ class ModeloController
     public function obtenerModelosUsuario($idusuario)
     {
         return $this->modelo->obtenerModelosUsuario($idusuario);
+    }
+
+    public function obtenerModelosUsuarioNP($idusuario)
+    {
+        return $this->modelo->obtenerModelosUsuarioNP($idusuario);
     }
     
 
@@ -153,5 +161,32 @@ class ModeloController
 
     public function obtenerModelosPrivadosUsuario($id_usuario){
         return $this -> modelo -> obtenerModelosPrivadosUsuario($id_usuario);
+    }
+    public function descargar($id){
+        $modelo = $this -> obtenerModeloPorId($id); 
+        if($modelo !== false){
+            $nombre_archivo = $modelo -> archivo_modelo;
+            $comprado = VentasController::comprobarVentaDescarga($id);
+            if($comprado){
+                $fileName = $nombre_archivo;
+                $filePath = $_ENV['BASE_URL_PUBLIC']."3dmodels/".$fileName;
+                var_dump(file_exists($filePath));
+                var_dump(($filePath));
+                    // Define headers
+                    header("Cache-Control: public");
+                    header("Content-Description: File Transfer");
+                    header("Content-Disposition: attachment; filename=$fileName");
+                    header("Content-Type: type/glb");
+                    header("Content-Transfer-Encoding: binary");
+                    
+                    // Read the file
+                    readfile($filePath);
+                }
+            else{
+                Utils::irView($id);
+            }
+        }else{
+            Utils::irView($id);
+        }
     }
 }

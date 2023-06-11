@@ -213,7 +213,7 @@ class Modelo
 	{
 		// DEVUELVE UN ARRAY DE OBJETOS MODELO
 		if ($num_complejidad === null) {
-			$this->conexion->consulta("SELECT * FROM modelos WHERE estado='subido' ORDER BY id ");
+			$this->conexion->consulta("SELECT * FROM modelos WHERE estado='subido' AND privado=false ORDER BY id ");
 			return $this->getAll();
 		} else {
 			$consulta = $this->conexion->prepara("SELECT * FROM modelos WHERE num_dificultad = :num_complejidad");
@@ -421,6 +421,18 @@ class Modelo
 			return $modelos;
 		}catch (PDOException $err) {
 			echo "Error en la consulta: " . $err->getMessage();
+			return false;
+		}
+	}
+
+	public function obtenerModelosUsuarioNP($id_usuario){
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
+		WHERE id_usuario=:id_usuario AND estado = 'subido' AND privado = false");
+		$consulta->bindParam(':id_usuario', $id_usuario);
+		try {
+			$consulta->execute();
+			return $consulta-> fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
 			return false;
 		}
 	}

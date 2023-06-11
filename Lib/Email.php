@@ -20,7 +20,7 @@
             
         }
 
-        public function enviarCorreoRegistro($email, $nombre){
+        public function contacto($nombre, $email, $contenido){
 
             $mail = new PHPMailer();
             $mail->isSMTP();
@@ -35,13 +35,16 @@
 
             $mail -> isHTML(TRUE);
             $mail -> CharSet = "UTF-8";
-            $mail -> Subject = "Correo de confirmación";
+            $mail -> Subject = "User Contact Email";
             $contenido = "<html>
                             <p>
-                                Hola ".$nombre." bienvenido al Proyecto de cursos, logueate ya en nuestra página y comienza a gestionar!
+                            User name:".$nombre."
                             </p>
                             <p>
-                                Presiona aquí: <a href = ".$_ENV['BASE_URL']."usuario/login>Log in</a>
+                            User email: ".$email."
+                            </p>
+                            <p>
+                            Description: ".$contenido."
                             </p>
                         </html>";
 

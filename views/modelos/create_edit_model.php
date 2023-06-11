@@ -11,17 +11,22 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
 <main>
     <div class="container">
-        <h1 class="title">Upload your Model</h1>
+        <?php if(isset($datos_guardados)):?>
+            <h1 class="title">Edit your Model</h1>
+        <?php else:?>
+            <h1 class="title">Upload your Model</h1>
+        <?php endif;?>
+
         <form action="<?php $_ENV['BASE_URL'] ?>../creator/request" method="POST" class="form" enctype="multipart/form-data">
             <div class="model-form">
 
             <div class="double-input-section">
                     <div class="input-container">
-                        <input type="text" value="<?= $datos_guardados['title'] ?? "" ?>" name="data[title]" placeholder="Title">
+                        <input type="text" value="<?= $datos_guardados['titulo'] ?? "" ?>" name="data[title]" placeholder="Title">
                         <span class="required requiredtitle">*</span>
                     </div>
                     <div class="input-container">
-                        <input type="text" id="price" value="<?= $datos_guardados['price'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
+                        <input type="text" id="price" value="<?= $datos_guardados['precio'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
                         <span class="required">*</span>
                     </div>
                 </div>

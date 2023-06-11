@@ -101,7 +101,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                 if($comprobacion_venta && $modelo->id_usuario == Utils::isLogged()) :?>
 
                 <div class="model-info-2-btn">
-                    <button type="submit" name="action" value="buyNow" class="defaultbtn buynow-btn boxshadow">DOWNLOAD</button>
+                    <button type="submit" name="action" value="buyNow" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/view/download/id=<?= $modelo->id ?>'" class="defaultbtn buynow-btn boxshadow">DOWNLOAD</button>
                 </div>
 
                 <?php else:?>

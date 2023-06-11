@@ -61,6 +61,18 @@ class VentasController
         }
     }
 
+    public static function comprobarVentaDescarga($id_modelo){
+
+        if(Utils::isLogged()){
+
+            $id_usuario = $_SESSION['identity']->id;
+           return (new Ventas("","","","","","")) -> comprobarVenta($id_usuario, $id_modelo);
+        }else{
+            Utils::irView($id_modelo);
+            return false;
+        }
+    }
+
     public function obtenerVentasUsuario($id_usuario_creador){
         return $this -> ventas -> obtenerVentasUsuario(($id_usuario_creador));
     }

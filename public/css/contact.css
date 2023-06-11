@@ -815,6 +815,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   cursor: url(../img/contact/pointer.png), auto;
 }
 
+
 .contact-form input,
 .contact-form textarea {
   cursor: url(../img/contact/text.png), auto;
@@ -824,8 +825,8 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 }
 
 .contact-body {
+height: 100%;
   font-family: var(--ff-arcade);
-  overflow: hidden;
   cursor: url(../img/contact/cursor.png), auto;
 }
 
@@ -850,7 +851,6 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 
 .contact-img-container {
   width: 100%;
-  overflow: hidden;
 }
 .contact-img-container img {
   position: absolute;
@@ -876,6 +876,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 
 .contact-form-container {
   position: relative;
+  margin-top: 3rem;
   width: 100%;
   height: 80vh;
   display: flex;
@@ -916,6 +917,8 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
 .section input,
 .section textarea {
   position: absolute;
+  font-size: var(--fs-200);
+
   font-family: var(--ff-arcade);
   background-color: transparent;
   border: none;
@@ -933,10 +936,23 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   width: 100%;
   height: 100%;
 }
+
+.retro_error{
+  width: 25px;
+}
+.retro_error_container, .successful{
+  display: flex;
+  justify-content: inherit;
+  align-items: center;
+  gap: 1rem;
+}
+.successful{
+  justify-content: center;
+}
+
 .section textarea {
   left: 5px;
   top: 10px;
-  font-size: var(--fs-200);
   width: 98%;
   height: 90%;
 }
@@ -993,11 +1009,19 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .contactbtn {
     margin: 0.5rem;
     min-width: 0;
-    width: 50%;
+    border-width: 3px;
+    width: 80%;
   }
   .header-title,
   .contact-link {
     font-size: var(--fs-300);
+  }
+  
+  .contact-form-container{
+    margin-top: 0;
+  }
+  .retro_error{
+    width: 15px;
   }
 }
 @media (min-width: 500px) and (max-width: 650px) {
@@ -1006,13 +1030,21 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .contact-form .contact-name,
   .contact-form .contact-email {
+
     height: 2rem;
   }
   .contact-form-card {
     width: 80%;
   }
   .contactbtn {
-    margin: 0.5rem;
+    width: 70%;
+    height: 4rem;
+  }
+  .contact-form-container{
+    margin-top: 0;
+  }
+  .retro_error{
+    width: 15px;
   }
 }
 @media (min-width: 650px) and (max-width: 800px) {
@@ -1026,6 +1058,12 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   .contactbtn {
     margin: 0.5rem;
   }
+.contact-form-container{
+  margin-top: 0;
+}
+.retro_error{
+  width: 15px;
+}
 }
 @media (min-width: 800px) and (max-width: 1100px) {
   .contact-form .section1 {
@@ -1093,7 +1131,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
   }
   .contact-description {
     box-sizing: border-box;
-    height: 17rem;
+    height: 14rem;
   }
   .contact-description textarea {
     width: 92%;
@@ -1101,7 +1139,7 @@ input::-webkit-input-placeholder, input:-ms-input-placeholder, input:-moz-placeh
     box-sizing: border-box;
     padding: 0.5rem 0 0 1rem;
     width: 97%;
-    height: 15rem;
+    height: 12rem;
   }
   .contactbtn {
     width: 75%;

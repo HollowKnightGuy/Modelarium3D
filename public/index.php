@@ -99,8 +99,8 @@ Router::add('GET', '/models/create', function () {
     (new ModeloController())->crear();
 });
 
-Router::add('GET', '/models/edit', function () {
-    (new ModeloController())->editar();
+Router::add('GET', '/models/edit/id=:id', function (int $id) {
+    (new ModeloController())->editar($id);
 });
 
 
@@ -110,6 +110,10 @@ Router::add('GET', '/models/view/id=:id', function (int $id) {
 
 Router::add('POST', '/model/buy/id=:id', function (int $id) {
     (new VentasController())->comprar($id);
+});
+
+Router::add('GET', '/model/view/download/id=:id', function (int $id) {
+    (new ModeloController())->descargar($id);
 });
 
 Router::add('GET', '/model/like/id=:id', function (int $id) {
@@ -144,6 +148,10 @@ Router::add('GET', '/model/view/comment/report/id=:id', function (int $id) {
 
 
 Router::add('GET', '/contact', function () {
+    (new HomeController())->contacto();
+});
+
+Router::add('POST', '/contact', function () {
     (new HomeController())->contacto();
 });
 
@@ -192,6 +200,11 @@ Router::add('GET', 'creator/request', function () {
 
 Router::add('POST', 'creator/request', function () {
     (new PeticionController())->solicitud();
+});
+
+Router::add('GET', 'creator/deleteModel/id=:id', function (int $id) {
+    (new ModeloController())->borrar($id);
+    Utils::irProfile();
 });
 
 
@@ -267,6 +280,7 @@ Router::add('GET', 'admin/denyrequest/CO/id=:id', function (int $id) {
 Router::add('GET', 'admin/acceptrequest/CO/id=:id', function (int $id) {
     (new PeticionController())->aceptarSolicitud('CO', $id);
 });
+
 
 
 
