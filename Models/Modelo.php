@@ -195,7 +195,7 @@ class Modelo
 	public function obtenerModelosPendientes()
 	{
 
-		$consulta = $this->conexion->prepara("SELECT m.id, m.titulo, m.descripcion, m.id_usuario, m.archivo_modelo, m.foto_modelo, m.precio, m.fecha_subida, m.privado, m.estado, m.num_likes, m.num_favs, m.num_comment,  m.nivel_complejidad, p.id_modelo, p.tipo
+		$consulta = $this->conexion->prepara("SELECT m.id, m.titulo, m.descripcion, m.id_usuario, m.archivo_modelo, m.foto_modelo, m.precio, m.fecha_subida, m.privado, m.estado, m.num_likes, m.num_favs, m.num_comment, p.id_modelo, p.tipo
 		FROM modelos AS m
 		INNER JOIN peticiones AS p ON p.id_modelo = m.id
 		WHERE m.estado = 'pendiente'

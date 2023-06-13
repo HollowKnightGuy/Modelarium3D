@@ -67,7 +67,7 @@ require_once '../views/layout/header.php';
         <?php foreach ($usuario as $key => $value) : ?>
             <tr>
                 <th><?= $key ?></th>
-                <td><?= $value ?></td>
+                <td><?= $value  === null || $value  === "" ? "-" : $value ?></td>
             </tr>
         <?php endforeach; ?>
 
@@ -78,7 +78,7 @@ require_once '../views/layout/header.php';
     <h1 class="title">Model</h1>
     <?php $modelo ?>
     <table>
-        <?php foreach ($modelo as $key => $value) : ?>
+        <?php foreach ($modelo[0] as $key => $value) : ?>
             <?php if ($key === "foto_modelo") : ?>
                 <th><?= $key ?></th>
                 <td><img src="<?= $_ENV['BASE_URL_PUBLIC']?>img/models/<?=$value?>" alt="Foto Modelo" width="200px"></td>
@@ -86,7 +86,7 @@ require_once '../views/layout/header.php';
 
                 <tr>
                     <th><?= $key ?></th>
-                    <td><?= $value ?></td>
+                    <td><?= $value === null ? "-" : $value ?></td>
                 </tr>
                 <?php endif; ?>
         <?php endforeach; ?>

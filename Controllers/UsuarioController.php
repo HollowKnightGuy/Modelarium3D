@@ -43,7 +43,6 @@ class UsuarioController
                         $this->pages->render('admin/users', ['usuarios' => $this->usuario->getall()]);
                     } else {
                         $this->login(true);
-                        $this -> email -> enviarCorreoRegistro($_SESSION['identity'] -> email, $_SESSION['identity'] -> nombre);
                     }
                 } else if (gettype($save) === "string") {
                     $this->pages->render('usuario/registerform', ['message' => $save, 'datos_guardados' => $_POST['data'], 'imagenval' => $_FILES]);

@@ -37,7 +37,7 @@ class PeticionController
                 $file = $_FILES;
 
                 $usuario = $this->intercontroller->obtenerUsuario($_SESSION['identity']->email);
-                
+
                 $peticion = $this->peticion->guardarPeticionModelo($message, $datos, $file, $usuario);
                 if ($peticion === true) {
                     $this->pages->render('usuario/profile', ['message' => $message]);
@@ -49,34 +49,31 @@ class PeticionController
             } else {
                 $this->pages->render('usuario/profile');
             }
-
-
         } elseif (Utils::isAdmin()) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $this->pages->render('admin/requests/models');
             }
-
-        }else if($comentario === 'rep' and $id_comentario !== null){
-            if(Utils::isLogged()){
-                $comentarioObj = $this -> intercontroller -> obtenerComentarioPorId($id_comentario);
-                if($comentarioObj -> id === Utils::idLoggedUsuario()){
-                    $this -> pages -> render('modelos/modelview', ['error_reportar_tu_comentario' => 'You can'."'".'report your comment']);
+        } else if ($comentario === 'rep' and $id_comentario !== null) {
+            if (Utils::isLogged()) {
+                $comentarioObj = $this->intercontroller->obtenerComentarioPorId($id_comentario);
+                if ($comentarioObj->id === Utils::idLoggedUsuario()) {
+                    $this->pages->render('modelos/modelview', ['error_reportar_tu_comentario' => 'You can' . "'" . 'report your comment']);
                     return false;
                 }
-                if($comentarioObj -> reportado !== NULL){
+                if ($comentarioObj->reportado !== NULL) {
                     $_SESSION['esta_reportado'] = "This comment is already reported";
-                    Utils::irView($comentarioObj -> id_modelo);
-                }else{
+                    Utils::irView($comentarioObj->id_modelo);
+                } else {
                     $_SESSION['esta_reportado'] = "";
 
                     // $this -> intercontroller -> obtenerComentario($id_comentario);
                     $reportado = true;
-                    $this -> peticion -> guardarPeticionComentarioRep($comentarioObj);
-                    $this -> intercontroller -> cambiarEstadoComentario($reportado, $id_comentario);
-                    Utils::irView($comentarioObj -> id_modelo);
+                    $this->peticion->guardarPeticionComentarioRep($comentarioObj);
+                    $this->intercontroller->cambiarEstadoComentario($reportado, $id_comentario);
+                    Utils::irView($comentarioObj->id_modelo);
                 }
-            }else{
+            } else {
                 Utils::irLogin();
             }
         } else {
@@ -88,29 +85,27 @@ class PeticionController
                 $datos['archivo_modelo'] = $archivos['model_file'];
                 $datos['foto_modelo'] = $archivos['model_photo'];
                 $datos['id_usuario'] = $_SESSION['identity']->id;
-                
+
                 $usuario = $this->intercontroller->obtenerUsuario($_SESSION['identity']->email);
                 $peticionCreador = $this->peticion->guardarPeticionCreador($message, $datos, $usuario);
-                if($peticionCreador === true){
+                if ($peticionCreador === true) {
                     return true;
-                }else{
+                } else {
                     return $peticionCreador;
                 }
             } else {
-                if(Utils::isLogged()){
+                if (Utils::isLogged()) {
                     Utils::irProfile();
-                }else{
+                } else {
                     Utils::irLogin();
                 }
             }
-
         }
-
     }
 
     public function serCreador()
     {
-        if(!Utils::isCreator() && Utils::isLogged()){
+        if (!Utils::isCreator() && Utils::isLogged()) {
             // if($this -> existePeticion($_SESSION['identity'] -> id, 'BC') === true){
             //     $_SESSION['peticion_mandada'] = true;
             //     Utils::irProfile();
@@ -120,24 +115,25 @@ class PeticionController
             $_SESSION['peticion_mandada'] = false;
             $message = ['email' => "", 'desc' => "", 'titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $solicitud = $this -> solicitud($message);
-                if($solicitud !== true){
-                    $this -> pages -> render('usuario/creatorform', ['message' => $solicitud, 'datos_guardados' => $_POST['data']]);
-                }else{                    
+                $solicitud = $this->solicitud($message);
+                if ($solicitud !== true) {
+                    $this->pages->render('usuario/creatorform', ['message' => $solicitud, 'datos_guardados' => $_POST['data']]);
+                } else {
                     Utils::irProfile();
                 }
             } else {
                 $this->pages->render('usuario/creatorform',  ['message' => $message, 'datos_guardados' => []]);
             }
-        }else if(!Utils::isLogged()){
+        } else if (!Utils::isLogged()) {
             Utils::irLogin();
-        }else{
+        } else {
             Utils::irModels();
         }
     }
 
-    public function existePeticion($idusuario, $tipo){
-        return $this -> peticion -> existePeticion($idusuario, $tipo);
+    public function existePeticion($idusuario, $tipo)
+    {
+        return $this->peticion->existePeticion($idusuario, $tipo);
     }
 
     public function obtenerCreatorsPendientes()
@@ -154,72 +150,71 @@ class PeticionController
     {
 
         $modelo_creador = $this->peticion->obtenerPeticionCreador($id);
-        $id_usuario = $modelo_creador[0] -> id_usuario;
+        $id_usuario = $modelo_creador[0]->id_usuario;
         $usuario = $this->intercontroller->obtenerUsuarioPorId($id_usuario);
-        $peticion = $this -> peticion -> obtenerPeticion($modelo_creador[0] -> id);
+        $peticion = $this->peticion->obtenerPeticion($modelo_creador[0]->id);
 
-        $this -> pages -> render('admin/requests/creators', ['modelo' => $modelo_creador, 'usuario' => $usuario, 'peticion' => $peticion]);
-
+        $this->pages->render('admin/requests/creators', ['modelo' => $modelo_creador, 'usuario' => $usuario, 'peticion' => $peticion]);
     }
 
     public function obtenerComentario($id_comentario)
     {
-        $comentario = $this -> intercontroller -> obtenerComentarioPorId($id_comentario);
-        $modelo = $this -> intercontroller -> obtenerModeloPorId($comentario -> id_modelo);
-        $usuario = $this->intercontroller->obtenerUsuarioPorId($comentario -> id_usuario);
-        $peticion = $this -> peticion -> obtenerPeticionComentario($comentario -> id);
+        $comentario = $this->intercontroller->obtenerComentarioPorId($id_comentario);
+        $modelo = $this->intercontroller->obtenerModeloPorId($comentario->id_modelo);
+        $usuario = $this->intercontroller->obtenerUsuarioPorId($comentario->id_usuario);
+        $peticion = $this->peticion->obtenerPeticionComentario($comentario->id);
 
-        $this -> pages -> render('admin/requests/comments', ['modelo' => $modelo, 'usuario' => $usuario, 'comentario' => $comentario, 'peticion' => $peticion]);
-
-    }
-
-    public function borrarPeticion($id){
-        return $this -> peticion -> borrarPeticion($id);
+        $this->pages->render('admin/requests/comments', ['modelo' => $modelo, 'usuario' => $usuario, 'comentario' => $comentario, 'peticion' => $peticion]);
     }
 
-    public function obtenerPeticion($id_modelo){
-        return $this -> peticion -> obtenerPeticion($id_modelo);
+    public function borrarPeticion($id)
+    {
+        return $this->peticion->borrarPeticion($id);
     }
-    
-    public function obtenerPeticionComentario($id_comentario){
-        return $this -> peticion -> obtenerPeticionComentario($id_comentario);
+
+    public function obtenerPeticion($id_modelo)
+    {
+        return $this->peticion->obtenerPeticion($id_modelo);
     }
-    
-    public function obtenerPeticionPorId($id){
-        return $this -> peticion -> obtenerPeticionPorId($id);
+
+    public function obtenerPeticionComentario($id_comentario)
+    {
+        return $this->peticion->obtenerPeticionComentario($id_comentario);
     }
-    
-    
+
+    public function obtenerPeticionPorId($id)
+    {
+        return $this->peticion->obtenerPeticionPorId($id);
+    }
+
+
     public function rechazarSolicitud($type, $id)
     {
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
                 $delete = $this->intercontroller->borrarModelo($id);
-                $borrarPeticion = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
+                $borrarPeticion = $this->borrarPeticion($this->obtenerPeticion($id)->id);
                 if ($delete) {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
-            }
+            } elseif ($type === 'BC') {
 
-            elseif ($type === 'BC') {
-
-                $delete = $this->intercontroller->borrarModelo($this -> obtenerPeticion($id)->id_modelo);
-                $borrarPeticion = $this -> borrarPeticion($id);
+                $delete = $this->intercontroller->borrarModelo($this->obtenerPeticion($id)->id_modelo);
+                $borrarPeticion = $this->borrarPeticion($id);
                 if ($delete && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
-            }
-            elseif ($type === 'CO') {
-                $cambiarEstado = $this -> intercontroller -> cambiarEstadoComentario(false, $this -> obtenerPeticionPorId($id)->id_comentario );
-                $borrarPeticion = $this -> borrarPeticion($id);
+            } elseif ($type === 'CO') {
+                $cambiarEstado = $this->intercontroller->cambiarEstadoComentario(false, $this->obtenerPeticionPorId($id)->id_comentario);
+                $borrarPeticion = $this->borrarPeticion($id);
                 if ($cambiarEstado && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
             }
         } else {
@@ -232,36 +227,33 @@ class PeticionController
         if (Utils::isAdmin()) {
             if ($type === 'MO') {
                 $cambiarEstado = $this->intercontroller->cambiarEstadoModelo($id);
-                $borrarPeticion = $this -> borrarPeticion($this -> obtenerPeticion($id)->id);
+                $borrarPeticion = $this->borrarPeticion($this->obtenerPeticion($id)->id);
                 if ($cambiarEstado) {
                     //$this -> peticion -> aceptarPeticion($id_peticion);
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
-            }
+            } elseif ($type === 'BC') {
 
-            elseif ($type === 'BC') {
+                $cambiarEstado = $this->intercontroller->cambiarEstadoModelo($this->obtenerPeticionPorId($id)->id_modelo);
+                $id_usuario = $this->obtenerPeticionPorId($id)->id_usuario;
+                $borrarPeticion = $this->borrarPeticion($id);
 
-                $cambiarEstado = $this->intercontroller->cambiarEstadoModelo($this -> obtenerPeticionPorId($id)->id_modelo);
-                $id_usuario = $this -> obtenerPeticionPorId($id) -> id_usuario;
-                $borrarPeticion = $this -> borrarPeticion($id);
-
-                $this -> intercontroller -> cambiaRol($id_usuario, 'ROLE_CREATOR');
+                $this->intercontroller->cambiaRol($id_usuario, 'ROLE_CREATOR');
                 if ($cambiarEstado && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Peticion aceptada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['aceptada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
-                
-            }elseif ($type === 'CO') {
-                $id_comentario = $this -> obtenerPeticionPorId($id) -> id_comentario;
-                $borrarPeticion = $this -> borrarPeticion($id);
+            } elseif ($type === 'CO') {
+                $id_comentario = $this->obtenerPeticionPorId($id)->id_comentario;
+                $borrarPeticion = $this->borrarPeticion($id);
                 $delete = $this->intercontroller->borrarComentario($id_comentario);
                 if ($delete && $borrarPeticion) {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Peticion rechazada correctamente"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 } else {
-                    $this->pages->render('admin/requests/models', ['rechazada' => "Ha habido un error al procesar la peticion"]);
+                    header("Location:" . $_ENV['BASE_URL'] . "admin/requests");
                 }
             }
         } else {
