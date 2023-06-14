@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="main.js" defer></script>
+    <title>Vite App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  </head>
+  
+  <body>
+    <div id="cursor" class="none">
+      <img src="./public/img/icons/visible-hover.svg" alt="eye.svg">
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <div class="loader">
+      <div class="loadercolor">
+        <img src="./public/img/logoloader/logoloadercolor.jpg" alt="logoloadergrey.jpg" class="logoloader">
+        <h3 style="z-index: 5;">Cargando <span class="percentage" id="percentage"></h3>
+
+        <a id="arcadelink" href="http://honest-words-sneeze.loca.lt/modelarium3D-php/contact"></a>
+        <a id="pclink" href="http://honest-words-sneeze.loca.lt/modelarium3D-php/home"></a>
+        <a id="ipadlink" href="http://honest-words-sneeze.loca.lt/modelarium3D-php/aboutus"></a>
+      </div>
+    </div>
+    <div class="experience">
+      <button style="display:none; position: absolute; background:transparent;">Volver al inicio</button>
+      <canvas class="experience-canvas">
+
+      </canvas>
+    </div>
+    <div id="rotator" style="height:100px;width:100px"></div>
+  </body>
+
+</html>
