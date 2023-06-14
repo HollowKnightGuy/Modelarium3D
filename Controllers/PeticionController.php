@@ -32,7 +32,9 @@ class PeticionController
         if (Utils::isCreator()) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
-                $_POST['data']['price'] = number_format($_POST['data']['price'], 2, '.', '');
+                if(!empty($_POST['data']['price']) ){
+                    $_POST['data']['price'] = number_format($_POST['data']['price'], 2, '.', '');
+                }
                 $datos = $_POST['data'];
                 $file = $_FILES;
 

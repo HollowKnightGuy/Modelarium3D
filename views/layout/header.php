@@ -31,7 +31,7 @@
                     <div class="icon-left"></div>
                 </div>
                 <li class="header-logo">
-                    <a href="<?= $_ENV['BASE_URL'] ?>">
+                    <a href="https://ppmodelarium3d.000webhostapp.com/">
                         <img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/logo/logo.png" alt="logo" class="logo">
                         <h1 class="header-title">Modelarium</h1>
                     </a>
@@ -168,25 +168,13 @@
                         <li>
                             <a class="transition" id="account-responsive-link" href="<?= $_ENV['BASE_URL'] ?>login" style="cursor:pointer;">
                                 <div>
-                                    <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/profile.svg" alt="account.svg">
+                                    <img class="link-icon profile-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/profile.svg" alt="account.svg">
                                     <span>Account</span>
                                 </div>
                             </a>
                         </li>
                     <?php endif; ?>
                     <?php if ($session) : ?>
-                        <script>
-                            const logouticon = document.getElementsByClassName("logout-icon")[0];
-                            const logouticon1src = document.getElementsByClassName("logout-icon")[0].src;
-                            const logouticon2src = document.getElementsByClassName("logout-icon")[1].src;
-                            logouticon.addEventListener("mouseover", function() {
-                                logouticon.src = logouticon2src
-
-                            });
-                            logouticon.addEventListener("mouseout", function() {
-                                logouticon.src = logouticon1src
-                            });
-                        </script>
                         <li>
                             <a class="transition" id="account-responsive-link" style="cursor:pointer;">
                                 <div>
@@ -204,6 +192,18 @@
                                 <span>Log Out</span>
                             </a>
                         </li>
+                        <script defer>
+                            const logouticon = document.getElementsByClassName("logout-icon")[0];
+                            const logouticon1src = document.getElementsByClassName("logout-icon")[0].src;
+                            const logouticon2src = document.getElementsByClassName("logout-icon")[1].src;
+                            logouticon.addEventListener("mouseover", function() {
+                                logouticon.src = logouticon2src
+
+                            });
+                            logouticon.addEventListener("mouseout", function() {
+                                logouticon.src = logouticon1src
+                            });
+                        </script>
                     <?php endif; ?>
                     <?php if (!$session) : ?>
                         <li>

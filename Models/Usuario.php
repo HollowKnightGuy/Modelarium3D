@@ -203,6 +203,7 @@ class Usuario
 	{
 
 		$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
+		$descval = "/^[0-9a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
 		$emailval = "/^[A-z0-9\\.-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9-]+)*\\.([A-z]{2,6})$/";
 		$passwval = "/^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,14}$/";
 
@@ -212,8 +213,8 @@ class Usuario
 			$message['nombre'] = "";
 		}
 
-		if (!empty($datos_usuario['descripcion']) && preg_match($nombreval, $datos_usuario['descripcion']) === 0) {
-			$message['descripcion'] = "The description can only contain letters and spaces";
+		if (!empty($datos_usuario['descripcion']) && preg_match($descval, $datos_usuario['descripcion']) === 0) {
+			$message['descripcion'] = "The description can only contain letters, numbers and spaces";
 		} else {
 			$message['descripcion'] = "";
 		}
@@ -345,6 +346,7 @@ class Usuario
 	{
 
 		$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
+		$descval = "/^[0-9a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
 
 		if (empty($datos_usuario['nombre']) || preg_match($nombreval, $datos_usuario['nombre']) === 0) {
 			$message['nombre'] = "The name can only contain letters and spaces";
@@ -352,8 +354,8 @@ class Usuario
 			$message['nombre'] = "";
 		}
 
-		if (!empty($datos_usuario['descripcion']) && preg_match($nombreval, $datos_usuario['descripcion']) === 0) {
-			$message['descripcion'] = "The description can only contain letters and spaces";
+		if (!empty($datos_usuario['descripcion']) && preg_match($descval, $datos_usuario['descripcion']) === 0) {
+			$message['descripcion'] = "The description can only contain letters, numbers and spaces";
 		} else {
 			$message['descripcion'] = "";
 		}
@@ -390,6 +392,24 @@ class Usuario
 			if($usuario -> foto_perfil != null || $usuario -> foto_perfil != ""){
 				unlink("../public/img/user/profilephoto/".$usuario -> foto_perfil);
 			}
+
+
+			// Verificar si existen filas en la tabla "peticiones"
+			$consultaPeticiones = $this->conexion->prepara("SELECT * FROM peticiones WHERE id_usuario = :id");
+			$consultaPeticiones->bindParam(':id', $id);
+			$consultaPeticiones->execute();
+			if ($consultaPeticiones->rowCount() != 0) {
+			}
+
+			$borrarPeticiones =  $this->conexion->prepara("DELETE FROM peticiones WHERE id = :id");
+			$borrarPeticiones->bindParam(':id', $id);
+			try {
+				$borrarPeticiones->execute();
+			} catch (PDOException $e) {
+				exit($e->getMessage());
+			}
+			
+
 			$consulta =  $this->conexion->prepara("DELETE FROM usuarios WHERE id = :id");
 			$consulta->bindParam('id', $id, PDO::PARAM_INT);
 	

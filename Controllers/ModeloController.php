@@ -54,14 +54,28 @@ class ModeloController
     public function editar($id_modelo)
     {
         if(Utils::isCreator() || Utils::isAdmin()){
-            $modelo = $this -> obtenerModeloPorId($id_modelo);
+            if($_SERVER['REQUEST_METHOD'] === "POST"){
+                $_POST['data']['id'] = $id_modelo;
+                $datos = $_POST['data'];
+                $datos['id_usuario'] = Utils::idLoggedUsuario();
+                $datos['model_file'] = $_FILES['model_file'];
+                $datos['model_photo'] = $_FILES['model_photo'];
 
-            $message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
-            $datos_guardados = ['titulo' => $modelo->titulo, 'precio' => $modelo->precio, 'descripcion_modelo' => $modelo->descripcion, 'modelo_glb' => $modelo->archivo_modelo, 'modelo_foto' => $modelo->foto_modelo];
-            $this->pages->render("modelos/create_edit_model", ['message' => $message, 'datos_guardados' => $datos_guardados]);
-        }else{
-            Utils::irModels();
+                $this -> modelo -> actualizar($datos);
+
+                $comentarios = $this -> comentarioC -> obtenerComentarios($id_modelo);
+                $modelo = $this -> modelo -> obtenerModeloPorId($id_modelo);    
+                $this->pages->render("modelos/modelview", ['modelo' => $modelo, 'comentarios' => $comentarios]);
+
+            }else{
+
+                $modelo = $this -> obtenerModeloPorId($id_modelo);
+                $message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+                $datos_guardados = ['id' => $modelo->id,'titulo' => $modelo->titulo, 'precio' => $modelo->precio, 'descripcion_modelo' => $modelo->descripcion, 'modelo_glb' => $modelo->archivo_modelo, 'modelo_foto' => $modelo->foto_modelo];
+                $this->pages->render("modelos/create_edit_model", ['message' => $message, 'datos_guardados' => $datos_guardados, "editar" => true]);
+            }
         }
+
     }
 
     public function cambiarEstado($id)
@@ -108,10 +122,16 @@ class ModeloController
         return $this->modelo->obtenerModelosUsuario($idusuario);
     }
 
+    public function obtenerTodosModelosUsuario($idusuario)
+    {
+        return $this->modelo->obtenerTodosModelosUsuario($idusuario);
+    }
+
     public function obtenerModelosUsuarioNP($idusuario)
     {
         return $this->modelo->obtenerModelosUsuarioNP($idusuario);
     }
+
     
 
     public function like($idmodelo)
@@ -167,7 +187,7 @@ class ModeloController
         if($modelo !== false){
             $nombre_archivo = $modelo -> archivo_modelo;
             $comprado = VentasController::comprobarVentaDescarga($id);
-            if($comprado){
+            if($comprado || Utils::isAdmin()){
                 $fileName = $nombre_archivo;
                 $filePath = $_ENV['BASE_URL_PUBLIC']."3dmodels/".$fileName;
                 var_dump(file_exists($filePath));
@@ -176,7 +196,7 @@ class ModeloController
                     header("Cache-Control: public");
                     header("Content-Description: File Transfer");
                     header("Content-Disposition: attachment; filename=$fileName");
-                    header("Content-Type: type/glb");
+                    header("Content-Type: application/octet-stream");
                     header("Content-Transfer-Encoding: binary");
                     
                     // Read the file

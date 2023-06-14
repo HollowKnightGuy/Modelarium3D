@@ -11,17 +11,13 @@ use Lib\Email;
 class UsuarioController
 {
 
-    private Utils $utils;
     private Pages $pages;
     private Usuario $usuario;
-    private Email $email;
 
     public function __construct()
     {
-        $this->utils = new Utils();
         $this->pages = new Pages();
         $this->usuario = new Usuario(0, '', '', '', '', '', '', '', '', '');
-        $this->email = new Email();
     }
 
 
@@ -190,6 +186,7 @@ class UsuarioController
     public function borrarUsuario($id)
     {
         if (Utils::isAdmin()) {
+            
             $borrar = $this->usuario->borrar($id);
             if ($borrar) {
                 $this->pages->render('admin/users', ['usuarios' => $this->usuario->getall()]);

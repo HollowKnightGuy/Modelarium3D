@@ -3,6 +3,7 @@
 namespace Models;
 
 use Lib\BaseDatos;
+use Lib\Utils;
 use PDO;
 use PDOException;
 
@@ -109,6 +110,61 @@ class Modelo
 		}
 	}
 
+	public function obtenerTodosModelosUsuario($id_usuario){
+		$consulta = $this->conexion->prepara("SELECT * FROM modelos 
+		WHERE id_usuario=:id_usuario");
+		$consulta->bindParam(':id_usuario', $id_usuario);
+		try {
+			$consulta->execute();
+			return $consulta-> fetchAll(PDO::FETCH_OBJ);
+		} catch (PDOException $err) {
+			return false;
+		}
+	}
+
+	public function actualizar($datos){
+
+		//TODO: PROBAR VALIDACION
+		$message = ['titulo' => "", 'precio' => "", 'descripcion_modelo' => "", 'modelo_glb' => "", 'modelo_foto' => ""];
+		$validacion = $this -> validarModelo($datos, $message);
+
+		if($validacion === true){
+
+			$consulta = $this->conexion->prepara("UPDATE modelos SET titulo=:title, descripcion=:descripcion_modelo, precio=:price, archivo_modelo=:archivo_modelo, foto_modelo=:foto_modelo 
+			WHERE id=:id_modelo");
+	
+			$consulta->bindParam(':id_modelo', $datos['id']);
+			$consulta->bindParam(':title', $datos['title']);
+			$consulta->bindParam(':descripcion_modelo', $datos['descripcion_modelo']);
+			$consulta->bindParam(':price', $datos['price']);
+			$consulta->bindParam(':archivo_modelo', $datos['model_file']['name']);
+			$consulta->bindParam(':foto_modelo', $datos['model_photo']['name']);
+	
+			
+			try {
+				$consulta->execute();
+				if (file_exists("../public/img/models/") || @mkdir("../public/img/models/")) {
+					$origenDocumento = $datos['model_photo']['tmp_name'];
+					$urlDocumento = "../public/img/models/" .$datos['model_photo']['name'];
+					@move_uploaded_file($origenDocumento, $urlDocumento);
+				}
+	
+				if (file_exists("../public/3dmodels/") || @mkdir("../public/3dmodels/")) {
+					$origenDocumento = $datos['model_file']['tmp_name'];
+					$urlDocumento = "../public/3dmodels/" . $datos['model_file']['name'];
+					@move_uploaded_file($origenDocumento, $urlDocumento);
+				}
+	
+				return $consulta-> fetchAll(PDO::FETCH_OBJ);
+			} catch (PDOException $err) {
+				return false;
+			}
+		}else{
+			return $validacion;
+		}
+
+	}
+
 
 	public function guardar($datos)
 	{
@@ -124,7 +180,7 @@ class Modelo
 			titulo, descripcion, id_usuario, archivo_modelo, foto_modelo, precio, fecha_subida
 			) 
 			VALUES(
-				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio
+				:titulo,:descripcion,:id_usuario,:archivo_modelo,:foto_modelo,:precio, :fecha_subida
 				)");
 		$consulta->bindParam(':titulo', $titulo, PDO::PARAM_STR);
 		$consulta->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
@@ -146,6 +202,49 @@ class Modelo
 		}
 	}
 
+	public function validarModelo($datosavalidar, $message){	
+		$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
+		$descripval = "/^[0-9a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
+		$precioval = "/^(0|[1-9]\d*)(\.\d{2})?$/";
+
+		
+		if (empty($datosavalidar['title']) || preg_match($nombreval, $datosavalidar['title']) === 0) {
+			$message['titulo'] = "The title can only contain letters and spaces";
+		} else {
+			$message['titulo'] = "";
+		}
+		if (empty($datosavalidar['price']) || !preg_match($precioval, $datosavalidar['price']) || strlen(explode(".", $datosavalidar['price'])[0]) > 2) {
+			$message['precio'] = "The price must contain only numbers (Ex: XX.XX) max: €99.99";
+		} else {
+			$message['precio'] = "";
+		}
+		
+		if (empty($datosavalidar['descripcion_modelo']) || preg_match($descripval, $datosavalidar['descripcion_modelo']) === 0  ) {
+			$message['descripcion_modelo'] = "The description can only contain letters, numbers and spaces";
+		} else {
+			$message['descripcion_modelo'] = "";
+		}
+
+		$modelos_usuario = $this -> obtenerModelosUsuario(Utils::idLoggedUsuario());
+		foreach($modelos_usuario as $modelo){
+			if(strtolower($modelo -> titulo) === strtolower($datosavalidar['title'])){
+				$message['titulo'] = "You already have a model with that name";
+			}
+		}
+		$archivo_modelo = $datosavalidar['model_file'];
+		$message = Utils::validarArchivoModelo($archivo_modelo, $message);
+
+
+		$foto_modelo = $datosavalidar['model_photo'];
+		$message = Utils::validarImagenModelo($foto_modelo, $message);
+
+
+		if (Utils::comprobarErrores($message)) {
+			return true;
+		}
+		return $message;
+	}
+
 	public function borrar($id)
 	{
 		try {
@@ -160,9 +259,19 @@ class Modelo
 			$consultaFavoritos = $this->conexion->prepara("SELECT * FROM favoritos WHERE id_modelo = :id");
 			$consultaFavoritos->bindParam(':id', $id);
 			$consultaFavoritos->execute();
+
+			// Verificar si existen filas en la tabla "comentarios"
+			$consultaComentarios = $this->conexion->prepara("SELECT * FROM comentarios WHERE id_modelo = :id");
+			$consultaComentarios->bindParam(':id', $id);
+			$consultaComentarios->execute();
+
+			// Verificar si existen filas en la tabla "comentarios"
+			$consultaPComentarios = $this->conexion->prepara("SELECT * FROM peticiones WHERE id_modelo = :id");
+			$consultaPComentarios->bindParam(':id', $id);
+			$consultaPComentarios->execute();
 	
 			// Si no hay filas en ninguna de las tablas, retornar false
-			if ($consultaLikes->rowCount() == 0 && $consultaFavoritos->rowCount() == 0) {
+			if ($consultaLikes->rowCount() == 0 && $consultaFavoritos->rowCount() == 0 && $consultaComentarios->rowCount() == 0 && $consultaPComentarios->rowCount() == 0) {
 				$this->conexion->rollBack();
 				return false;
 			}
@@ -176,6 +285,16 @@ class Modelo
 			$borrarFavoritos = $this->conexion->prepara("DELETE FROM favoritos WHERE id_modelo = :id");
 			$borrarFavoritos->bindParam(':id', $id);
 			$borrarFavoritos->execute();
+
+			// Borrar las filas de la tabla "comentarios"
+			$borrarComentarios = $this->conexion->prepara("DELETE FROM comentarios WHERE id_modelo = :id");
+			$borrarComentarios->bindParam(':id', $id);
+			$borrarComentarios->execute();
+
+			// Borrar las filas de la tabla "comentarios"
+			$borrarComentarios = $this->conexion->prepara("DELETE FROM peticiones WHERE id_modelo = :id");
+			$borrarComentarios->bindParam(':id', $id);
+			$borrarComentarios->execute();
 	
 			// Borrar la fila de la tabla "modelos"
 			$borrarModelo = $this->conexion->prepara("DELETE FROM modelos WHERE id = :id");

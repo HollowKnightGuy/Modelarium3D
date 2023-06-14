@@ -27,8 +27,11 @@ $modelos_creador = $modeloC -> obtenerModelosUsuario($creador->id);
     <main>
     
         <div class="banner">
-            <img class="banner-img" src="<?= $_ENV['BASE_URL_PUBLIC']?>img/user/profilebanner/<?= $creador -> banner?>" alt="<?= $creador -> banner?>">
-
+            <?php if($creador -> banner == NULL):?>
+                <img class="banner-img" src="<?= $_ENV['BASE_URL_PUBLIC']?>img/default/banner.jpg">
+            <?php else:?>
+                <img class="banner-img" src="<?= $_ENV['BASE_URL_PUBLIC']?>img/user/profilebanner/<?= $creador -> banner?>" alt="<?= $creador -> banner?>">
+            <?php endif;?>
             <img class="profile-img" src="<?= $_ENV['BASE_URL_PUBLIC']?>img/user/profilephoto/<?= $creador -> foto_perfil?>" alt="<?= $creador -> foto_perfil?>">
             
             <div class="profile-info">

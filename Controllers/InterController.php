@@ -4,8 +4,7 @@ namespace Controllers;
 use Controllers\UsuarioController;
 use Controllers\ModeloController;
 use Controllers\ComentariosController;
-
-
+use Lib\Utils;
 
 class InterController{
 
@@ -27,6 +26,20 @@ class InterController{
 
     public function obtenerUsuarioPorId($id){
         return $this -> usuarioC -> obtenerUsuarioPorId($id);
+    }
+
+    public function borrarUsuario($id_usuario){
+        if(Utils::isAdmin()){
+            $modelos = $this -> modeloC -> obtenerTodosModelosUsuario($id_usuario);
+            if(!empty($modelos)){
+                foreach ($modelos as $modelo){
+                    $this -> modeloC -> borrar($modelo -> id);
+                }
+            }
+            $this -> usuarioC -> borrarUsuario($id_usuario);
+        }else{
+            Utils::irModels();
+        }
     }
 
     public function borrarModelo($id){

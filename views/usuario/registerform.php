@@ -39,7 +39,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
             </input>
             <div>
                 <span class="required">*</span>
-                <input class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
+                <input class="selectfileinput" id="inputImgName" type="text" placeholder="profilephoto.jpg" readonly>
                 <input type="file" name="file" id="file" hidden required>
             </div>
         </div>

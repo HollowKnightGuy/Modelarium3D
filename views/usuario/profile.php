@@ -44,23 +44,25 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
             <img class="profile-img" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/user/profilephoto/<?= $userdata->foto_perfil; ?>" alt="profile">
         </div>
-        <div class="profile-creator-gear">
-            <div class="profile-creator-div">
+        <?php if(!Utils::isAdmin()): ?>
+            <div class="profile-creator-gear">
+                <div class="profile-creator-div">
 
-                <?php if (isset($userdata->rol) && $userdata->rol == 'ROLE_USER') : ?>
+                    <?php if (isset($userdata->rol) && $userdata->rol == 'ROLE_USER') : ?>
 
-                    <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
-                        Be Creator
-                        <img class="model-creator-svg" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/cube.svg" alt="model">
-                    </button>
-                <?php endif; ?>
+                        <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
+                            Be Creator
+                            <img class="model-creator-svg" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/cube.svg" alt="model">
+                        </button>
+                    <?php endif; ?>
+                </div>
+                <div class="profile-gear-button">
+                    <a href="<?= $_ENV['BASE_URL'] ?>profile/settings">
+                        <img class="gear-svg transition" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/gear.svg" alt="gear">
+                    </a>
+                </div>
             </div>
-            <div class="profile-gear-button">
-                <a href="<?= $_ENV['BASE_URL'] ?>profile/settings">
-                    <img class="gear-svg transition" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/gear.svg" alt="gear">
-                </a>
-            </div>
-        </div>
+        <?php endif; ?>
 
         <div class="profile-info">
             <h1><?= $userdata->nombre ?></h1>
@@ -331,7 +333,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                                 </div>
                                 <div class="profile-cards-button">
                                     <div class="model--seebtn">
-                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/edit/id=<?= $modelo->id ?>'">EDIT</button>
+                                        <button class="boxshadow defaultbtn transition profile-button" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>models/edit?id=<?= $modelo->id ?>'">EDIT</button>
                                     </div>
 
                                 </div>

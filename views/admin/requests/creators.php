@@ -7,7 +7,6 @@ require_once '../views/layout/header.php';
 ?>
 
 <style>
-    
     th,
     td {
         border: 1px solid grey;
@@ -44,7 +43,7 @@ require_once '../views/layout/header.php';
         text-align: center;
     }
 
-    .title{
+    .title {
         display: flex;
         width: 100%;
         align-items: center;
@@ -52,7 +51,8 @@ require_once '../views/layout/header.php';
         padding: 50 10 10 10;
     }
 
-    .model, .user{
+    .model,
+    .user {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -81,20 +81,27 @@ require_once '../views/layout/header.php';
         <?php foreach ($modelo[0] as $key => $value) : ?>
             <?php if ($key === "foto_modelo") : ?>
                 <th><?= $key ?></th>
-                <td><img src="<?= $_ENV['BASE_URL_PUBLIC']?>img/models/<?=$value?>" alt="Foto Modelo" width="200px"></td>
+                <td><img src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/models/<?= $value ?>" alt="Foto Modelo" width="200px"></td>
             <?php else : ?>
-
                 <tr>
                     <th><?= $key ?></th>
                     <td><?= $value === null ? "-" : $value ?></td>
                 </tr>
-                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($key === "archivo_modelo") : ?>
+                <tr>
+                    <th><?= $key ?></th>
+                    <td>
+                    <button type="submit" name="action" value="buyNow" onclick="location.href = '<?= $_ENV['BASE_URL'] ?>model/view/download/id=<?= $modelo[0]->id ?>'" class="defaultbtn buynow-btn boxshadow"><?= $value ?></button>
+                    </td>
+                </tr>
+            <?php endif; ?>
         <?php endforeach; ?>
 
     </table>
 </div>
 
-    <div class="user-opt">
-        <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/BC/id=<?= $peticion -> id?>">Rechazar Petición</a>
-        <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/BC/id=<?=$peticion -> id?>">Aceptar Petición</a>
-    </div>
+<div class="user-opt">
+    <a class="defaultbtn" id="rechazarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/denyrequest/BC/id=<?= $peticion->id ?>">Rechazar Petición</a>
+    <a class="defaultbtn" id="aceptarbtn" href="<?= $_ENV['BASE_URL'] ?>admin/acceptrequest/BC/id=<?= $peticion->id ?>">Aceptar Petición</a>
+</div>

@@ -11,13 +11,15 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
 <main>
     <div class="container">
-        <?php if(isset($datos_guardados)):?>
+        <?php if(isset($editar)): ?>
             <h1 class="title">Edit your Model</h1>
-        <?php else:?>
+            <form action='<?= $_ENV['BASE_URL'] ?>models/edit?id=<?= $datos_guardados['id'] ?>' method="POST" class="form" enctype="multipart/form-data">
+        <?php else: ?>
             <h1 class="title">Upload your Model</h1>
-        <?php endif;?>
+            <form action="<?= $_ENV['BASE_URL'] ?>creator/request" method="POST" class="form" enctype="multipart/form-data">
+        <?php endif; ?>
 
-        <form action="<?php $_ENV['BASE_URL'] ?>../creator/request" method="POST" class="form" enctype="multipart/form-data">
+
             <div class="model-form">
 
             <div class="double-input-section">

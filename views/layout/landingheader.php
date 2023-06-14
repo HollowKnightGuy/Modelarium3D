@@ -12,10 +12,9 @@
 
 <body class="landingbody">
     <header>
-        <a href="<?= $_ENV['BASE_URL'] ?>" class="landing-link defaultbtn smodels room transition">Room</a>
+        <a href="https://ppmodelarium3d.000webhostapp.com/" class="landing-link defaultbtn smodels room transition">Room</a>
         <div class="landing-user-opt">
             <?php
-
             use Lib\Utils;
 
             if (!Utils::isLogged()) : ?>

@@ -13,6 +13,7 @@ use Controllers\PeticionController;
 use Controllers\LikeController;
 use Controllers\FavoritosController;
 use Controllers\ComentariosController;
+use Controllers\InterController;
 use Controllers\VentasController;
 use Lib\Utils;
 
@@ -31,7 +32,7 @@ $dotenv->safeLoad();
 
 
 Router::add('GET', '/', function () {
-    (new HomeController())->IrHabitacion();
+    (new HomeController())->index();
 });
 
 
@@ -97,10 +98,6 @@ Router::add('GET', '/models', function () {
 
 Router::add('GET', '/models/create', function () {
     (new ModeloController())->crear();
-});
-
-Router::add('GET', '/models/edit/id=:id', function (int $id) {
-    (new ModeloController())->editar($id);
 });
 
 
@@ -207,6 +204,15 @@ Router::add('GET', 'creator/deleteModel/id=:id', function (int $id) {
     Utils::irProfile();
 });
 
+Router::add('GET', '/models/edit?id=:id', function (int $id) {
+    (new ModeloController())->editar($id);
+});
+
+Router::add('POST', '/models/edit?id=:id', function (int $id) {
+    (new ModeloController())->editar($id);
+});
+
+
 
 // //ADMINISTRADOR
 
@@ -243,7 +249,7 @@ Router::add('POST', 'admin/createuser', function () {
 });
 
 Router::add('GET', 'admin/deleteuser/id=:id', function (int $id) {
-    (new UsuarioController())->borrarUsuario($id);
+    (new InterController())->borrarUsuario($id);
 });
 
 Router::add('GET', 'admin/updateuser/id=:id', function (int $id) {

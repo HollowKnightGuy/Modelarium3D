@@ -57,13 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // HOVER EFFECTS FOR THE HEADER ICONS
-    logouticon.addEventListener("mouseover", function(){
-        logouticon.src = logouticon2src
-        
-    });
-    logouticon.addEventListener("mouseout", function(){
-        logouticon.src = logouticon1src
-    });
+
     headerHeart.addEventListener("mouseover", function(){
         headerHeart.src = headerHeart2src
         

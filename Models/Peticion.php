@@ -216,7 +216,7 @@ class Peticion
 
 	public function validarPModelo($datosavalidar, $message){	
 			$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
-			$descripval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
+			$descripval = "/^[0-9a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
 			$precioval = "/^(0|[1-9]\d*)(\.\d{2})?$/";
 
 			
@@ -231,9 +231,8 @@ class Peticion
 				$message['precio'] = "";
 			}
 			
-			//TODO: || strlen($datosavalidar['descripcion_modelo']) < 40
 			if (empty($datosavalidar['descripcion_modelo']) || preg_match($descripval, $datosavalidar['descripcion_modelo']) === 0  ) {
-				$message['descripcion_modelo'] = "The description can only contain letters and spaces and a minimum of 40 characters";
+				$message['descripcion_modelo'] = "The description can only contain letters, numbers and spaces";
 			} else {
 				$message['descripcion_modelo'] = "";
 			}
@@ -260,7 +259,7 @@ class Peticion
 		
 		public function validarPCreador($datosavalidar, $message){	
 			$nombreval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ\s]+$/";
-			$descripval = "/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
+			$descripval = "/^[0-9a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ,.\s]+$/";
 			$emailval = "/^[A-z0-9\\.-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9-]+)*\\.([A-z]{2,6})$/";
 			if (empty($datosavalidar['email']) || preg_match($emailval, $datosavalidar['email']) === 0) {
 				$message['email'] = "Invalid email";
@@ -270,7 +269,7 @@ class Peticion
 
 			//TODO:  || strlen($datosavalidar['desc']) < 40
 			if (empty($datosavalidar['desc']) || preg_match($descripval, $datosavalidar['desc']) === 0) {
-				$message['desc'] = "The description can only contain letters and spaces and a minimum of 40 characters";
+				$message['desc'] = "The description can only contain letters, numbers and spaces and a minimum of 40 characters";
 			} else {
 				$message['desc'] = "";
 			}
