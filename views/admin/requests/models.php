@@ -282,7 +282,6 @@ $peticionController = new PeticionController();
     }
 
     function changeReqstate(s1, s2, s3) {
-        console.log(s1)
         sectionReq[0].style.display = s1;
         sectionReq[1].style.display = s2;
         sectionReq[2].style.display = s3;

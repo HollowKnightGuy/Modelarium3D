@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // ICONS FROM HEADER
+
     const headerHeart = document.getElementsByClassName("heart-icon")[0];
     const headerHeart1src = document.getElementsByClassName("heart-icon")[0].src;
     const headerHeart2src = document.getElementsByClassName("heart-icon")[1].src;
@@ -56,7 +57,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // HOVER EFFECTS FOR THE HEADER ICONS
-
+    logouticon.addEventListener("mouseover", function(){
+        logouticon.src = logouticon2src
+        
+    });
+    logouticon.addEventListener("mouseout", function(){
+        logouticon.src = logouticon1src
+    });
     headerHeart.addEventListener("mouseover", function(){
         headerHeart.src = headerHeart2src
         

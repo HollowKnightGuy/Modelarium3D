@@ -30,8 +30,8 @@
             $mail->Username = '8aa69c861f0fc8';
             $mail->Password = '2ce2a537889f8c';
 
-            $mail -> setFrom('modelarium3d@gmail.com','Modelarium 3D');
-            $mail -> addAddress("$email");
+            $mail -> setFrom("$email",'User');
+            $mail -> addAddress('modelarium3d@gmail.com', 'Modelarium 3D');
 
             $mail -> isHTML(TRUE);
             $mail -> CharSet = "UTF-8";

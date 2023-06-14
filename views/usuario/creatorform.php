@@ -13,7 +13,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
             <div class="creator-form-section">
                 <div class="input-container">
-                    <input type="email" name="data[email]" value="<?= $datos_guardados['email'] ?? "" ?>" id="email" placeholder="Paypal Email Adress">
+                    <input type="email" name="data[email]" value="<?= $datos_guardados['email'] ?? "" ?>" require id="email" placeholder="Paypal Email Adress">
                     <span class="required">*</span>
                 </div>
                 <?php if ($message['email'] === "") :  ?>
@@ -27,7 +27,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
             </div>
             <div class="creator-form-section">
                 <div class="input-container">
-                    <textarea name="data[desc]" id="desc" rows="10" placeholder="Profile Description"><?= $datos_guardados['desc'] ?? "" ?></textarea><span class="required">*</span>
+                    <textarea require name="data[desc]" id="desc" rows="10" placeholder="Profile Description"><?= $datos_guardados['desc'] ?? "" ?></textarea><span class="required">*</span>
 
                 </div>
                 <?php if ($message['desc'] === "") :  ?>
@@ -47,11 +47,11 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 
                 <div class="double-input-section">
                     <div class="input-container">
-                        <input type="text" value="<?= $datos_guardados['title'] ?? "" ?>" name="data[title]" placeholder="Title">
+                        <input require type="text" value="<?= $datos_guardados['title'] ?? "" ?>" name="data[title]" placeholder="Title">
                         <span class="required requiredtitle">*</span>
                     </div>
                     <div class="input-container">
-                        <input type="text" id="price" value="<?= $datos_guardados['price'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
+                        <input  require type="text" id="price" value="<?= $datos_guardados['price'] ?? "" ?>" name="data[price]" placeholder="Price (XX.XX EUR)">
                         <span class="required">*</span>
                     </div>
                 </div>
@@ -62,18 +62,18 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <?= $message['precio'] === "" ? "" : $error_img . $message['precio']; ?>
                 </span>
                 <div class="input-container">
-                    <textarea name="data[descripcion_modelo]" id="descripcion_modelo" rows="10" placeholder="Model Description"><?= $datos_guardados['descripcion_modelo'] ?? "" ?></textarea>
+                    <textarea require name="data[descripcion_modelo]" id="descripcion_modelo" rows="10" placeholder="Model Description"><?= $datos_guardados['descripcion_modelo'] ?? "" ?></textarea>
                     <span class="required">*</span>
                 </div>
                 <span class="red-error">
                     <?= $message['descripcion_modelo'] === "" ? "" : $error_img . $message['descripcion_modelo']; ?>
                 </span>
                 <div class="input-container selectfilecontainer">
-                    <input style="color:white; background-color:var(--primary-color)" type="button" value="Select File" class="select-file-btn transition" onclick="getFile()">
+                    <input require style="color:white; background-color:var(--primary-color)" type="button" value="Select File" class="select-file-btn transition" onclick="getFile()">
                     </input>
                     <div>
                         <span class="required">*</span>
-                        <input class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
+                        <input require class="selectfileinput" id="inputImgName" type="text" placeholder="Model.glb" readonly>
                         <input type="file" name="model_file" id="file" hidden>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
                     <div>
                         <span class="required">*</span>
                         <input class="selectfileinput2" id="inputImgName2" type="text" placeholder="Model-photo.jpg" readonly>
-                        <input type="file" name="model_photo" id="file2" hidden>
+                        <input require type="file" name="model_photo" id="file2" hidden>
                     </div>
                 </div>
                 <?php if ($message['modelo_foto'] === "") : ?>

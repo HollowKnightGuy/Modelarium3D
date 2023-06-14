@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <?php
 
-use Lib\Utils;
+    use Lib\Utils;
 
     if (Utils::isLogged()) {
         $session = $_SESSION['identity'];
@@ -79,7 +77,8 @@ use Lib\Utils;
                     <?php if ($session) : ?>
                         <li class="header-link user-link transition">
                             <a class="transition" href="<?= $_ENV['BASE_URL'] ?>logout">
-                                <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/logout.svg" alt="logout.svg">
+                                <img class="link-icon logout-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/logout.svg" alt="logout.svg">
+                                <img class="link-icon logout-icon none" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/logout-red.svg" alt="logout.svg">
                             </a>
                         </li>
                     <?php endif; ?>
@@ -123,12 +122,12 @@ use Lib\Utils;
                 <div id="general-menu-section">
 
                     <?php if (!Utils::isAdmin()) : ?>
-                    <li>
-                        <a class="transition" href="<?= $_ENV['BASE_URL'] ?>home">
-                            <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/home.svg" alt="home.svg">
-                            <span>Home</span>
-                        </a>
-                    </li>
+                        <li>
+                            <a class="transition" href="<?= $_ENV['BASE_URL'] ?>home">
+                                <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/home.svg" alt="home.svg">
+                                <span>Home</span>
+                            </a>
+                        </li>
 
                         <li>
                             <a class="transition" href="<?= $_ENV['BASE_URL'] ?>models">
@@ -176,6 +175,18 @@ use Lib\Utils;
                         </li>
                     <?php endif; ?>
                     <?php if ($session) : ?>
+                        <script>
+                            const logouticon = document.getElementsByClassName("logout-icon")[0];
+                            const logouticon1src = document.getElementsByClassName("logout-icon")[0].src;
+                            const logouticon2src = document.getElementsByClassName("logout-icon")[1].src;
+                            logouticon.addEventListener("mouseover", function() {
+                                logouticon.src = logouticon2src
+
+                            });
+                            logouticon.addEventListener("mouseout", function() {
+                                logouticon.src = logouticon1src
+                            });
+                        </script>
                         <li>
                             <a class="transition" id="account-responsive-link" style="cursor:pointer;">
                                 <div>

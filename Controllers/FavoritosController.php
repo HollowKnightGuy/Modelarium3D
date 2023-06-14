@@ -35,12 +35,12 @@
                     } else if ($this->intercontroller->favorito($idmodelo)) {
                         if ($view === true) Utils::irView($idmodelo);
                         if ($autor === true) {
-                            $idautor = $this->intercontroller->obtenerModeloPorId($idmodelo)[0]->id_usuario;
+                            $idautor = $this->intercontroller->obtenerModeloPorId($idmodelo)->id_usuario;
                             Utils::irAutor($idautor);
                         } 
                         if($profile === true){
                             Utils::irProfile();
-                        }else {
+                        }else if(!$autor && !$view && !$profile){
                             $view ? Utils::irView($idmodelo) : Utils::irModels();
                         }
                     }
@@ -52,12 +52,12 @@
                     } else if ($this->intercontroller->revertirFavorito($idmodelo)) {
                         if ($view === true) Utils::irView($idmodelo);
                         if ($autor === true) {
-                            $idautor = $this->intercontroller->obtenerModeloPorId($idmodelo)[0]->id_usuario;
+                            $idautor = $this->intercontroller->obtenerModeloPorId($idmodelo)->id_usuario;
                             Utils::irAutor($idautor);
                         } 
                         if($profile === true){
                             Utils::irProfile();
-                        }else {
+                        }else if(!$autor && !$view && !$profile){
                             $view ? Utils::irView($idmodelo) : Utils::irModels();
                         }
                     }

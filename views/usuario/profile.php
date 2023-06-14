@@ -391,7 +391,6 @@ $error_img = '<img src=' . $_ENV['BASE_URL_PUBLIC'] . 'img/icons/error.svg alt=e
 </main>
 <script>
     const profileSections = document.getElementsByClassName("profile-section");
-    console.log(profileSections);
     const pLinks = document.getElementsByClassName("profile_link");
 
 

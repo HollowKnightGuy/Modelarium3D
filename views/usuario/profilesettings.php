@@ -44,19 +44,21 @@ $pparte2 = explode(',', $precio)[1];
                     <span>Profile</span>
                 </a>
             </li>
-            <li>
-                <a class="transition profsetlink">
-                    <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/earnings.svg" alt="earnings.svg">
-                    <span>Earnings</span>
-                </a>
-            </li>
-            <li>
-                <a class="transition profsetlink">
-                    <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/model.svg" alt="model.svg">
-                    <span>Be a creator</span>
-                </a>
-            </li>
-
+            <?php if(Utils::isCreator()): ?>
+                <li>
+                    <a class="transition profsetlink">
+                        <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/earnings.svg" alt="earnings.svg">
+                        <span>Earnings</span>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li>
+                    <a class="transition profsetlink">
+                        <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/model.svg" alt="model.svg">
+                        <span>Be a creator</span>
+                    </a>
+                </li>
+            <?php endif; ?>
             <li>
                 <a class="transition profsetlink">
                     <img class="link-icon" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/shield.svg" alt="shield.svg">
@@ -119,23 +121,26 @@ $pparte2 = explode(',', $precio)[1];
                 <input type="submit" class="    submit transition boxshadow" id="psform-edit" value="SAVE CHANGES">
             </form>
         </article>
-        <article class="profsetsection none" id="psearnings">
-            <h1>Earnings</h1>
-            <span>You Have Already Earn:</span>
-            <div class="model--price textshadowlight">
-                <span class="price--bnumber"><?= $pparte1 ?></span><span class="price-snumber">,<?= $pparte2 ?>€</span>
-            </div>
-            <span>If you have any question about your earnings check out our <a class=" profsetlink linkpurple" style="cursor:pointer; color:var(--contact-input-color); width: 10px; display:inline-block">FAQs</a></span>
-        </article>
-        <article class="profsetsection none" id="psbecreator">
-            <p>If you wanna be a creator, before you must to fill the <a href="<?= $_ENV['BASE_URL_PUBLIC'] ?>profile/becreator" class="linkpurple">creator form</a>. Then, we will decide if you are mercedor to be one of us!</p>
-            <div class="profile-creator-div pscreator-btn">
-                <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
-                    Be Creator
-                    <img class="model-creator-svg" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/cube.svg" alt="model">
-                </button>
-            </div>
-        </article>
+        <?php if(Utils::isCreator()): ?>
+            <article class="profsetsection none" id="psearnings">
+                <h1>Earnings</h1>
+                <span>You Have Already Earn:</span>
+                <div class="model--price textshadowlight">
+                    <span class="price--bnumber"><?= $pparte1 ?></span><span class="price-snumber">,<?= $pparte2 ?>€</span>
+                </div>
+                <span>If you have any question about your earnings check out our <a class=" profsetlink linkpurple" style="cursor:pointer; color:var(--contact-input-color); width: 10px; display:inline-block">FAQs</a></span>
+            </article>
+        <?php else: ?>
+            <article class="profsetsection none" id="psbecreator">
+                <p>If you wanna be a creator, before you must to fill the <a href="<?= $_ENV['BASE_URL_PUBLIC'] ?>profile/becreator" class="linkpurple">creator form</a>. Then, we will decide if you are mercedor to be one of us!</p>
+                <div class="profile-creator-div pscreator-btn">
+                    <button class="profile-creator-button transition textshadow boxshadow defaultbtn" onclick="location.href ='<?= $_ENV['BASE_URL'] ?>profile/becreator'">
+                        Be Creator
+                        <img class="model-creator-svg" src="<?= $_ENV['BASE_URL_PUBLIC'] ?>img/icons/cube.svg" alt="model">
+                    </button>
+                </div>
+            </article>
+        <?php endif; ?>
         <article class="profsetsection none" id="psaccsupport">
             <div class="faq">
                 <div class="faq-question linkpurple transition">
@@ -182,7 +187,6 @@ $pparte2 = explode(',', $precio)[1];
         </article>
     </section>
 </main>
-
 <?php 
 require_once '../views/layout/footer.php';
 ?>

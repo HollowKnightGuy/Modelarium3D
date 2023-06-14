@@ -4,8 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let a = document.createElement("a");
     a.setAttribute("id", "iteration");
     document.body.appendChild(a);
-    const pslinks = document.getElementsByClassName("profsetlink");
-    const pssections = document.getElementsByClassName("profsetsection");
 
     const psProfImg = document.getElementsByClassName("ps-prof-img")[0];
     const psProfImgPencil = document.getElementById("pencil1");
@@ -60,30 +58,33 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // FUNCIONALITY OF THE PROFILE SETTINGS
-    pslinks[4].addEventListener("click", function () {
-      changePSState("none", "none", "none", "flex");
-    });
 
-    pslinks[3].addEventListener("click", function () {
-      changePSState("none", "none", "none", "flex");
-    });
-    pslinks[2].addEventListener("click", function () {
-      changePSState("none", "none", "flex", "none");
-    });
-    pslinks[1].addEventListener("click", function () {
-      changePSState("none", "flex", "none", "none");
-    });
-    pslinks[0].addEventListener("click", function () {
-      changePSState("flex", "none", "none", "none");
-    });
 
-    let lastclicked;
+        const pssections = document.getElementsByClassName("profsetsection");
+    
+    const pslinks = document.getElementsByClassName("profsetlink");
+
+
+
+        pslinks[2].addEventListener("click", function () {
+        changePSState("none", "none", "flex", "none");
+        });
+
+        pslinks[1].addEventListener("click", function () {
+        changePSState("none", "flex", "none", "none");
+        });
+        pslinks[0].addEventListener("click", function () {
+        changePSState("flex", "none", "none", "none");
+        });
+
+
+
+let lastclicked;
 
     function changePSState(s1, s2, s3, s4) {
       pssections[0].style.display = s1;
       pssections[1].style.display = s2;
       pssections[2].style.display = s3;
-      pssections[3].style.display = s4;
 
       if (s1 !== "none") {
         changePSLinkStates(lastclicked, 0);
@@ -91,8 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
         changePSLinkStates(lastclicked, 1);
       } else if (s3 !== "none") {
         changePSLinkStates(lastclicked, 2);
-      } else if (s4 !== "none") {
-        changePSLinkStates(lastclicked, 3);
       }
     }
 

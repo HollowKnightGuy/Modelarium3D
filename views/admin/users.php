@@ -100,7 +100,6 @@ tr:first-child:hover{
     let lastclicked; 
     $(".user").on("click",function(e){
         let iduser = e.target.parentElement.children[0].attributes['id'].nodeValue;
-        console.log(iduser);
         if(lastclicked != undefined){
             setLink(iduser, borrarbtn);
             setLink(iduser, editarbtn);
